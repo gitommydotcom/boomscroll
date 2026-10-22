@@ -1,0 +1,40 @@
+name: Diagnosi GitHub Models (temporaneo)
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/diag.yml']
+
+permissions:
+  contents: read
+  models: read
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Catalogo
+        run: curl -sS -i https://models.github.ai/catalog/models -H "Authorization: Bearer $GH_TOKEN" | head -c 1500; echo
+      - name: Chat (inference)
+        run: |
+          for m in openai/gpt-4.1-mini openai/gpt-4o-mini; do
+            echo "== $m"
+            curl -sS -i -X POST https://models.github.ai/inference/chat/completions \
+              -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/json" -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              -d "{\"model\":\"$m\",\"messages\":[{\"role\":\"user\",\"content\":\"Rispondi solo: ciao\"}]}" | head -c 1500; echo
+          done
+      - name: Chat (org/repo path)
+        run: |
+          curl -sS -i -X POST "https://models.github.ai/orgs/${{ github.repository_owner }}/inference/chat/completions" \
+            -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/json" \
+            -d '{"model":"openai/gpt-4.1-mini","messages":[{"role":"user","content":"ciao"}]}' | head -c 800; echo
+      - name: gh models
+        run: |
+          gh extension install github/gh-models || true
+          gh models list 2>&1 | head -20 || true
+          echo "Rispondi solo: ciao" | gh models run openai/gpt-4.1-mini 2>&1 | head -20 || true
+          GH_DEBUG=api gh models run openai/gpt-4.1-mini "ciao" 2>&1 | grep -iE "^(\* Request|> POST|> GET|< HTTP)|models" | head -30 || true
