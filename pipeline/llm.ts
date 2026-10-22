@@ -156,33 +156,88 @@ function openAiCompatible(name: string, url: string, key: string, models: string
   };
 }
 
+const nullableString = { type: ['string', 'null'] };
+
+/** Schema JSON imposto al modello locale: i modelli piccoli altrimenti saltano dei campi. */
+const ITEMS_SCHEMA = {
+  type: 'object',
+  properties: {
+    items: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          title_it: nullableString,
+          summary: { type: 'string' },
+          excerpt_it: nullableString,
+          tags: { type: 'array', items: { type: 'string' } },
+          interest: { type: 'integer' },
+          category: nullableString,
+          quiz: {
+            type: ['object', 'null'],
+            properties: {
+              q: { type: 'string' },
+              options: { type: 'array', items: { type: 'string' } },
+              answer: { type: 'integer' },
+            },
+            required: ['q', 'options', 'answer'],
+          },
+          word: {
+            type: ['object', 'null'],
+            properties: {
+              word: { type: 'string' },
+              definition_it: { type: 'string' },
+              example: { type: 'string' },
+              example_it: { type: 'string' },
+            },
+            required: ['word', 'definition_it'],
+          },
+        },
+        required: ['id', 'title_it', 'summary', 'tags', 'interest', 'quiz'],
+      },
+    },
+  },
+  required: ['items'],
+};
+
 /** Modello open source che gira sul runner di GitHub Actions tramite Ollama. */
 function ollama(host: string, model: string): Provider {
+  let consecutiveErrors = 0;
   return {
     name: `ollama/${model}`,
     batch: 3,
     pauseMs: 0,
     async complete(payload) {
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const res = await http(`${host}/api/chat`, {
+      let res: Response;
+      try {
+        res = await http(`${host}/api/chat`, {
           method: 'POST',
           timeoutMs: 600_000,
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model,
             stream: false,
-            format: 'json',
+            format: ITEMS_SCHEMA,
             keep_alive: '30m',
-            options: { temperature: 0.3, num_ctx: 6144, num_predict: 1500 },
+            options: { temperature: 0.3, repeat_penalty: 1.15, num_ctx: 6144, num_predict: 1600 },
             messages: messages(payload),
           }),
         });
-        if (!res.ok) throw new ProviderDown(`HTTP ${res.status}: ${(await res.text()).slice(0, 160)}`);
-        const data = (await res.json()) as any;
-        const items = parseItems(data.message?.content ?? '');
-        if (items) return items;
+      } catch (e) {
+        throw new ProviderDown(`server non raggiungibile: ${(e as Error).message}`);
       }
-      throw new Error('risposta non valida');
+      if (!res.ok) {
+        // Un errore del modello su un lotto (es. ripetizioni) non deve fermare tutta l'edizione.
+        const text = (await res.text()).slice(0, 160);
+        if (++consecutiveErrors >= 3) throw new ProviderDown(`HTTP ${res.status}: ${text}`);
+        throw new Error(`HTTP ${res.status}: ${text}`);
+      }
+      consecutiveErrors = 0;
+      const data = (await res.json()) as any;
+      const items = parseItems(data.message?.content ?? '');
+      if (!items) throw new Error('risposta non valida');
+      return items;
     },
   };
 }
