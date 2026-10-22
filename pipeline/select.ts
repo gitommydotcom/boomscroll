@@ -40,7 +40,7 @@ export function dedupe(items: RawItem[]): RawItem[] {
 const ALWAYS_KEEP = new Set(['chess', 'word', 'artwork', 'comic', 'image', 'poem']);
 
 /** Prima dell'IA: limita il numero di candidati per categoria, privilegiando qualità e freschezza. */
-export function preselect(items: RawItem[], now: Date, perCategory = 12, total = 95): RawItem[] {
+export function preselect(items: RawItem[], now: Date, perCategory = 14, total = 150): RawItem[] {
   const score = (i: RawItem) => {
     const ageH = i.publishedAt ? (now.getTime() - i.publishedAt.getTime()) / 3_600_000 : 24;
     return i.source.quality + Math.max(0, 1 - ageH / 72) * 0.3 + (i.image ? 0.08 : 0) + (i.kind === 'video' ? 0.1 : 0);
@@ -50,7 +50,7 @@ export function preselect(items: RawItem[], now: Date, perCategory = 12, total =
     // I video hanno un loro gruppo, così non tolgono spazio agli articoli della stessa categoria.
     const key = i.kind === 'video' ? 'video' : i.source.category;
     const list = byCat.get(key) ?? [];
-    if (list.length < (key === 'video' ? 16 : perCategory)) list.push(i);
+    if (list.length < (key === 'video' ? 24 : perCategory)) list.push(i);
     byCat.set(key, list);
   }
   return [...byCat.values()].flat().sort((a, b) => score(b) - score(a)).slice(0, total);
@@ -103,15 +103,15 @@ export function buildItem(raw: RawItem, ai: AiResult | undefined, now: Date): It
 }
 
 /** Dopo l'IA: scarta ciò che è poco interessante e limita per categoria. */
-export function finalize(items: Item[], perCategory = 12, total = 110): Item[] {
+export function finalize(items: Item[], perCategory = 14, total = 170): Item[] {
   const good = items.filter((i) => ALWAYS_KEEP.has(i.kind) || i.interest === undefined || i.interest >= 3);
   // Se l'IA è stata troppo severa, recuperiamo i migliori tra gli scartati.
-  const pool = good.length >= 50 ? good : [...good, ...items.filter((i) => !good.includes(i)).sort((a, b) => (b.interest ?? 0) - (a.interest ?? 0)).slice(0, 50 - good.length)];
+  const pool = good.length >= 70 ? good : [...good, ...items.filter((i) => !good.includes(i)).sort((a, b) => (b.interest ?? 0) - (a.interest ?? 0)).slice(0, 70 - good.length)];
   const rank = (i: Item) => i.quality + (i.interest ?? 3) / 5;
   const counts = new Map<string, number>();
   // Opere, poesie, parole e giochi sono pochi e scelti apposta: entrano sempre.
-  // I video, fino a 16, non contano nel limite per categoria.
-  const videos = pool.filter((i) => i.kind === 'video').sort((a, b) => rank(b) - rank(a)).slice(0, 16);
+  // I video, fino a 24, non contano nel limite per categoria.
+  const videos = pool.filter((i) => i.kind === 'video').sort((a, b) => rank(b) - rank(a)).slice(0, 24);
   const out: Item[] = [...pool.filter((i) => ALWAYS_KEEP.has(i.kind)), ...videos];
   for (const i of out) if (i.kind !== 'video') counts.set(i.category, (counts.get(i.category) ?? 0) + 1);
   for (const i of pool.filter((i) => !ALWAYS_KEEP.has(i.kind) && !videos.includes(i)).sort((a, b) => rank(b) - rank(a))) {

@@ -3,7 +3,9 @@ import { ItemSheets } from './cards/ItemDetail';
 import { dailyDecay, onToast } from './lib/actions';
 import { isAfter } from './lib/dates';
 import { bumpStats, flush, useAppState } from './lib/store';
-import { IconBookmark, IconFeed, IconLeaf, IconPin, IconUser } from './ui/icons';
+import { SocialLayers } from './cards/Social';
+import { IconHome, IconLeaf, IconPin, IconSearch, IconUser } from './ui/icons';
+import { Explore, SourceProfile, TagPage } from './views/Explore';
 import { Library } from './views/Library';
 import { Nearby } from './views/Nearby';
 import { Onboarding } from './views/Onboarding';
@@ -12,12 +14,15 @@ import { Profile } from './views/Profile';
 import { Today } from './views/Today';
 
 const ROUTES = [
-  { path: 'oggi', label: 'Oggi', Icon: IconFeed },
-  { path: 'vicino', label: 'Vicino', Icon: IconPin },
+  { path: 'oggi', label: 'Home', Icon: IconHome },
+  { path: 'esplora', label: 'Esplora', Icon: IconSearch },
   { path: 'pratica', label: 'Pratica', Icon: IconLeaf },
-  { path: 'libreria', label: 'Libreria', Icon: IconBookmark },
-  { path: 'tu', label: 'Tu', Icon: IconUser },
+  { path: 'vicino', label: 'Vicino', Icon: IconPin },
+  { path: 'tu', label: 'Profilo', Icon: IconUser },
 ] as const;
+
+/** Pagine senza voce propria nella barra: quale voce resta evidenziata. */
+const NAV_OF: Record<string, string> = { fonte: 'esplora', tag: 'esplora', libreria: 'tu' };
 
 function useRoute(): string[] {
   const parse = () => (location.hash.replace(/^#\/?/, '') || 'oggi').split('/');
@@ -83,6 +88,7 @@ export function App() {
   if (!s.settings.onboarded) return <Onboarding />;
 
   const page = route[0];
+  const navPage = NAV_OF[page] ?? page;
   const immersive = page === 'oggi' && s.settings.view === 'immersive';
   let content;
   switch (page) {
@@ -95,8 +101,17 @@ export function App() {
     case 'libreria':
       content = <Library tab={route[1]} date={route[2]} />;
       break;
+    case 'esplora':
+      content = <Explore cat={route[1]} key={route[1]} />;
+      break;
+    case 'fonte':
+      content = <SourceProfile id={route[1] ?? ''} key={route[1]} />;
+      break;
+    case 'tag':
+      content = <TagPage tag={route[1] ?? ''} key={route[1]} />;
+      break;
     case 'tu':
-      content = <Profile />;
+      content = <Profile tab={route[1]} />;
       break;
     default:
       content = <Today />;
@@ -107,13 +122,14 @@ export function App() {
       <main style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>{content}</main>
       <nav class={`nav${immersive ? ' on-dark' : ''}`} aria-label="Sezioni">
         {ROUTES.map(({ path, label, Icon }) => (
-          <a key={path} href={`#/${path}`} aria-current={page === path || (path === 'oggi' && !ROUTES.some((r) => r.path === page)) ? 'page' : undefined}>
+          <a key={path} href={`#/${path}`} aria-current={navPage === path || (path === 'oggi' && !ROUTES.some((r) => r.path === navPage)) ? 'page' : undefined}>
             <Icon size={22} />
             {label}
           </a>
         ))}
       </nav>
       <ItemSheets />
+      <SocialLayers />
       {toast && (
         <div class="toast" role="status">
           {toast}

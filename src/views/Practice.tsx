@@ -8,17 +8,17 @@ import { fetchEdition, fetchIndex } from '../lib/data';
 import { addDays, shortDate, today } from '../lib/dates';
 import { DISTORTIONS, GRATITUDE_PROMPT, challengeFor, journalPromptFor } from '../lib/exercises';
 import { setState, useAppState, type Flashcard, type Habit, type JournalEntry } from '../lib/store';
-import { IconBack, IconCheck, IconPlus, IconTrash } from '../ui/icons';
+import { ICON_NAMES, Icon, IconBack, IconCheck, IconPlus, IconTrash } from '../ui/icons';
 
 const TOOLS = [
-  { id: 'respiro', emoji: '🫁', title: 'Respiro', desc: 'Un minuto di respirazione quadrata' },
-  { id: 'diario', emoji: '📓', title: 'Diario', desc: 'Una domanda al giorno' },
-  { id: 'gratitudine', emoji: '🙏', title: 'Gratitudine', desc: 'Tre cose belle di oggi' },
-  { id: 'pensiero', emoji: '🧠', title: 'Rileggi un pensiero', desc: 'Ristrutturazione cognitiva in 5 passi' },
-  { id: 'focus', emoji: '⏳', title: 'Concentrazione', desc: 'Timer per una cosa sola' },
-  { id: 'flashcard', emoji: '🔤', title: 'Flashcard', desc: 'Le parole che hai raccolto' },
-  { id: 'abitudini', emoji: '🌱', title: 'Abitudini', desc: 'Piccole cose, ogni giorno' },
-  { id: 'scacchi', emoji: '♞', title: 'Scacchi', desc: 'Il puzzle del giorno' },
+  { id: 'respiro', icon: 'wind', title: 'Respiro', desc: 'Un minuto di respirazione quadrata' },
+  { id: 'diario', icon: 'notebook', title: 'Diario', desc: 'Una domanda al giorno' },
+  { id: 'gratitudine', icon: 'sun', title: 'Gratitudine', desc: 'Tre cose belle di oggi' },
+  { id: 'pensiero', icon: 'brain', title: 'Rileggi un pensiero', desc: 'Ristrutturazione cognitiva in 5 passi' },
+  { id: 'focus', icon: 'timer', title: 'Concentrazione', desc: 'Timer per una cosa sola' },
+  { id: 'flashcard', icon: 'cards', title: 'Flashcard', desc: 'Le parole che hai raccolto' },
+  { id: 'abitudini', icon: 'sprout', title: 'Abitudini', desc: 'Piccole cose, ogni giorno' },
+  { id: 'scacchi', icon: 'chess', title: 'Scacchi', desc: 'Un puzzle da risolvere' },
 ];
 
 const BOX_DAYS = [1, 3, 7, 14, 30, 90];
@@ -223,7 +223,7 @@ function Focus() {
         <div style={{ fontFamily: 'var(--font-display)', fontSize: '4.5rem', fontVariantNumeric: 'tabular-nums', lineHeight: 1.1 }} role="timer">
           {mm}:{ss}
         </div>
-        {done && <p style={{ fontWeight: 600 }}>Tempo! Fai una pausa di 5 minuti. 🌿</p>}
+        {done && <p style={{ fontWeight: 600 }}>Tempo! Fai una pausa di 5 minuti.</p>}
         {!endAt ? (
           <>
             <div class="chips" style={{ justifyContent: 'center', margin: '12px 0' }}>
@@ -303,7 +303,9 @@ function Flashcards() {
           )}
         </div>
       ) : (
-        all.length > 0 && <div class="panel flash">🎉 Nessuna parola da ripassare oggi.</div>
+        all.length > 0 && <div class="panel flash">
+          <IconCheck size={28} /> Nessuna parola da ripassare oggi.
+        </div>
       )}
       {all.length > 0 && (
         <>
@@ -336,22 +338,29 @@ function Flashcards() {
 }
 
 const HABIT_IDEAS = [
-  ['📖', 'Leggere 10 pagine'],
-  ['🚶', 'Camminare 20 minuti'],
-  ['💧', 'Bere due litri d’acqua'],
-  ['🌙', 'Niente telefono a letto'],
-  ['🧘', 'Meditare 5 minuti'],
-  ['✍️', 'Scrivere tre righe'],
+  ['book', 'Leggere 10 pagine'],
+  ['walk', 'Camminare 20 minuti'],
+  ['drop', 'Bere due litri d’acqua'],
+  ['moon', 'Niente telefono a letto'],
+  ['wind', 'Meditare 5 minuti'],
+  ['pen', 'Scrivere tre righe'],
 ];
+
+const HABIT_ICONS = ['sprout', 'book', 'walk', 'drop', 'moon', 'wind', 'pen', 'sun', 'heart', 'bolt'];
+
+/** Le abitudini salvate prima delle icone hanno un'emoji: al suo posto la prima lettera. */
+function HabitIcon({ h }: { h: Habit }) {
+  return ICON_NAMES.includes(h.emoji) ? <Icon name={h.emoji} size={20} /> : <b>{h.name.charAt(0).toUpperCase()}</b>;
+}
 
 function Habits() {
   const s = useAppState();
   const t = today();
   const [name, setName] = useState('');
-  const [emoji, setEmoji] = useState('🌱');
+  const [icon, setIcon] = useState('sprout');
   const add = (n: string, e: string) => {
     if (!n.trim()) return;
-    const h: Habit = { id: crypto.randomUUID(), name: n.trim(), emoji: e || '🌱', days: [], created: t };
+    const h: Habit = { id: crypto.randomUUID(), name: n.trim(), emoji: e || 'sprout', days: [], created: t };
     setState((st) => ({ habits: [...st.habits, h] }));
     setName('');
   };
@@ -374,7 +383,7 @@ function Habits() {
         return (
           <div class="habit" key={h.id}>
             <button class="habit-check" aria-pressed={h.days.includes(t)} onClick={() => toggle(h)} aria-label={`${h.name}: fatto oggi`}>
-              {h.days.includes(t) ? <IconCheck size={22} /> : h.emoji}
+              {h.days.includes(t) ? <IconCheck size={22} /> : <HabitIcon h={h} />}
             </button>
             <div style={{ flex: 1 }}>
               <strong>{h.name}</strong>
@@ -393,16 +402,22 @@ function Habits() {
       })}
       <h2 class="section-title">Nuova abitudine</h2>
       <div class="row">
-        <input value={emoji} onInput={(e) => setEmoji(e.currentTarget.value.slice(0, 2))} style={{ width: '64px', textAlign: 'center' }} aria-label="Emoji" />
         <input value={name} onInput={(e) => setName(e.currentTarget.value)} placeholder="Es. leggere prima di dormire" aria-label="Nome dell’abitudine" />
-        <button class="btn" onClick={() => add(name, emoji)} aria-label="Aggiungi">
+        <button class="btn" onClick={() => add(name, icon)} aria-label="Aggiungi">
           <IconPlus size={20} />
         </button>
+      </div>
+      <div class="icon-pick" role="radiogroup" aria-label="Icona">
+        {HABIT_ICONS.map((n) => (
+          <button key={n} role="radio" aria-checked={icon === n} onClick={() => setIcon(n)} aria-label={n}>
+            <Icon name={n} size={20} />
+          </button>
+        ))}
       </div>
       <div class="chips" style={{ marginTop: '12px' }}>
         {HABIT_IDEAS.filter(([, n]) => !s.habits.some((h) => h.name === n)).map(([e, n]) => (
           <button key={n} class="chip" onClick={() => add(n, e)}>
-            {e} {n}
+            <Icon name={e} size={16} /> {n}
           </button>
         ))}
       </div>
@@ -483,17 +498,19 @@ export function Practice({ tool }: { tool?: string }) {
           <div class="tiles">
             {dueCards > 0 ? (
               <a class="tile hero" href="#/pratica/flashcard" style={{ textDecoration: 'none' }}>
-                <span class="emoji">🔤</span>
+                <Icon name="cards" size={26} />
                 <h3>{dueCards} parole da ripassare</h3>
                 <p>Bastano due minuti.</p>
               </a>
             ) : (
               <div class="tile hero">
-                <span class="emoji">⚡</span>
+                <Icon name="bolt" size={26} />
                 <h3>Sfida di oggi: {challenge.title}</h3>
                 <p>{challenge.text}</p>
                 {challengeDone ? (
-                  <p style={{ fontWeight: 600 }}>Fatto ✓</p>
+                  <p class="row" style={{ fontWeight: 600, gap: '6px' }}>
+                    <IconCheck size={18} /> Fatto
+                  </p>
                 ) : (
                   <button class="btn small" style={{ background: 'var(--paper)', color: 'var(--ink)', alignSelf: 'flex-start' }} onClick={() => exerciseDone(`sfida:${challenge.title}`)}>
                     Fatto
@@ -503,9 +520,7 @@ export function Practice({ tool }: { tool?: string }) {
             )}
             {TOOLS.map((tl) => (
               <a key={tl.id} class="tile" href={`#/pratica/${tl.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <span class="emoji" aria-hidden="true">
-                  {tl.emoji}
-                </span>
+                <Icon name={tl.icon} size={26} />
                 <h3>{tl.title}</h3>
                 <p>{tl.desc}</p>
               </a>

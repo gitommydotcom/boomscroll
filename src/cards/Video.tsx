@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Item } from '../../shared/types';
+import { getState } from '../lib/store';
 import { playVideo, stopVideo, useUi } from '../lib/ui';
 import { IconPlay } from '../ui/icons';
 
@@ -18,32 +19,45 @@ export function useYtThumb(id: string) {
   };
 }
 
-export const embedUrl = (id: string) => `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;
+export const embedUrl = (id: string, mute = false) =>
+  `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1${mute ? '&mute=1' : ''}`;
 
 /**
- * Video riproducibile nella card: parte solo con un tocco (niente autoplay)
- * e si ferma quando esce dallo schermo.
+ * Video riproducibile nella card. Con `auto` (feed a schermo intero) parte da solo e senza audio
+ * quando la card è sullo schermo, se l'opzione è attiva; altrimenti con un tocco.
+ * Si ferma sempre quando esce dallo schermo.
  */
-export function VideoBox({ item, class: cls }: { item: Item; class?: string }) {
-  const { playing } = useUi();
+export function VideoBox({ item, class: cls, auto }: { item: Item; class?: string; auto?: boolean }) {
+  const { playing, muted } = useUi();
   const ref = useRef<HTMLDivElement>(null);
   const isPlaying = playing === item.id;
   const thumb = useYtThumb(item.youtubeId!);
 
   useEffect(() => {
-    if (!isPlaying || !ref.current) return;
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting || e.intersectionRatio < 0.35) stopVideo();
-    }, { threshold: [0, 0.35] });
+    if (!ref.current) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        const visible = e.isIntersecting && e.intersectionRatio >= 0.7;
+        clearTimeout(timer);
+        if (!visible && playing === item.id) stopVideo();
+        // Un attimo di attesa: se stai solo scorrendo oltre, il video non parte.
+        if (visible && auto && getState().settings.autoplay && playing !== item.id) timer = setTimeout(() => playVideo(item.id, true), 700);
+      },
+      { threshold: [0, 0.35, 0.7] },
+    );
     io.observe(ref.current);
-    return () => io.disconnect();
-  }, [isPlaying]);
+    return () => {
+      clearTimeout(timer);
+      io.disconnect();
+    };
+  }, [playing, auto]);
 
   return (
     <div class={`video-box ${cls ?? ''}`} ref={ref}>
       {isPlaying ? (
         <iframe
-          src={embedUrl(item.youtubeId!)}
+          src={embedUrl(item.youtubeId!, muted)}
           title={item.title}
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
           allowFullScreen

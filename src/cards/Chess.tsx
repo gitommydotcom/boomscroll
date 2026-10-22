@@ -164,7 +164,7 @@ export function ChessPuzzle({ data, puzzleUrl, compact }: { data: ChessData; puz
       />
       <p role="status" style={{ minHeight: '1.5em', textAlign: 'center', fontWeight: 600 }}>
         {status === 'wrong' && 'Non è la mossa giusta. Riprova!'}
-        {status === 'solved' && '🎉 Risolto! Ottimo lavoro.'}
+        {status === 'solved' && 'Risolto! Ottimo lavoro.'}
         {status === 'shown' && 'Ecco la soluzione. Domani un altro puzzle.'}
       </p>
       <div class="row" style={{ justifyContent: 'center', flexWrap: 'wrap' }}>

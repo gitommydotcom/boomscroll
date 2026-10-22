@@ -3,27 +3,30 @@ import type { CategoryId } from './types';
 export interface CategoryMeta {
   id: CategoryId;
   label: string;
-  emoji: string;
-  /** Colore di fondo delle card: scuro abbastanza da reggere testo bianco. */
-  color: string;
+  /** Nome dell'icona (vedi src/ui/icons.tsx). */
+  icon: string;
 }
 
 export const CATEGORIES: CategoryMeta[] = [
-  { id: 'notizie', label: 'Notizie', emoji: '🗞️', color: '#2F4858' },
-  { id: 'scienza', label: 'Scienza', emoji: '🔭', color: '#2E5E4E' },
-  { id: 'tech', label: 'Tech', emoji: '💡', color: '#3D3B8E' },
-  { id: 'arte', label: 'Arte', emoji: '🎨', color: '#8E3628' },
-  { id: 'design', label: 'Design', emoji: '📐', color: '#8F4A1F' },
-  { id: 'lingue', label: 'Lingue', emoji: '🗣️', color: '#5B4B8A' },
-  { id: 'poesia', label: 'Poesia', emoji: '🪶', color: '#7A3B5C' },
-  { id: 'antropologia', label: 'Antropologia', emoji: '🏺', color: '#5E4F31' },
-  { id: 'psicologia', label: 'Psicologia', emoji: '🧠', color: '#33606F' },
-  { id: 'produttivita', label: 'Produttività', emoji: '⏳', color: '#46642B' },
-  { id: 'abitudini', label: 'Abitudini', emoji: '🌱', color: '#2C6457' },
-  { id: 'universita', label: 'Università', emoji: '🎓', color: '#5A2E3B' },
-  { id: 'curiosita', label: 'Curiosità', emoji: '🧭', color: '#765A18' },
-  { id: 'divertimento', label: 'Divertimento', emoji: '🎲', color: '#A93F31' },
-  { id: 'vicino', label: 'Vicino a te', emoji: '📍', color: '#2E5A7A' },
+  { id: 'notizie', label: 'Notizie', icon: 'news' },
+  { id: 'scienza', label: 'Scienza', icon: 'atom' },
+  { id: 'tech', label: 'Tech', icon: 'chip' },
+  { id: 'arte', label: 'Arte', icon: 'palette' },
+  { id: 'design', label: 'Design', icon: 'ruler' },
+  { id: 'storia', label: 'Storia', icon: 'columns' },
+  { id: 'natura', label: 'Natura', icon: 'tree' },
+  { id: 'cultura', label: 'Libri, film e musica', icon: 'book' },
+  { id: 'filosofia', label: 'Filosofia', icon: 'quote' },
+  { id: 'lingue', label: 'Lingue', icon: 'translate' },
+  { id: 'poesia', label: 'Poesia', icon: 'feather' },
+  { id: 'antropologia', label: 'Antropologia', icon: 'globe' },
+  { id: 'psicologia', label: 'Psicologia', icon: 'brain' },
+  { id: 'produttivita', label: 'Produttività', icon: 'timer' },
+  { id: 'abitudini', label: 'Abitudini', icon: 'sprout' },
+  { id: 'universita', label: 'Università', icon: 'cap' },
+  { id: 'curiosita', label: 'Curiosità', icon: 'compass' },
+  { id: 'divertimento', label: 'Divertimento', icon: 'dice' },
+  { id: 'vicino', label: 'Vicino a te', icon: 'pin' },
 ];
 
 export const CATEGORY_IDS = CATEGORIES.map((c) => c.id);

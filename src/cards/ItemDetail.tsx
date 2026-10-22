@@ -1,14 +1,15 @@
 import { useState } from 'preact/hooks';
 import { categoryMeta } from '../../shared/categories';
 import { isHardLang, type Item } from '../../shared/types';
-import { addFlashcard, lessOf, share } from '../lib/actions';
+import { addFlashcard, lessOf, react, share, toggleFollow } from '../lib/actions';
 import { explain } from '../lib/ranking';
 import { useAppState } from '../lib/store';
-import { closeDetail, closeMenu, stopVideo, useUi } from '../lib/ui';
-import { IconExternal, IconInfo, IconMute, IconPlay, IconShare, IconTranslate } from '../ui/icons';
+import { closeDetail, closeMenu, openNotes, stopVideo, useUi } from '../lib/ui';
+import { Avatar } from '../ui/Avatar';
+import { IconComment, IconExternal, IconInfo, IconMute, IconPlay, IconShare, IconThumbDown, IconTranslate, IconUser, IconUserPlus } from '../ui/icons';
 import { Sheet } from '../ui/Sheet';
 import { ChessPuzzle } from './Chess';
-import { Actions } from './ItemCards';
+import { Actions, SourceName, Tags, statsLine } from './ItemCards';
 import { embedUrl, useYtThumb } from './Video';
 import { CatTag, langName, metaBits, titles } from './common';
 
@@ -79,9 +80,15 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
         )
       )}
 
-      <div class="row" style={{ marginTop: '14px', flexWrap: 'wrap', gap: '8px' }}>
+      <div class="detail-who">
+        <a href={`#/fonte/${item.sourceId}`} onClick={() => closeDetail()}>
+          <Avatar id={item.sourceId} item={item} size={36} />
+        </a>
+        <div style={{ flex: 1, minWidth: 0 }} onClick={(e) => (e.target as HTMLElement).closest('a') && closeDetail()}>
+          <SourceName item={item} follow />
+          <div class="post-sub">{[...metaBits(item).slice(1), statsLine(item)].filter(Boolean).join(' · ')}</div>
+        </div>
         <CatTag item={item} />
-        <span class="muted small">{metaBits(item).join(' · ')}</span>
       </div>
       <h1 class="detail-title">{t.main}</h1>
       {t.sub && <p class="detail-orig">{t.sub}</p>}
@@ -147,13 +154,9 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
         <p class="muted small">Oggi il riassunto automatico non era disponibile: qui sopra trovi il testo della fonte.</p>
       )}
 
-      {item.tags.length > 0 && (
-        <div class="tags">
-          {item.tags.map((t) => (
-            <span key={t}>#{t.replace(/\s+/g, '')}</span>
-          ))}
-        </div>
-      )}
+      <div onClick={(e) => (e.target as HTMLElement).closest('a') && closeDetail()}>
+        <Tags item={item} />
+      </div>
 
       {item.kind !== 'chess' && (
         <a class="btn block" href={item.url} target="_blank" rel="noopener" style={{ margin: '8px 0 4px' }}>
@@ -177,7 +180,9 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
 }
 
 function Menu({ item, explored }: { item: Item; explored?: boolean }) {
+  const s = useAppState();
   const [why, setWhy] = useState(false);
+  const following = !!s.follows[`s:${item.sourceId}`];
   const cat = categoryMeta(item.category).label;
   const act = (fn: () => void) => () => {
     fn();
@@ -195,6 +200,18 @@ function Menu({ item, explored }: { item: Item; explored?: boolean }) {
       <a href={item.url} target="_blank" rel="noopener" onClick={() => closeMenu()}>
         <IconExternal /> Apri l’originale
       </a>
+      <a href={`#/fonte/${item.sourceId}`} onClick={() => closeMenu()}>
+        <IconUser /> Profilo di {item.sourceName}
+      </a>
+      <button onClick={act(() => toggleFollow(`s:${item.sourceId}`, item.sourceName))}>
+        <IconUserPlus /> {following ? `Non seguire più ${item.sourceName}` : `Segui ${item.sourceName}`}
+      </button>
+      <button onClick={act(() => openNotes(item))}>
+        <IconComment /> Aggiungi una nota
+      </button>
+      <button onClick={act(() => react(item, 'dislike'))}>
+        <IconThumbDown /> Non mi piace
+      </button>
       <button onClick={act(() => share(item))}>
         <IconShare /> Condividi
       </button>

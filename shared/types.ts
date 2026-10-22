@@ -15,6 +15,10 @@ export type CategoryId =
   | 'universita'
   | 'curiosita'
   | 'divertimento'
+  | 'storia'
+  | 'natura'
+  | 'cultura'
+  | 'filosofia'
   | 'vicino';
 
 export type ItemKind =
@@ -96,6 +100,14 @@ export interface Item {
   chess?: ChessData;
   art?: ArtData;
   youtubeId?: string;
+  /** Numeri reali dalla fonte (punti su Hacker News, visualizzazioni su YouTube…). */
+  stats?: ItemStats;
+}
+
+export interface ItemStats {
+  points?: number;
+  comments?: number;
+  views?: number;
 }
 
 export interface SourceReport {

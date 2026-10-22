@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'preact/hooks';
 import { CATEGORIES } from '../../shared/categories';
 import { editionSlot, type Edition } from '../../shared/types';
+import { GridTile, MiniRow } from '../cards/ItemCards';
 import { WeekSummary, sumDays } from '../cards/Specials';
+import { account } from '../lib/accounts';
+import { Avatar } from '../ui/Avatar';
+import { FollowButton } from './Explore';
+import { Archive } from './Library';
 import { adjustWeight, toast } from '../lib/actions';
 import { ACTIONS_URL, getToken, lastRun, setToken, startEdition, type RunStatus } from '../lib/github';
 import { fetchEdition, fetchIndex } from '../lib/data';
-import { longDate, today } from '../lib/dates';
+import { longDate, shortDate, today } from '../lib/dates';
 import { MAX_W, keyC } from '../lib/ranking';
 import { DEFAULT_STATE, getState, replaceState, setState, updateSettings, useAppState, type State } from '../lib/store';
-import { IconMinus, IconPlus } from '../ui/icons';
+import { Icon, IconBack, IconClose, IconGear, IconGrid, IconMinus, IconPlus } from '../ui/icons';
 
 function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
   return <button class="switch" role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)} />;
@@ -35,8 +40,8 @@ function Tastes() {
         const pct = ((v + MAX_W) / (2 * MAX_W)) * 100;
         return (
           <div class="taste-row" key={c.id}>
-            <span>
-              {c.emoji} {c.label}
+            <span class="row" style={{ gap: '8px' }}>
+              <Icon name={c.icon} size={18} /> {c.label}
             </span>
             <span class="bar" aria-label={`Interesse per ${c.label}`}>
               <i style={{ width: `${pct}%`, background: v < -0.5 ? 'var(--bad)' : v > 0.5 ? 'var(--good)' : undefined }} />
@@ -70,7 +75,7 @@ function Tastes() {
           <div class="chips">
             {muted.map(([k, v]) => (
               <button class="chip" key={k} onClick={() => adjustWeight(k, -v)}>
-                {nameOf(k)} ✕
+                {nameOf(k)} <IconClose size={14} />
               </button>
             ))}
           </div>
@@ -105,7 +110,7 @@ function Sources() {
           {[...ok, ...ko].map((x) => (
             <div class="setting" key={x.id} style={{ padding: '6px 0' }}>
               <span>{x.name}</span>
-              <span class="muted">{x.ok ? `✓ ${x.count}` : `✕ ${x.error ?? ''}`}</span>
+              <span class="muted">{x.ok ? `${x.count} contenuti` : `non raggiunta: ${x.error ?? ''}`}</span>
             </div>
           ))}
         </div>
@@ -146,9 +151,9 @@ function Editions() {
       {run && (
         <p class="small" style={{ margin: '0 0 10px' }}>
           {running
-            ? `⏳ Edizione in preparazione dalle ${time(run.startedAt)}`
+            ? `Edizione in preparazione dalle ${time(run.startedAt)}`
             : run.conclusion === 'success'
-              ? `✓ Ultima preparazione completata alle ${time(run.updatedAt)}`
+              ? `Ultima preparazione completata alle ${time(run.updatedAt)}`
               : `Ultima preparazione non riuscita (${time(run.updatedAt)}): l’edizione precedente resta disponibile`}
         </p>
       )}
@@ -229,7 +234,7 @@ function importData(file: File) {
     .catch(() => toast('File non valido'));
 }
 
-export function Profile() {
+export function Settings() {
   const s = useAppState();
   const st = s.settings;
   const todayStats = sumDays(s.stats, today(), 1);
@@ -238,7 +243,10 @@ export function Profile() {
   return (
     <div class="screen">
       <div class="page">
-        <h1 class="page-title">Tu</h1>
+        <a href="#/tu" class="row muted back">
+          <IconBack size={18} /> Profilo
+        </a>
+        <h1 class="page-title">Impostazioni</h1>
         <p class="page-sub">
           Oggi: {todayStats.seen} contenuti, {Math.round(todayStats.seconds / 60)} minuti{st.dailyLimitMin ? ` su ${st.dailyLimitMin}` : ''}.
         </p>
@@ -263,12 +271,20 @@ export function Profile() {
             <span class="muted small">Vale dalla prossima edizione</span>
           </span>
           <select value={st.editionSize} onChange={(e) => updateSettings({ editionSize: Number(e.currentTarget.value) })}>
-            {[15, 20, 30, 40].map((n) => (
+            {[15, 20, 30, 40, 60, 80].map((n) => (
               <option key={n} value={n}>
                 {n}
               </option>
             ))}
           </select>
+        </div>
+        <div class="setting">
+          <span>
+            Video automatici
+            <br />
+            <span class="muted small">Nel feed a schermo intero partono da soli, senza audio</span>
+          </span>
+          <Switch on={st.autoplay} onChange={(v) => updateSettings({ autoplay: v })} label="Video automatici" />
         </div>
         <div class="setting">
           <span>
@@ -360,7 +376,8 @@ export function Profile() {
             L’app sceglie per te circa {st.editionSize} contenuti dell’edizione in base alle tue reazioni, con qualche scoperta fuori dalle tue abitudini.
           </p>
           <p style={{ margin: 0 }}>
-            Niente notifiche, niente autoplay, nessuna misura del tempo passato su un contenuto per decidere cosa mostrarti. Il feed finisce.
+            Sembra un social, ma non lo è: gli “account” sono fonti affidabili, i commenti sono note che vedi solo tu, le notifiche le calcola il
+            telefono e non arrivano mai da sole. Nessuna misura del tempo passato su un contenuto per decidere cosa mostrarti. Il feed finisce.
           </p>
           <p style={{ margin: 0 }}>
             <a href="https://github.com/gitommydotcom/boomscroll" target="_blank" rel="noopener">
@@ -368,6 +385,169 @@ export function Profile() {
             </a>
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Il tuo profilo, come su un social ──────────────────────────────────── */
+
+const HIGHLIGHTS = [
+  { href: '#/pratica/diario', icon: 'notebook', label: 'Diario' },
+  { href: '#/pratica/flashcard', icon: 'cards', label: 'Parole' },
+  { href: '#/pratica/abitudini', icon: 'sprout', label: 'Abitudini' },
+  { href: '#/pratica/gratitudine', icon: 'sun', label: 'Gratitudine' },
+  { href: '#/vicino', icon: 'pin', label: 'Vicino' },
+];
+
+function Following() {
+  const s = useAppState();
+  const keys = Object.keys(s.follows).sort((a, b) => s.follows[b].localeCompare(s.follows[a]));
+  return (
+    <div class="screen">
+      <div class="page">
+        <a href="#/tu" class="row muted back">
+          <IconBack size={18} /> Profilo
+        </a>
+        <h1 class="page-title">Seguiti</h1>
+        <p class="page-sub">Account e argomenti che segui. I loro contenuti arrivano in Seguiti e nelle storie.</p>
+        {!keys.length && (
+          <p class="muted">
+            Ancora nessuno. Trova qualcuno in <a href="#/esplora">Esplora</a>.
+          </p>
+        )}
+        {keys.map((k) => {
+          const isTag = k.startsWith('t:');
+          const a = isTag ? null : account(k.slice(2));
+          const label = isTag ? `#${k.slice(2).replace(/\s+/g, '')}` : a!.name;
+          return (
+            <div class="acc-row" key={k}>
+              <a href={isTag ? `#/tag/${encodeURIComponent(k.slice(2))}` : `#/fonte/${k.slice(2)}`} class="row" style={{ flex: 1, minWidth: 0, color: 'inherit', textDecoration: 'none' }}>
+                {isTag ? (
+                  <span class="av" style={{ width: '44px', height: '44px' }}>
+                    <span>#</span>
+                  </span>
+                ) : (
+                  <Avatar id={k.slice(2)} size={44} />
+                )}
+                <span style={{ minWidth: 0 }}>
+                  <b>{label}</b>
+                  <span class="muted small">{isTag ? 'Argomento' : a!.about}</span>
+                </span>
+              </a>
+              <FollowButton k={k} label={label} small />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export function Profile({ tab }: { tab?: string }) {
+  const s = useAppState();
+  if (tab === 'impostazioni') return <Settings />;
+  if (tab === 'seguiti') return <Following />;
+  const current = tab === 'note' || tab === 'archivio' ? tab : 'salvati';
+  const name = s.settings.name || 'Tu';
+  const read = Object.values(s.stats).reduce((n, d) => n + d.seen, 0);
+  const saved = Object.values(s.saved).sort((a, b) => b.savedAt.localeCompare(a.savedAt));
+  const withNotes = Object.entries(s.notes)
+    .map(([id, list]) => ({ entry: s.saved[id], list }))
+    .filter((x) => x.entry)
+    .sort((a, b) => b.list[b.list.length - 1].at.localeCompare(a.list[a.list.length - 1].at));
+  const rename = () => {
+    const n = prompt('Come vuoi chiamarti nel profilo?', s.settings.name);
+    if (n !== null) updateSettings({ name: n.trim().slice(0, 40) });
+  };
+
+  return (
+    <div class="screen">
+      <div class="page">
+        <div class="row between">
+          <h1 class="page-title" style={{ margin: 0 }}>{name}</h1>
+          <a class="icon-btn" href="#/tu/impostazioni" aria-label="Impostazioni">
+            <IconGear size={22} />
+          </a>
+        </div>
+        <div class="profile-head">
+          <span class="av me" style={{ width: '84px', height: '84px', fontSize: '2rem' }}>
+            <span>{name.charAt(0).toUpperCase()}</span>
+          </span>
+          <div class="profile-stats">
+            <span>
+              <b>{read}</b>letti
+            </span>
+            <span>
+              <b>{saved.length}</b>salvati
+            </span>
+            <a href="#/tu/seguiti">
+              <b>{Object.keys(s.follows).length}</b>seguiti
+            </a>
+          </div>
+        </div>
+        <p class="muted small" style={{ margin: '0 0 10px' }}>
+          Su Boomscroll dal {shortDate(s.since || today())} · {Object.keys(s.notes).length} {Object.keys(s.notes).length === 1 ? 'nota' : 'note'}
+        </p>
+        <div class="row" style={{ gap: '8px' }}>
+          <button class="btn ghost small" style={{ flex: 1 }} onClick={rename}>
+            Modifica nome
+          </button>
+          <a class="btn ghost small" style={{ flex: 1 }} href="#/tu/impostazioni">
+            Gusti e impostazioni
+          </a>
+        </div>
+        <div class="highlights">
+          {HIGHLIGHTS.map((h) => (
+            <a key={h.href} href={h.href}>
+              <span class="av ring seen" style={{ width: '62px', height: '62px' }}>
+                <span>
+                  <Icon name={h.icon} size={26} />
+                </span>
+              </span>
+              {h.label}
+            </a>
+          ))}
+        </div>
+        <div class="icon-tabs" role="tablist">
+          <a role="tab" href="#/tu/salvati" aria-selected={current === 'salvati'} aria-label="Salvati">
+            <IconGrid size={22} />
+          </a>
+          <a role="tab" href="#/tu/note" aria-selected={current === 'note'} aria-label="Note">
+            <Icon name="bubble" size={22} />
+          </a>
+          <a role="tab" href="#/tu/archivio" aria-selected={current === 'archivio'} aria-label="Archivio delle edizioni">
+            <Icon name="calendar" size={22} />
+          </a>
+        </div>
+        {current === 'salvati' &&
+          (saved.length ? (
+            <>
+              <div class="grid3" style={{ margin: '0 -16px' }}>
+                {saved.map((e) => (
+                  <GridTile key={e.item.id} item={e.item} />
+                ))}
+              </div>
+              <p class="small" style={{ marginTop: '12px' }}>
+                <a href="#/libreria/salvati">Cerca nei salvati</a>
+              </p>
+            </>
+          ) : (
+            <div class="empty">
+              <h3>Ancora niente di salvato</h3>
+              <p>Tocca il segnalibro su un contenuto per ritrovarlo qui.</p>
+            </div>
+          ))}
+        {current === 'note' &&
+          (withNotes.length ? (
+            withNotes.map(({ entry, list }) => <MiniRow key={entry.item.id} item={entry.item} note={`Tu: ${list[list.length - 1].text}`} />)
+          ) : (
+            <div class="empty">
+              <h3>Nessuna nota</h3>
+              <p>Tocca il fumetto su un contenuto per scrivere un pensiero: lo vedi solo tu.</p>
+            </div>
+          ))}
+        {current === 'archivio' && <Archive />}
       </div>
     </div>
   );

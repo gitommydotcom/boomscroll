@@ -1,10 +1,22 @@
 # Boomscroll
 
-**Un feed che finisce.** Un'app personale che sostituisce i social: tre edizioni al giorno (mattina, pomeriggio e sera) di contenuti di qualità (notizie, scienza, tech, arte, design, lingue, poesia, antropologia, psicologia, produttività, lezioni universitarie, curiosità, giochi), più esercizi per crescere e idee per uscire di casa.
+**Un feed che finisce.** Un'app personale che sostituisce i social: tre edizioni al giorno (mattina, pomeriggio e sera) di contenuti di qualità (notizie, scienza, natura, tech, arte, design, storia, libri, film e musica, filosofia, lingue, poesia, antropologia, psicologia, produttività, lezioni universitarie, curiosità, giochi), più esercizi per crescere e idee per uscire di casa.
 
-- Feed a schermo intero (stile TikTok) o a lista (stile Twitter)
+**Un cavallo di Troia.** Si usa come un social network, ma non lo è:
+
+| Sembra… | …invece è |
+|---|---|
+| Account da seguire, con foto profilo, bio e badge di verifica | Quasi 200 fonti affidabili (riviste, università, musei, canali YouTube di divulgazione) |
+| Storie in cima al feed | Il meglio dell'edizione per categoria e dagli account che segui, poi finiscono |
+| Schede *Per te* e *Seguiti* | L'edizione scelta per i tuoi gusti, e i contenuti delle fonti che segui, fino a “Sei in pari” |
+| Commenti | Note private: le vedi solo tu, e il contenuto finisce nei salvati |
+| Notifiche con il pallino rosso | Avvisi calcolati sul telefono (edizione nuova, parole da ripassare, sfida del giorno), mai push |
+| Esplora con griglia, ricerca e #hashtag | Le edizioni degli ultimi tre giorni, per categoria e argomento |
+| Doppio tocco per mettere mi piace, video che partono da soli | Segnali per i gusti; i video partono senza audio e si possono disattivare |
+
+- Feed a schermo intero (stile TikTok) o a lista (stile Instagram)
 - L'edizione ha una fine; dopo ci sono solo approfondimenti, con pause
-- Impara solo da *mi piace*, *non mi piace*, *salva* e “meno di…”, mai dal tempo passato su un contenuto
+- Impara solo da *mi piace*, *non mi piace*, *salva*, *segui* e “meno di…”, mai dal tempo passato su un contenuto
 - Contenuti in qualsiasi lingua, con riassunto in italiano e traduzione per le lingue più difficili
 - Installabile come app (PWA), funziona offline, nessun account, nessun tracciamento
 
@@ -13,7 +25,7 @@
 ```
 GitHub Actions, 3 volte al giorno               GitHub Pages
 ┌─────────────────────────────────┐            ┌──────────────────────────────┐
-│ pipeline/ ~110 fonti, 39 YouTube│  commit →  │ PWA statica (Preact)          │
+│ pipeline/ 124 fonti, 72 YouTube │  commit →  │ PWA statica (Preact)          │
 │ → doppioni → riassunti con IA   │            │ ordina l'edizione sul telefono│
 │ → public/data/editions/*.json   │            │ gusti e salvati in IndexedDB  │
 └─────────────────────────────────┘            └──────────────────────────────┘
@@ -29,7 +41,7 @@ La pipeline usa il primo servizio disponibile:
 
 1. **Google Gemini** se c'è il secret `GEMINI_API_KEY`: piano gratuito, riassunti migliori e più veloci (consigliato).
 2. **Groq** se c'è il secret `GROQ_API_KEY` (piano gratuito).
-3. **Un modello open source sul runner di Actions** (Gemma 3 4B via Ollama): nessuna chiave, nessuna registrazione. Più lento (~40 minuti), qualità discreta.
+3. **Un modello open source sul runner di Actions** (Gemma 3 4B via Ollama): nessuna chiave, nessuna registrazione. Più lento (circa 100 minuti per un centinaio di contenuti), qualità discreta. Riassume prima le lingue difficili, poi le altre lingue straniere, per ultimi i contenuti in italiano (che restano leggibili anche senza).
 
 Se nessuno risponde, l'edizione esce lo stesso con gli estratti delle fonti.
 
@@ -39,15 +51,15 @@ Tre al giorno, ognuna solo con contenuti nuovi rispetto alle precedenti:
 
 | Edizione | Avvio (ora italiana, legale / solare) | Pronta circa |
 |---|---|---|
-| Mattina | 05:07 / 04:07 | 06:30 |
-| Pomeriggio | 11:37 / 10:37 | 13:00 |
-| Sera | 17:37 / 16:37 | 19:00 |
+| Mattina | 04:37 / 03:37 | 06:30 |
+| Pomeriggio | 11:07 / 10:07 | 13:00 |
+| Sera | 17:07 / 16:07 | 19:00 |
 
-Con una chiave Gemini sono pronte in pochi minuti invece che in un'ora e mezza. Gli orari sono in `.github/workflows/daily.yml` (in UTC).
+Con una chiave Gemini sono pronte in pochi minuti invece che in due ore. Gli orari sono in `.github/workflows/daily.yml` (in UTC).
 
 **Aggiornare a mano:**
-- nell'app, il pulsante ↻ in alto in *Oggi* controlla se è uscita una nuova edizione (lo fa anche da solo quando riapri l'app);
-- per *crearne* una nuova: GitHub → *Actions → Edizione quotidiana → Run workflow*, oppure dall'app in *Tu → Edizioni → Crea un'edizione adesso* (serve un token GitHub personale con permesso *Actions: Read and write* solo su questo repository; resta salvato sul telefono).
+- nell'app, il pulsante ↻ in alto in *Home* (o un tocco su *Per te* quando è già selezionato) controlla se è uscita una nuova edizione (lo fa anche da solo quando riapri l'app);
+- per *crearne* una nuova: GitHub → *Actions → Edizione quotidiana → Run workflow*, oppure dall'app in *Profilo → Impostazioni → Edizioni → Crea un'edizione adesso* (serve un token GitHub personale con permesso *Actions: Read and write* solo su questo repository; resta salvato sul telefono).
 
 ## Pubblicazione
 
@@ -78,10 +90,10 @@ BOOMSCROLL_NO_AI=1 npm run pipeline            # edizione senza riassunti
 Una riga in `pipeline/sources.ts`:
 
 ```ts
-{ id: 'nome', name: 'Nome leggibile', type: 'rss', url: 'https://…/feed', category: 'scienza', lang: 'en', quality: 0.85, max: 2, maxAgeDays: 3 },
+rss('nome', 'Nome leggibile', 'https://…/feed', 'scienza', 'en', 0.85, 2, 3, 'Bio dell’account in una riga'),
 ```
 
-Al push la pipeline rigenera l'edizione e in *Tu → Fonti dell'ultima edizione* vedi se la fonte funziona.
+Gli argomenti sono: id, nome, feed, categoria, lingua, qualità (da 0,85 in su ha il badge di verifica), massimo per edizione, età massima in giorni, bio. La fonte diventa subito un account con il suo profilo. Al push la pipeline rigenera l'edizione e in *Profilo → Impostazioni → Fonti dell'ultima edizione* vedi se la fonte funziona.
 
 ### Aggiungere una città con eventi locali
 
@@ -89,6 +101,6 @@ In `pipeline/sources.ts` aggiungi la città a `CITIES` e le sue fonti a `LOCAL_S
 
 ## Privacy
 
-Le reazioni, i gusti, i salvati, il diario e le abitudini restano nel browser (IndexedDB). Da *Tu → I tuoi dati* puoi esportarli, importarli o cancellarli. La posizione, se la usi, serve solo sul telefono per cercare luoghi vicini.
+Le reazioni, i gusti, gli account seguiti, le note, i salvati, il diario e le abitudini restano nel browser (IndexedDB). Le foto profilo degli account sono le icone dei siti, chieste al servizio di favicon di Google. Da *Profilo → Impostazioni → I tuoi dati* puoi esportarli, importarli o cancellarli. La posizione, se la usi, serve solo sul telefono per cercare luoghi vicini.
 
 Ogni contenuto mostra un riassunto e un breve estratto, con il link alla fonte originale.

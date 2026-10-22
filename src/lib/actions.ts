@@ -31,7 +31,10 @@ export function react(item: Item, r: Reaction) {
     else delete reactions[item.id];
     return { reactions };
   });
-  if (next === 'like') bumpStats((d) => ({ likes: d.likes + 1 }));
+  if (next === 'like') {
+    bumpStats((d) => ({ likes: d.likes + 1 }));
+    haptic();
+  }
   if (next === 'dislike') {
     bumpStats((d) => ({ dislikes: d.dislikes + 1 }));
     toast('Capito: ne vedrai meno di simili');
@@ -133,3 +136,45 @@ export async function share(item: Item) {
     // condivisione annullata
   }
 }
+
+/* ── Social: seguire account e argomenti, note ──────────────────────────── */
+
+/** key: "s:<fonte>" per un account, "t:<argomento>" per un hashtag. */
+export const isFollowing = (key: string) => !!getState().follows[key];
+
+export function toggleFollow(key: string, label: string) {
+  const was = isFollowing(key);
+  setState((s) => {
+    const follows = { ...s.follows };
+    if (was) delete follows[key];
+    else follows[key] = today();
+    return { follows };
+  });
+  // Seguire è anche un segnale forte per i gusti.
+  adjustWeight(key, was ? -1.5 : 1.5);
+  toast(was ? `Non segui più ${label}` : `Segui ${label}: lo trovi anche in Seguiti`);
+}
+
+export function addNote(item: Item, text: string) {
+  const t = text.trim();
+  if (!t) return;
+  setState((s) => ({ notes: { ...s.notes, [item.id]: [...(s.notes[item.id] ?? []), { text: t, at: new Date().toISOString() }] } }));
+  // Una nota vale come un salvataggio: la ritrovi nel profilo.
+  if (!getState().saved[item.id]) {
+    signal(item, 'save');
+    setState((s) => ({ saved: { ...s.saved, [item.id]: { item, savedAt: new Date().toISOString(), review: { next: addDays(today(), 7), step: 0 } } } }));
+  }
+}
+
+export function removeNote(itemId: string, at: string) {
+  setState((s) => {
+    const list = (s.notes[itemId] ?? []).filter((n) => n.at !== at);
+    const notes = { ...s.notes };
+    if (list.length) notes[itemId] = list;
+    else delete notes[itemId];
+    return { notes };
+  });
+}
+
+/** Piccola vibrazione di conferma, dove il telefono la supporta. */
+export const haptic = () => navigator.vibrate?.(8);

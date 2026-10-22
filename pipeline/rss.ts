@@ -10,6 +10,8 @@ export interface FeedEntry {
   publishedAt?: Date;
   author?: string;
   youtubeId?: string;
+  /** Visualizzazioni (feed YouTube). */
+  views?: number;
 }
 
 const parser = new XMLParser({
@@ -113,6 +115,7 @@ export function parseFeed(xml: string): FeedEntry[] {
       publishedAt: date(it.published) ?? date(it.updated),
       author: clean(it.author?.name) || undefined,
       youtubeId: str(it['yt:videoId']) || undefined,
+      views: Number(it['media:group']?.['media:community']?.['media:statistics']?.['@_views']) || undefined,
     });
   }
   return out;

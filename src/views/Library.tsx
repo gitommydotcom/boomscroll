@@ -6,7 +6,7 @@ import { fetchEdition, fetchIndex } from '../lib/data';
 import { longDate, shortDate } from '../lib/dates';
 import { composeEdition } from '../lib/ranking';
 import { getState, useAppState } from '../lib/store';
-import { IconBack, IconSearch } from '../ui/icons';
+import { Icon, IconBack, IconSearch } from '../ui/icons';
 
 function Saved() {
   const s = useAppState();
@@ -46,7 +46,7 @@ function Saved() {
           </button>
           {CATEGORIES.filter((c) => cats.includes(c.id)).map((c) => (
             <button key={c.id} class="chip" aria-pressed={cat === c.id} onClick={() => setCat(cat === c.id ? null : c.id)}>
-              {c.emoji} {c.label}
+              <Icon name={c.icon} size={15} /> {c.label}
             </button>
           ))}
         </div>
@@ -61,7 +61,7 @@ function Saved() {
   );
 }
 
-function Archive() {
+export function Archive() {
   const [index, setIndex] = useState<EditionIndex | null | undefined>(undefined);
   useEffect(() => {
     fetchIndex().then(setIndex);
@@ -78,12 +78,13 @@ function Archive() {
             </h3>
             <span class="muted small">{e.count} contenuti</span>
           </div>
-          <div class="muted small">
+          <div class="row muted" style={{ gap: '8px' }}>
             {Object.entries(e.categories)
               .sort((a, b) => b[1] - a[1])
-              .slice(0, 6)
-              .map(([c]) => categoryMeta(c as CategoryId).emoji)
-              .join(' ')}
+              .slice(0, 7)
+              .map(([c]) => (
+                <Icon key={c} name={categoryMeta(c as CategoryId).icon} size={16} aria-label={categoryMeta(c as CategoryId).label} />
+              ))}
           </div>
           {e.highlights.length > 0 && (
             <ul>
@@ -130,7 +131,7 @@ function EditionView({ date }: { date: string }) {
             </button>
             {CATEGORIES.filter((c) => cats.includes(c.id)).map((c) => (
               <button key={c.id} class="chip" aria-pressed={cat === c.id} onClick={() => setCat(cat === c.id ? null : c.id)}>
-                {c.emoji} {c.label}
+                <Icon name={c.icon} size={15} /> {c.label}
               </button>
             ))}
           </div>
@@ -154,6 +155,9 @@ export function Library({ tab, date }: { tab?: string; date?: string }) {
           <EditionView date={date} />
         ) : (
           <>
+            <a href="#/tu" class="row muted back">
+              <IconBack size={18} /> Profilo
+            </a>
             <h1 class="page-title">Libreria</h1>
             <p class="page-sub">Quello che hai salvato e tutte le edizioni passate.</p>
             <div class="tabs" role="tablist">

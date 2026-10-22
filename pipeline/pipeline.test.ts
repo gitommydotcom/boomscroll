@@ -28,6 +28,14 @@ const raw = (over: Partial<RawItem> = {}): RawItem => ({
 });
 
 describe('parseFeed', () => {
+  it('legge le visualizzazioni dei video YouTube', () => {
+    const xml = `<feed xmlns="http://www.w3.org/2005/Atom" xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/">
+      <entry><yt:videoId>v1</yt:videoId><title>Video</title><link rel="alternate" href="https://www.youtube.com/watch?v=v1"/>
+      <media:group><media:community><media:starRating count="10" average="5.00"/><media:statistics views="12345"/></media:community></media:group></entry>
+    </feed>`;
+    expect(parseFeed(xml)[0].views).toBe(12345);
+  });
+
   it('legge RSS 2.0 con CDATA, entità e immagini', () => {
     const xml = `<?xml version="1.0"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/">
       <channel><title>T</title>

@@ -21,7 +21,7 @@ export interface Place {
   id: string;
   name: string;
   kind: string;
-  emoji: string;
+  icon: string;
   label: string;
   outdoor: boolean;
   lat: number;
@@ -83,29 +83,29 @@ export async function reverseName(lat: number, lon: number): Promise<string> {
 }
 
 const WMO: Record<number, [string, string]> = {
-  0: ['Sereno', '☀️'],
-  1: ['Quasi sereno', '🌤️'],
-  2: ['Poco nuvoloso', '⛅'],
-  3: ['Nuvoloso', '☁️'],
-  45: ['Nebbia', '🌫️'],
-  48: ['Nebbia', '🌫️'],
-  51: ['Pioviggine', '🌦️'],
-  53: ['Pioviggine', '🌦️'],
-  55: ['Pioviggine', '🌦️'],
-  61: ['Pioggia', '🌧️'],
-  63: ['Pioggia', '🌧️'],
-  65: ['Pioggia forte', '🌧️'],
-  71: ['Neve', '🌨️'],
-  73: ['Neve', '🌨️'],
-  75: ['Neve forte', '❄️'],
-  80: ['Rovesci', '🌦️'],
-  81: ['Rovesci', '🌧️'],
-  82: ['Rovesci forti', '⛈️'],
-  95: ['Temporale', '⛈️'],
-  96: ['Temporale', '⛈️'],
-  99: ['Temporale', '⛈️'],
+  0: ['Sereno', 'sun'],
+  1: ['Quasi sereno', 'cloud-sun'],
+  2: ['Poco nuvoloso', 'cloud-sun'],
+  3: ['Nuvoloso', 'cloud'],
+  45: ['Nebbia', 'fog'],
+  48: ['Nebbia', 'fog'],
+  51: ['Pioviggine', 'rain'],
+  53: ['Pioviggine', 'rain'],
+  55: ['Pioviggine', 'rain'],
+  61: ['Pioggia', 'rain'],
+  63: ['Pioggia', 'rain'],
+  65: ['Pioggia forte', 'rain'],
+  71: ['Neve', 'snow'],
+  73: ['Neve', 'snow'],
+  75: ['Neve forte', 'snow'],
+  80: ['Rovesci', 'rain'],
+  81: ['Rovesci', 'rain'],
+  82: ['Rovesci forti', 'storm'],
+  95: ['Temporale', 'storm'],
+  96: ['Temporale', 'storm'],
+  99: ['Temporale', 'storm'],
 };
-export const weatherLabel = (code: number) => WMO[code] ?? ['Variabile', '🌥️'];
+export const weatherLabel = (code: number) => WMO[code] ?? ['Variabile', 'cloud'];
 
 export async function weather(lat: number, lon: number): Promise<Weather> {
   const url =
@@ -125,17 +125,17 @@ export async function weather(lat: number, lon: number): Promise<Weather> {
 /** Bel tempo per stare fuori? */
 export const goodOutside = (w: Weather) => w.code <= 3 && w.rainProb < 40 && w.max >= 6 && w.max <= 32;
 
-const KINDS: { match: (t: Record<string, string>) => boolean; kind: string; emoji: string; label: string; outdoor: boolean }[] = [
-  { match: (t) => t.tourism === 'museum', kind: 'museum', emoji: '🏛️', label: 'Museo', outdoor: false },
-  { match: (t) => t.tourism === 'gallery' || t.amenity === 'arts_centre', kind: 'gallery', emoji: '🖼️', label: 'Galleria e arte', outdoor: false },
-  { match: (t) => t.amenity === 'library', kind: 'library', emoji: '📚', label: 'Biblioteca', outdoor: false },
-  { match: (t) => t.amenity === 'theatre', kind: 'theatre', emoji: '🎭', label: 'Teatro', outdoor: false },
-  { match: (t) => t.amenity === 'cinema', kind: 'cinema', emoji: '🎬', label: 'Cinema', outdoor: false },
-  { match: (t) => t.tourism === 'viewpoint', kind: 'viewpoint', emoji: '🌄', label: 'Punto panoramico', outdoor: true },
-  { match: (t) => t.tourism === 'alpine_hut' || t.tourism === 'wilderness_hut', kind: 'hut', emoji: '🏔️', label: 'Rifugio', outdoor: true },
-  { match: (t) => ['park', 'garden', 'nature_reserve'].includes(t.leisure), kind: 'park', emoji: '🌳', label: 'Parco e verde', outdoor: true },
-  { match: (t) => !!t.historic, kind: 'historic', emoji: '🏰', label: 'Luogo storico', outdoor: true },
-  { match: (t) => t.tourism === 'attraction' || t.tourism === 'artwork', kind: 'attraction', emoji: '✨', label: 'Da vedere', outdoor: true },
+const KINDS: { match: (t: Record<string, string>) => boolean; kind: string; icon: string; label: string; outdoor: boolean }[] = [
+  { match: (t) => t.tourism === 'museum', kind: 'museum', icon: 'columns', label: 'Museo', outdoor: false },
+  { match: (t) => t.tourism === 'gallery' || t.amenity === 'arts_centre', kind: 'gallery', icon: 'frame', label: 'Galleria e arte', outdoor: false },
+  { match: (t) => t.amenity === 'library', kind: 'library', icon: 'book', label: 'Biblioteca', outdoor: false },
+  { match: (t) => t.amenity === 'theatre', kind: 'theatre', icon: 'mask', label: 'Teatro', outdoor: false },
+  { match: (t) => t.amenity === 'cinema', kind: 'cinema', icon: 'film', label: 'Cinema', outdoor: false },
+  { match: (t) => t.tourism === 'viewpoint', kind: 'viewpoint', icon: 'mountain', label: 'Punto panoramico', outdoor: true },
+  { match: (t) => t.tourism === 'alpine_hut' || t.tourism === 'wilderness_hut', kind: 'hut', icon: 'house', label: 'Rifugio', outdoor: true },
+  { match: (t) => ['park', 'garden', 'nature_reserve'].includes(t.leisure), kind: 'park', icon: 'tree', label: 'Parco e verde', outdoor: true },
+  { match: (t) => !!t.historic, kind: 'historic', icon: 'tower', label: 'Luogo storico', outdoor: true },
+  { match: (t) => t.tourism === 'attraction' || t.tourism === 'artwork', kind: 'attraction', icon: 'star', label: 'Da vedere', outdoor: true },
 ];
 
 export async function places(lat: number, lon: number): Promise<Place[]> {
@@ -169,7 +169,7 @@ export async function places(lat: number, lon: number): Promise<Place[]> {
       id: `${el.type}/${el.id}`,
       name: t.name,
       kind: k.kind,
-      emoji: k.emoji,
+      icon: k.icon,
       label: k.label,
       outdoor: k.outdoor,
       lat: plat,

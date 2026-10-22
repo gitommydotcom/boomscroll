@@ -8,8 +8,14 @@ export interface OpenItem {
 
 let detail: OpenItem | null = null;
 let menu: OpenItem | null = null;
+let notes: Item | null = null;
+/** Storie aperte: elenco dei gruppi e gruppo di partenza. */
+let stories: { groups: StoryGroup[]; start: number } | null = null;
+let activity = false;
 /** Id del contenuto il cui video è in riproduzione nel feed (uno solo alla volta). */
 let playing: string | null = null;
+/** Il video in riproduzione è partito da solo, senza audio. */
+let muted = false;
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 
@@ -30,8 +36,38 @@ export const closeMenu = () => {
   emit();
 };
 
-export const playVideo = (id: string) => {
+export const openNotes = (item: Item) => {
+  notes = item;
+  emit();
+};
+export const closeNotes = () => {
+  notes = null;
+  emit();
+};
+export const openStories = (groups: StoryGroup[], start: number) => {
+  stories = { groups, start };
+  stopVideo();
+  emit();
+};
+export const closeStories = () => {
+  stories = null;
+  emit();
+};
+export const setActivityOpen = (open: boolean) => {
+  activity = open;
+  emit();
+};
+
+export interface StoryGroup {
+  key: string;
+  label: string;
+  icon: string;
+  items: Item[];
+}
+
+export const playVideo = (id: string, silent = false) => {
   playing = id;
+  muted = silent;
   emit();
 };
 export const stopVideo = () => {
@@ -49,5 +85,5 @@ export function useUi() {
       listeners.delete(force);
     };
   }, []);
-  return { detail, menu, playing };
+  return { detail, menu, playing, muted, notes, stories, activity };
 }

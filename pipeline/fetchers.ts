@@ -1,4 +1,5 @@
 import { Chess } from 'chess.js';
+import { XMLParser } from 'fast-xml-parser';
 import type { Item, ItemKind } from '../shared/types';
 import { parseFeed, type FeedEntry } from './rss';
 import type { SourceDef } from './sources';
@@ -79,6 +80,7 @@ async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
         lang: src.lang,
         extra: {
           ...(e.youtubeId ? { youtubeId: e.youtubeId } : {}),
+          ...(e.views ? { stats: { views: e.views } } : {}),
           ...(kind === 'article' && words > 400 ? { readingMinutes: readingMinutes(words) } : {}),
         },
       };
@@ -98,6 +100,7 @@ async function fetchHN(src: SourceDef): Promise<RawItem[]> {
       publishedAt: new Date(h.created_at),
       kind: 'article' as const,
       lang: 'en',
+      extra: { stats: { points: h.points, comments: h.num_comments ?? undefined } },
     }));
 }
 
@@ -163,6 +166,13 @@ async function fetchApod(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> 
   }
 }
 
+/** Unisce i metadati di un'opera in frasi, saltando quelli mancanti. */
+export const sentences = (...parts: (string | undefined | null)[]) =>
+  parts
+    .map((p) => (p ?? '').trim().replace(/\.$/, ''))
+    .filter(Boolean)
+    .join('. ') + '.';
+
 async function fetchCleveland(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
   const base = 'https://openaccess-api.clevelandart.org/api/artworks/?cc0=1&has_image=1&type=Painting';
   const head = await getJson<{ info: { total: number } }>(`${base}&limit=1`);
@@ -182,7 +192,7 @@ async function fetchCleveland(src: SourceDef, ctx: FetchContext): Promise<RawIte
         source: src,
         url,
         title: a.title,
-        text: `${a.title}. ${artist ?? ''}. ${a.creation_date ?? ''}. ${a.technique ?? ''}. ${a.culture?.[0] ?? ''}. ${desc}`,
+        text: sentences(a.title, artist, a.creation_date, a.technique, a.culture?.[0], desc),
         image,
         imageAlt: a.title,
         kind: 'artwork',
@@ -228,7 +238,7 @@ async function fetchAic(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
       source: src,
       url: `https://www.artic.edu/artworks/${a.id}`,
       title: a.title,
-      text: `${a.title}. ${a.artist_display ?? ''}. ${a.date_display ?? ''}. ${a.medium_display ?? ''}. ${desc}`,
+      text: sentences(a.title, a.artist_display, a.date_display, a.medium_display, desc),
       image: `${iiif}/${a.image_id}/full/843,/0/default.jpg`,
       imageAlt: a.thumbnail?.alt_text ?? a.title,
       kind: 'artwork',
@@ -338,8 +348,12 @@ export function puzzlePosition(pgn: string, initialPly: number, firstMove: strin
   return null;
 }
 
-async function fetchLichess(src: SourceDef): Promise<RawItem[]> {
-  const d = await getJson<any>('https://lichess.org/api/puzzle/daily');
+async function fetchLichess(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
+  let d = await getJson<any>('https://lichess.org/api/puzzle/daily');
+  // Il puzzle del giorno è già uscito in un'edizione precedente: ne prendiamo un altro.
+  if (ctx.seen.has(itemId(`https://lichess.org/training/${d.puzzle?.id}`))) {
+    d = await getJson<any>('https://lichess.org/api/puzzle/next', { Accept: 'application/json' });
+  }
   const solution: string[] = d.puzzle?.solution ?? [];
   if (!solution.length) return [];
   const fen = puzzlePosition(d.game?.pgn ?? '', d.puzzle.initialPly ?? 0, solution[0]);
@@ -350,7 +364,7 @@ async function fetchLichess(src: SourceDef): Promise<RawItem[]> {
     {
       source: src,
       url: `https://lichess.org/training/${d.puzzle.id}`,
-      title: `Puzzle di scacchi del giorno · ${d.puzzle.rating}`,
+      title: `Puzzle di scacchi · ${d.puzzle.rating}`,
       text: `Muove ${side}. Trova la mossa migliore: ${userMoves === 1 ? 'basta una mossa' : `servono ${userMoves} mosse`}. Puoi risolverlo direttamente qui.`,
       kind: 'chess',
       lang: 'it',
@@ -378,6 +392,83 @@ async function fetchPoetryDB(src: SourceDef, ctx: FetchContext): Promise<RawItem
       author: poem.author,
       kind: 'poem',
       lang: 'en',
+    },
+  ];
+}
+
+/** Cerca in profondità il primo oggetto con il campo indicato (XML dalla forma incerta). */
+function findWith(node: any, key: string): any {
+  if (!node || typeof node !== 'object') return undefined;
+  if (Array.isArray(node)) {
+    for (const n of node) {
+      const hit = findWith(n, key);
+      if (hit) return hit;
+    }
+    return undefined;
+  }
+  if (key in node) return node;
+  for (const v of Object.values(node)) {
+    const hit = findWith(v, key);
+    if (hit) return hit;
+  }
+  return undefined;
+}
+
+/** Parola del giorno in altre lingue (Transparent Language): parola, traduzione inglese ed esempio. */
+async function fetchTransparent(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
+  const xml = await getText(`https://wotd.transparent.com/rss/${src.url}-widget.xml`);
+  const w = findWith(new XMLParser({ parseTagValue: false, processEntities: true }).parse(xml), 'word');
+  const text = (x: unknown) => htmlToText(String(x ?? '')).trim();
+  const word = text(w?.word);
+  if (!word) throw new Error('parola non trovata nel feed');
+  const parts = [
+    `${word}${w.wordtype ? ` (${text(w.wordtype)})` : ''}`,
+    w.translation && `In inglese: ${text(w.translation)}.`,
+    w.fnphrase && `Esempio: ${text(w.fnphrase)}`,
+    w.enphrase && `Traduzione inglese dell'esempio: ${text(w.enphrase)}`,
+  ];
+  return [
+    {
+      source: src,
+      url: `https://www.transparent.com/word-of-the-day/today/${src.url}.html?d=${ctx.date}`,
+      title: word,
+      text: parts.filter(Boolean).join('\n'),
+      kind: 'word',
+      lang: src.lang,
+      publishedAt: ctx.now,
+    },
+  ];
+}
+
+/** Un'opera in pubblico dominio dalla Galleria Nazionale di Danimarca (SMK Open). */
+async function fetchSmk(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
+  const base = 'https://api.smk.dk/api/v1/art/search/?keys=*&filters=%5Bhas_image:true%5D,%5Bpublic_domain:true%5D&lang=en';
+  const head = await getJson<any>(`${base}&offset=0&rows=1`);
+  const total = Math.min(head.found ?? 0, 9_980);
+  const data = total > 40 ? await getJson<any>(`${base}&offset=${Math.floor(ctx.rng() * (total - 40))}&rows=40`) : head;
+  const urlOf = (a: any) => `https://open.smk.dk/artwork/image/${encodeURIComponent(a.object_number)}`;
+  const candidates = (data.items ?? []).filter((a: any) => a.object_number && (a.image_thumbnail || a.image_iiif_id) && a.titles?.length && !ctx.seen.has(itemId(urlOf(a))));
+  if (!candidates.length) return [];
+  // Preferiamo i dipinti e le opere con un titolo vero.
+  const best = candidates.filter((a: any) => /paint|maleri/i.test(JSON.stringify(a.object_names ?? '')));
+  const pool = best.length ? best : candidates;
+  const a = pool[Math.floor(ctx.rng() * pool.length)];
+  const title = (a.titles.find((t: any) => t.language === 'en') ?? a.titles[0]).title as string;
+  const artist = a.production?.[0]?.creator as string | undefined;
+  const date = a.production_date?.[0]?.period as string | undefined;
+  const medium = (a.techniques ?? []).join(', ') || undefined;
+  const image = a.image_iiif_id ? `${a.image_iiif_id}/full/!1200,1200/0/default.jpg` : a.image_thumbnail;
+  return [
+    {
+      source: src,
+      url: urlOf(a),
+      title,
+      text: sentences(title, artist, date, medium, htmlToText((a.content_description ?? []).join(' '))),
+      image,
+      imageAlt: title,
+      kind: 'artwork',
+      lang: 'en',
+      extra: { art: { artist, date, medium, museum: 'SMK, Copenaghen' } },
     },
   ];
 }
@@ -411,10 +502,16 @@ export async function fetchSource(src: SourceDef, ctx: FetchContext): Promise<Ra
       items = await fetchXkcd(src);
       break;
     case 'lichess':
-      items = await fetchLichess(src);
+      items = await fetchLichess(src, ctx);
       break;
     case 'poetrydb':
       items = await fetchPoetryDB(src, ctx);
+      break;
+    case 'transparent':
+      items = await fetchTransparent(src, ctx);
+      break;
+    case 'smk':
+      items = await fetchSmk(src, ctx);
       break;
   }
   return items

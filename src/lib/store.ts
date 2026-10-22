@@ -25,6 +25,17 @@ export interface Settings {
   eveningFrom: string;
   theme: 'auto' | 'light' | 'dark';
   city: City;
+  /** Nome mostrato nel tuo profilo. */
+  name: string;
+  /** Video che partono da soli, senza audio, nel feed a schermo intero. */
+  autoplay: boolean;
+  /** Scheda del feed: tutto ("Per te") o solo gli account che segui. */
+  feedTab: 'perte' | 'seguiti';
+}
+
+export interface Note {
+  text: string;
+  at: string;
 }
 
 export interface SavedEntry {
@@ -62,6 +73,7 @@ export interface Flashcard {
 export interface Habit {
   id: string;
   name: string;
+  /** Nome dell'icona (le abitudini più vecchie possono avere un'emoji). */
   emoji: string;
   days: string[];
   created: string;
@@ -101,6 +113,16 @@ export interface State {
   /** Esercizi del feed completati o saltati, per data. */
   exercisesDone: Record<string, string[]>;
   recapSeen: string;
+  /** Account e argomenti seguiti: chiave come i pesi (s:fonte, t:argomento) → data. */
+  follows: Record<string, string>;
+  /** Note personali sui contenuti (i "commenti", visibili solo a te). */
+  notes: Record<string, Note[]>;
+  /** Storie già viste: chiave della storia → id dell'edizione. */
+  storiesSeen: Record<string, string>;
+  /** Avvisi dell'attività già visti. */
+  activitySeen: string[];
+  /** Primo giorno di uso dell'app. */
+  since: string;
 }
 
 export const DEFAULT_CITY: City = { name: "L'Aquila", lat: 42.3498, lon: 13.3995, id: 'laquila' };
@@ -116,6 +138,9 @@ export const DEFAULT_STATE: State = {
     eveningFrom: '21:30',
     theme: 'auto',
     city: DEFAULT_CITY,
+    name: '',
+    autoplay: true,
+    feedTab: 'perte',
   },
   weights: {},
   weightsDay: '',
@@ -131,6 +156,11 @@ export const DEFAULT_STATE: State = {
   journal: [],
   exercisesDone: {},
   recapSeen: '',
+  follows: {},
+  notes: {},
+  storiesSeen: {},
+  activitySeen: [],
+  since: '',
 };
 
 const idb = createStore('boomscroll', 'kv');
@@ -188,7 +218,8 @@ function prune(s: State): State {
       .sort(([a], [b]) => b.localeCompare(a))
       .slice(0, 10),
   );
-  return { ...s, seen, orders };
+  const storiesSeen = Object.fromEntries(Object.entries(s.storiesSeen).filter(([, d]) => d >= cutoff));
+  return { ...s, seen, orders, storiesSeen, activitySeen: s.activitySeen.slice(-300), since: s.since || today() };
 }
 
 export async function loadState(): Promise<void> {

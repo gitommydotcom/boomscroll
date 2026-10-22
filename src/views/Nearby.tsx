@@ -20,7 +20,7 @@ import {
   type WikiPlace,
 } from '../lib/geo';
 import { updateSettings, useAppState, type City } from '../lib/store';
-import { IconExternal, IconLocate, IconSearch } from '../ui/icons';
+import { Icon, IconExternal, IconLocate, IconSearch } from '../ui/icons';
 import { Sheet } from '../ui/Sheet';
 
 function CityPicker({ onClose, cities }: { onClose: () => void; cities: EditionIndex['cities'] }) {
@@ -104,7 +104,7 @@ function PlaceRow({ p }: { p: Place }) {
   return (
     <a class="place" href={p.website ?? mapsLink(p)} target="_blank" rel="noopener">
       <span class="ico" aria-hidden="true">
-        {p.emoji}
+        <Icon name={p.icon} size={20} />
       </span>
       <span style={{ flex: 1, minWidth: 0 }}>
         <h3>{p.name}</h3>
@@ -164,7 +164,7 @@ export function Nearby() {
     return list[hash(today() + city.name) % list.length];
   }, [pl, outside, city.name]);
 
-  const [label, emoji] = w ? weatherLabel(w.code) : ['', ''];
+  const [label, wicon] = w ? weatherLabel(w.code) : ['', ''];
   const groups = PLACE_GROUPS.map((g) => ({ ...g, list: (pl ?? []).filter((p) => g.kinds.includes(p.kind)) }))
     .filter((g) => g.list.length)
     // Con il bel tempo prima le attività all'aperto, altrimenti quelle al chiuso.
@@ -183,9 +183,7 @@ export function Nearby() {
 
         {w && (
           <div class="panel weather">
-            <span style={{ fontSize: '2.6rem' }} aria-hidden="true">
-              {emoji}
-            </span>
+            <Icon name={wicon} size={44} stroke-width="1.4" />
             <div>
               <div class="big">{w.temp}°</div>
               <div class="muted small">
@@ -251,7 +249,7 @@ export function Nearby() {
             <h2 class="section-title">Lo sapevi? Qui intorno</h2>
             {wiki.slice(0, 6).map((p) => (
               <a key={p.title} class="place" href={p.url} target="_blank" rel="noopener">
-                {p.thumb ? <img src={p.thumb} alt="" loading="lazy" /> : <span class="ico">📖</span>}
+                {p.thumb ? <img src={p.thumb} alt="" loading="lazy" /> : <span class="ico"><Icon name="book" size={20} /></span>}
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <h3>{p.title}</h3>
                   <p>{p.extract}</p>

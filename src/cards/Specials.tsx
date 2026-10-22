@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { categoryMeta } from '../../shared/categories';
 import type { Item } from '../../shared/types';
-import { exerciseDone, reviewAnswer } from '../lib/actions';
+import { account } from '../lib/accounts';
+import { exerciseDone, reviewAnswer, toggleFollow } from '../lib/actions';
 import { addDays, isoWeek, shortDate, today } from '../lib/dates';
 import { GRATITUDE_PROMPT, type FeedExercise } from '../lib/exercises';
-import { bumpStats, emptyDay, setState, useAppState, type DayStats, type SavedEntry } from '../lib/store';
+import { bumpStats, emptyDay, setState, updateSettings, useAppState, type DayStats, type SavedEntry } from '../lib/store';
+import { Avatar } from '../ui/Avatar';
 import { openDetail } from '../lib/ui';
-import { IconCheck } from '../ui/icons';
+import { Icon, IconCheck } from '../ui/icons';
 
 /* ── Respiro ────────────────────────────────────────────────────────────── */
 
@@ -70,10 +72,12 @@ export function ExerciseCard({ ex }: { ex: FeedExercise }) {
 
   return (
     <section class="special">
-      <div class="kicker">🌿 {kicker}</div>
+      <div class="kicker">
+        <Icon name={ex.type === 'respiro' ? 'wind' : ex.type === 'diario' ? 'notebook' : ex.type === 'gratitudine' ? 'sun' : 'bolt'} size={15} /> {kicker}
+      </div>
       {done ? (
         <>
-          <h2>Fatto ✓</h2>
+          <h2>Fatto.</h2>
           <p>Bel lavoro. Lo trovi anche nella sezione Pratica.</p>
         </>
       ) : ex.type === 'respiro' ? (
@@ -148,7 +152,9 @@ const PAUSE_LINES = [
 export function PauseCard({ n, count }: { n: number; count: number }) {
   return (
     <section class="special">
-      <div class="kicker">⏸ Pausa</div>
+      <div class="kicker">
+        <Icon name="pause" size={15} /> Pausa
+      </div>
       <h2>Hai visto altri {count} contenuti.</h2>
       <p>{PAUSE_LINES[n % PAUSE_LINES.length]}</p>
       <p class="muted small">Scorri per continuare, oppure chiudi l’app: domani c’è un’edizione nuova.</p>
@@ -189,11 +195,13 @@ export function QuizCard({ items, date }: { items: Item[]; date: string }) {
 
   return (
     <section class="special">
-      <div class="kicker">🧩 Quiz del giorno</div>
+      <div class="kicker">
+        <Icon name="question" size={15} /> Quiz del giorno
+      </div>
       <h2>Ti ricordi cosa hai letto?</h2>
       <p class="muted small">Richiamare alla memoria è il modo migliore per ricordare.</p>
       {done && !answered ? (
-        <p>Quiz di oggi già fatto ✓</p>
+        <p>Quiz di oggi già fatto.</p>
       ) : (
         qs.map((item) => {
           const a = answers[item.id];
@@ -216,7 +224,7 @@ export function QuizCard({ items, date }: { items: Item[]; date: string }) {
       )}
       {answered === qs.length && (
         <p style={{ marginTop: '16px', fontWeight: 600 }}>
-          {correct === qs.length ? `Perfetto: ${correct} su ${qs.length}! 🎉` : `${correct} su ${qs.length}. Domani un altro giro.`}
+          {correct === qs.length ? `Perfetto: ${correct} su ${qs.length}!` : `${correct} su ${qs.length}. Domani un altro giro.`}
         </p>
       )}
     </section>
@@ -235,7 +243,9 @@ export function RecallCard({ entry }: { entry: SavedEntry }) {
   };
   return (
     <section class="special">
-      <div class="kicker">🔁 Ti ricordi questo?</div>
+      <div class="kicker">
+        <Icon name="cycle" size={15} /> Ti ricordi questo?
+      </div>
       <p class="muted small" style={{ margin: '4px 0 0' }}>
         Salvato il {shortDate(entry.savedAt.slice(0, 10))} · {categoryMeta(item.category).label}
       </p>
@@ -320,7 +330,7 @@ export function WeekSummary({ stats }: { stats: DayStats }) {
           {top.map(([c, n], i) => (
             <span key={c}>
               {i ? ', ' : ''}
-              {categoryMeta(c as Item['category']).emoji} {categoryMeta(c as Item['category']).label} ({n})
+              {categoryMeta(c as Item['category']).label} ({n})
             </span>
           ))}
           .
@@ -335,7 +345,9 @@ export function WeekCard() {
   const week = useMemo(() => sumDays(s.stats, addDays(today(), -1), 7), []);
   return (
     <section class="special">
-      <div class="kicker">📅 La tua settimana</div>
+      <div class="kicker">
+        <Icon name="calendar" size={15} /> La tua settimana
+      </div>
       <h2>Sette giorni di Boomscroll</h2>
       <WeekSummary stats={week} />
       <button class="btn ghost small" onClick={() => setState(() => ({ recapSeen: isoWeek(today()) }))}>
@@ -353,7 +365,9 @@ export function EndCard({ date, name, next, onMore, isToday }: { date: string; n
   }, [date]);
   return (
     <section class="special">
-      <div class="kicker">🌙 Fine dell’edizione</div>
+      <div class="kicker">
+        <Icon name="moon" size={15} /> Fine dell’edizione
+      </div>
       <h2>{isToday ? `Hai finito l’${name.charAt(0).toLowerCase()}${name.slice(1)}.` : 'Hai finito questa edizione.'}</h2>
       <div class="stat-grid">
         <div class="stat">
@@ -380,9 +394,68 @@ export function EndCard({ date, name, next, onMore, isToday }: { date: string; n
 export function FinishedCard() {
   return (
     <section class="special">
-      <div class="kicker">🌿 Fine</div>
+      <div class="kicker">
+        <Icon name="leaf" size={15} /> Fine
+      </div>
       <h2>Hai visto tutto. Davvero.</h2>
       <p>Hai scorso anche gli approfondimenti degli ultimi giorni. Il feed finisce qui: a domani!</p>
+    </section>
+  );
+}
+
+/* ── Seguiti ────────────────────────────────────────────────────────────── */
+
+/** Fine della scheda Seguiti: come "Sei in pari" sui social, ma qui è davvero la fine. */
+export function CaughtUpCard({ count }: { count: number }) {
+  return (
+    <section class="special">
+      <div class="kicker">
+        <IconCheck size={15} /> Sei in pari
+      </div>
+      <h2>{count ? 'Hai visto tutto dagli account che segui.' : 'Gli account che segui non hanno pubblicato negli ultimi giorni.'}</h2>
+      <p>Torna su “Per te” per l’edizione, oppure trova altri account in Esplora.</p>
+      <div class="row">
+        <button class="btn" onClick={() => updateSettings({ feedTab: 'perte' })}>
+          Per te
+        </button>
+        <a class="btn ghost" href="#/esplora">
+          Esplora
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/** Seguiti ancora vuoto: qualche account dell'edizione da seguire subito. */
+export function NoFollowsCard({ items }: { items: Item[] }) {
+  const s = useAppState();
+  const ids = [...new Set(items.filter((i) => i.quality >= 0.8).map((i) => i.sourceId))].slice(0, 6);
+  return (
+    <section class="special">
+      <div class="kicker">
+        <Icon name="star" size={15} /> Seguiti
+      </div>
+      <h2>Segui gli account che ti piacciono</h2>
+      <p>Qui trovi solo i loro contenuti, dal più recente. Tocca il + sulla foto profilo, oppure inizia da questi:</p>
+      <div class="stack" style={{ gap: '4px' }}>
+        {ids.map((id) => {
+          const item = items.find((i) => i.sourceId === id)!;
+          const a = account(id, item);
+          const on = !!s.follows[`s:${id}`];
+          return (
+            <div class="acc-row" key={id}>
+              <Avatar id={id} item={item} size={40} />
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <b>{a.name}</b>
+                <span class="muted small">{a.about}</span>
+              </span>
+              <button class={`btn small${on ? ' ghost' : ''}`} onClick={() => toggleFollow(`s:${id}`, a.name)}>
+                {on ? 'Segui già' : 'Segui'}
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }

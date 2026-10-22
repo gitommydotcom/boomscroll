@@ -284,8 +284,10 @@ export async function summarize(items: RawItem[]): Promise<AiRun> {
     return run;
   }
   const deadline = Date.now() + Number(process.env.BOOMSCROLL_AI_MINUTES ?? 45) * 60_000;
-  // Prima le lingue difficili (serve la traduzione), poi il resto in ordine di qualità.
-  const todo = [...items].sort((a, b) => Number(isHardLang(b.lang)) - Number(isHardLang(a.lang)) || b.source.quality - a.source.quality);
+  // Prima le lingue difficili (serve la traduzione), poi le altre lingue straniere, per ultimo l'italiano
+  // (senza IA resta comunque leggibile con l'estratto della fonte). A parità, conta la qualità.
+  const need = (i: RawItem) => (isHardLang(i.lang) ? 2 : i.lang.startsWith('it') ? 0 : 1);
+  const todo = [...items].sort((a, b) => need(b) - need(a) || b.source.quality - a.source.quality);
   const used = new Set<string>();
 
   let i = 0;

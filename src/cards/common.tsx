@@ -2,6 +2,7 @@ import { categoryMeta } from '../../shared/categories';
 import { isHardLang, type Item } from '../../shared/types';
 import { ago } from '../lib/dates';
 import type { Settings } from '../lib/store';
+import { Icon } from '../ui/icons';
 
 const LANG_NAMES: Record<string, string> = {
   en: 'inglese',
@@ -36,6 +37,7 @@ export function CatTag({ item, light }: { item: Item; light?: boolean }) {
   const c = categoryMeta(item.category);
   return (
     <span class="cat-tag" style={light ? undefined : { color: 'var(--ink-3)' }}>
+      <Icon name={c.icon} size={13} />
       {c.label}
     </span>
   );
@@ -55,14 +57,14 @@ export function initials(name: string): string {
   return (words[0]?.[0] ?? '?').toUpperCase() + (words[1]?.[0] ?? '').toUpperCase();
 }
 
-export const KIND_EMOJI: Partial<Record<Item['kind'], string>> = {
-  video: '▶️',
-  paper: '📄',
-  poem: '🪶',
-  word: '🔤',
-  artwork: '🖼️',
-  image: '📷',
-  comic: '💬',
-  chess: '♞',
-  event: '📅',
+export const KIND_ICON: Partial<Record<Item['kind'], string>> = {
+  video: 'play',
+  paper: 'doc',
+  poem: 'feather',
+  word: 'type',
+  artwork: 'frame',
+  image: 'image',
+  comic: 'bubble',
+  chess: 'chess',
+  event: 'calendar',
 };
