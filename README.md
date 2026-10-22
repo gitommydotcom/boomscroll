@@ -1,6 +1,6 @@
 # Boomscroll
 
-**Un feed che finisce.** Un'app personale che sostituisce i social: ogni mattina un'edizione di contenuti di qualità (notizie, scienza, tech, arte, design, lingue, poesia, antropologia, psicologia, produttività, lezioni universitarie, curiosità, giochi), più esercizi per crescere e idee per uscire di casa.
+**Un feed che finisce.** Un'app personale che sostituisce i social: tre edizioni al giorno (mattina, pomeriggio e sera) di contenuti di qualità (notizie, scienza, tech, arte, design, lingue, poesia, antropologia, psicologia, produttività, lezioni universitarie, curiosità, giochi), più esercizi per crescere e idee per uscire di casa.
 
 - Feed a schermo intero (stile TikTok) o a lista (stile Twitter)
 - L'edizione ha una fine; dopo ci sono solo approfondimenti, con pause
@@ -11,7 +11,7 @@
 ## Come funziona
 
 ```
-GitHub Actions, ogni mattina (~05:15)          GitHub Pages
+GitHub Actions, 3 volte al giorno               GitHub Pages
 ┌─────────────────────────────────┐            ┌──────────────────────────────┐
 │ pipeline/ ~110 fonti, 39 YouTube│  commit →  │ PWA statica (Preact)          │
 │ → doppioni → riassunti con IA   │            │ ordina l'edizione sul telefono│
@@ -32,6 +32,22 @@ La pipeline usa il primo servizio disponibile:
 3. **Un modello open source sul runner di Actions** (Gemma 3 4B via Ollama): nessuna chiave, nessuna registrazione. Più lento (~40 minuti), qualità discreta.
 
 Se nessuno risponde, l'edizione esce lo stesso con gli estratti delle fonti.
+
+## Edizioni
+
+Tre al giorno, ognuna solo con contenuti nuovi rispetto alle precedenti:
+
+| Edizione | Avvio (ora italiana, legale / solare) | Pronta circa |
+|---|---|---|
+| Mattina | 05:07 / 04:07 | 06:30 |
+| Pomeriggio | 11:37 / 10:37 | 13:00 |
+| Sera | 17:37 / 16:37 | 19:00 |
+
+Con una chiave Gemini sono pronte in pochi minuti invece che in un'ora e mezza. Gli orari sono in `.github/workflows/daily.yml` (in UTC).
+
+**Aggiornare a mano:**
+- nell'app, il pulsante ↻ in alto in *Oggi* controlla se è uscita una nuova edizione (lo fa anche da solo quando riapri l'app);
+- per *crearne* una nuova: GitHub → *Actions → Edizione quotidiana → Run workflow*, oppure dall'app in *Tu → Edizioni → Crea un'edizione adesso* (serve un token GitHub personale con permesso *Actions: Read and write* solo su questo repository; resta salvato sul telefono).
 
 ## Pubblicazione
 

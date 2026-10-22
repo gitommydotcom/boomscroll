@@ -159,3 +159,11 @@ export const IconUp = (p: P) => (
     <path d="M6 15l6-6 6 6" />
   </Svg>
 );
+export const IconRefresh = (p: P) => (
+  <Svg {...p}>
+    <path d="M20 11a8 8 0 0 0-14.3-4.9L4 8" />
+    <path d="M4 3v5h5" />
+    <path d="M4 13a8 8 0 0 0 14.3 4.9L20 16" />
+    <path d="M20 21v-5h-5" />
+  </Svg>
+);

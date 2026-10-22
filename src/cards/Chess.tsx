@@ -66,7 +66,8 @@ export function ChessBoard({
   );
 }
 
-export function ChessPuzzle({ data, puzzleUrl }: { data: ChessData; puzzleUrl: string }) {
+/** Puzzle giocabile. `compact` per le card del feed (scacchiera più piccola, testi ridotti). */
+export function ChessPuzzle({ data, puzzleUrl, compact }: { data: ChessData; puzzleUrl: string; compact?: boolean }) {
   const userColor = data.fen.split(' ')[1];
   const [fen, setFen] = useState(data.fen);
   const [step, setStep] = useState(0);
@@ -149,8 +150,8 @@ export function ChessPuzzle({ data, puzzleUrl }: { data: ChessData; puzzleUrl: s
 
   const expected = data.solution[step];
   return (
-    <div>
-      <p style={{ margin: '0 0 4px' }}>
+    <div class={`chess-puzzle${compact ? ' compact' : ''}`}>
+      <p style={{ margin: '0 0 4px' }} class={compact ? 'small' : undefined}>
         Giochi con <b>{userColor === 'w' ? 'il Bianco' : 'il Nero'}</b>. Tocca un pezzo, poi la casa di arrivo.
       </p>
       <ChessBoard
@@ -170,15 +171,15 @@ export function ChessPuzzle({ data, puzzleUrl }: { data: ChessData; puzzleUrl: s
         {status !== 'solved' && status !== 'shown' && (
           <>
             <button class="btn ghost small" onClick={() => setHint(true)}>
-              Suggerimento
+              {compact ? 'Aiuto' : 'Suggerimento'}
             </button>
             <button class="btn ghost small" onClick={showSolution}>
-              Mostra la soluzione
+              {compact ? 'Soluzione' : 'Mostra la soluzione'}
             </button>
           </>
         )}
         <a class="btn ghost small" href={puzzleUrl} target="_blank" rel="noopener">
-          Apri su Lichess
+          {compact ? 'Lichess' : 'Apri su Lichess'}
         </a>
       </div>
       {data.themes.length > 0 && (status === 'solved' || status === 'shown') && (

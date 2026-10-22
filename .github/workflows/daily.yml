@@ -1,15 +1,23 @@
 name: Edizione quotidiana
 
 on:
+  # Tre edizioni al giorno. Orari in UTC: in Italia +2 ore con l'ora legale, +1 con l'ora solare.
+  # Con l'IA locale ogni edizione è pronta circa un'ora e mezza dopo l'avvio.
   schedule:
-    # 03:17 UTC → 05:17 in Italia con l'ora legale, 04:17 con l'ora solare
-    - cron: '17 3 * * *'
+    - cron: '7 3 * * *'    # mattina    (05:07 legale / 04:07 solare)
+    - cron: '37 9 * * *'   # pomeriggio (11:37 legale / 10:37 solare)
+    - cron: '37 15 * * *'  # sera       (17:37 legale / 16:37 solare)
   # Quando cambiano le fonti o la pipeline, rigenera subito l'edizione di oggi.
   push:
     branches: [main]
     paths: ['pipeline/**', 'shared/**', '.github/workflows/daily.yml']
   workflow_dispatch:
     inputs:
+      slot:
+        description: Fascia dell'edizione (vuoto = in base all'ora)
+        type: choice
+        options: ['', mattina, pomeriggio, sera]
+        default: ''
       deploy:
         description: Pubblica il sito dopo aver creato l'edizione
         type: boolean
@@ -60,14 +68,15 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
-          BOOMSCROLL_AI_MINUTES: 90
+          BOOMSCROLL_AI_MINUTES: 75
+          BOOMSCROLL_SLOT: ${{ github.event.schedule == '7 3 * * *' && 'mattina' || github.event.schedule == '37 9 * * *' && 'pomeriggio' || github.event.schedule == '37 15 * * *' && 'sera' || inputs.slot || '' }}
       - name: Salva l'edizione nel repository
         run: |
           git config user.name "boomscroll-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data
           if git diff --cached --quiet; then echo "Nessuna novità"; exit 0; fi
-          git commit -m "Edizione del $(TZ=Europe/Rome date +%F)"
+          git commit -m "Edizione del $(TZ=Europe/Rome date '+%F %H:%M')"
           git pull --rebase origin main
           git push origin HEAD:main
 

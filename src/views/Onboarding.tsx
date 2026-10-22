@@ -5,7 +5,7 @@ import { keyC } from '../lib/ranking';
 import { setState, type ViewMode } from '../lib/store';
 
 const PRINCIPLES = [
-  ['🌅', 'Un’edizione al giorno, preparata ogni mattina da fonti affidabili.'],
+  ['🌅', 'Tre edizioni al giorno (mattina, pomeriggio e sera) da fonti affidabili.'],
   ['🔚', 'Il feed finisce. Dopo ci sono solo approfondimenti, con pause sincere.'],
   ['🤍', 'Impara solo da ciò che dici tu: mi piace, non mi piace, salva. Mai dal tempo che passi qui.'],
   ['🔒', 'Niente account, niente tracciamento: i tuoi gusti restano su questo telefono.'],
@@ -28,7 +28,7 @@ export function Onboarding() {
   };
 
   return (
-    <div class="screen" style={{ paddingBottom: 0 }}>
+    <div class="screen" style={{ height: '100%', paddingBottom: 0 }}>
       <div class="onboarding">
         <div class="wordmark" style={{ fontSize: '1rem' }}>
           Boomscroll<i>.</i>

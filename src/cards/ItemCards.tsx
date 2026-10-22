@@ -6,7 +6,7 @@ import { openDetail, openMenu } from '../lib/ui';
 import { IconBookmark, IconExternal, IconHeart, IconMore, IconShare, IconThumbDown, IconUp } from '../ui/icons';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { CatTag, bodyText, initials, metaBits, titles } from './common';
-import { ChessBoard } from './Chess';
+import { ChessPuzzle } from './Chess';
 import { VideoBox } from './Video';
 
 const FULL_IMAGE = new Set(['artwork', 'image', 'comic']);
@@ -102,7 +102,21 @@ export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
     );
   }
 
-  // Senza immagine (parole, poesie, scacchi, testi): titolo e testo su fondo neutro.
+  // Scacchi: il puzzle si gioca direttamente nella card.
+  if (item.kind === 'chess' && item.chess) {
+    return (
+      <article class="slide typo chess" ref={ref}>
+        <div class="slide-head" style={{ cursor: 'default' }}>
+          {meta}
+          <h2 class="slide-title">{t.main}</h2>
+          <ChessPuzzle data={item.chess} puzzleUrl={item.url} compact />
+        </div>
+        <Rail item={item} explored={explored} />
+      </article>
+    );
+  }
+
+  // Senza immagine (parole, poesie, testi): titolo e testo su fondo neutro.
   if (typo) {
     return (
       <article class="slide typo" ref={ref}>
@@ -120,14 +134,6 @@ export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
               {item.author && <div class="slide-orig">{item.author}</div>}
               {item.excerpt && <div class="poem-lines">{item.excerpt.split('\n').slice(0, 8).join('\n')}</div>}
             </>
-          ) : item.kind === 'chess' && item.chess ? (
-            <>
-              <h2 class="slide-title">{t.main}</h2>
-              <div style={{ maxWidth: '260px', width: '70%', pointerEvents: 'none' }}>
-                <ChessBoard fen={item.chess.fen} />
-              </div>
-              <p class="slide-summary">{item.summary}</p>
-            </>
           ) : (
             <>
               <h2 class={`slide-title${t.main.length < 70 ? ' huge' : ''}`}>{t.main}</h2>
@@ -135,7 +141,7 @@ export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
               <p class="slide-summary">{bodyText(item, mode)}</p>
             </>
           )}
-          <span class="slide-more">{item.kind === 'chess' ? 'Risolvi il puzzle' : 'Apri'}</span>
+          <span class="slide-more">Apri</span>
         </div>
         <Rail item={item} explored={explored} />
       </article>
@@ -228,8 +234,8 @@ export function Post({ item, explored }: { item: Item; explored?: boolean }) {
           <VideoBox item={item} />
         </div>
       ) : item.kind === 'chess' && item.chess ? (
-        <div style={{ padding: '16px 16px 0', maxWidth: '360px', pointerEvents: 'none' }}>
-          <ChessBoard fen={item.chess.fen} />
+        <div style={{ padding: '16px 16px 0' }}>
+          <ChessPuzzle data={item.chess} puzzleUrl={item.url} compact />
         </div>
       ) : (
         img.ok && (

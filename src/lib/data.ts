@@ -13,10 +13,13 @@ export async function fetchIndex(): Promise<EditionIndex | null> {
   }
 }
 
-export function fetchEdition(date: string): Promise<Edition | null> {
+/** `fresh`: ignora la copia già caricata in questa sessione (edizione rigenerata). */
+export function fetchEdition(id: string, fresh = false): Promise<Edition | null> {
+  if (fresh) cache.delete(id);
+  const date = id;
   let p = cache.get(date);
   if (!p) {
-    p = fetch(`${BASE}data/editions/${date}.json`)
+    p = fetch(`${BASE}data/editions/${date}.json`, fresh ? { cache: 'no-cache' } : undefined)
       .then((r) => (r.ok ? (r.json() as Promise<Edition>) : null))
       .catch(() => null);
     cache.set(date, p);

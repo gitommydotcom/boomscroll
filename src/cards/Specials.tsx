@@ -345,7 +345,7 @@ export function WeekCard() {
   );
 }
 
-export function EndCard({ date, onMore, isToday }: { date: string; onMore: () => void; isToday: boolean }) {
+export function EndCard({ date, name, next, onMore, isToday }: { date: string; name: string; next: string; onMore: () => void; isToday: boolean }) {
   const s = useAppState();
   const d = s.stats[today()] ?? emptyDay();
   useEffect(() => {
@@ -354,7 +354,7 @@ export function EndCard({ date, onMore, isToday }: { date: string; onMore: () =>
   return (
     <section class="special">
       <div class="kicker">🌙 Fine dell’edizione</div>
-      <h2>{isToday ? 'Hai finito l’edizione di oggi.' : 'Hai finito questa edizione.'}</h2>
+      <h2>{isToday ? `Hai finito l’${name.charAt(0).toLowerCase()}${name.slice(1)}.` : 'Hai finito questa edizione.'}</h2>
       <div class="stat-grid">
         <div class="stat">
           <b>{d.seen}</b>
@@ -369,7 +369,7 @@ export function EndCard({ date, onMore, isToday }: { date: string; onMore: () =>
           <span>esercizi</span>
         </div>
       </div>
-      <p>Questo è un buon momento per chiudere l’app e fare altro. La prossima edizione arriva domattina.</p>
+      <p>Questo è un buon momento per chiudere l’app e fare altro. {next}</p>
       <button class="btn ghost block" onClick={onMore}>
         Continua con gli approfondimenti
       </button>

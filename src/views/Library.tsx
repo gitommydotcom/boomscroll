@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { CATEGORIES, categoryMeta } from '../../shared/categories';
-import type { CategoryId, Edition, EditionIndex } from '../../shared/types';
+import { SLOT_LABEL, editionId, editionSlot, type CategoryId, type Edition, type EditionIndex } from '../../shared/types';
 import { MiniRow, Post } from '../cards/ItemCards';
 import { fetchEdition, fetchIndex } from '../lib/data';
 import { longDate, shortDate } from '../lib/dates';
@@ -71,9 +71,11 @@ function Archive() {
   return (
     <div>
       {index.editions.map((e) => (
-        <a key={e.date} class="edition-row" href={`#/libreria/archivio/${e.date}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <a key={editionId(e)} class="edition-row" href={`#/libreria/archivio/${editionId(e)}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <div class="row between">
-            <h3>{longDate(e.date)}</h3>
+            <h3>
+              {longDate(e.date)} <span class="muted" style={{ fontWeight: 500 }}>· {editionSlot(e)}</span>
+            </h3>
             <span class="muted small">{e.count} contenuti</span>
           </div>
           <div class="muted small">
@@ -105,7 +107,7 @@ function EditionView({ date }: { date: string }) {
   const ordered = useMemo(() => {
     if (!edition) return [];
     const byId = new Map(edition.items.map((i) => [i.id, i]));
-    return composeEdition(edition.items, getState().weights, edition.items.length, `${date}-archive`).ids.map((id) => byId.get(id)!);
+    return composeEdition(edition.items, getState().weights, edition.items.length, `${editionId(edition)}-archive`).ids.map((id) => byId.get(id)!);
   }, [edition]);
   const cats = [...new Set(ordered.map((i) => i.category))];
   const list = cat ? ordered.filter((i) => i.category === cat) : ordered;
@@ -115,7 +117,8 @@ function EditionView({ date }: { date: string }) {
       <a href="#/libreria/archivio" class="row muted" style={{ textDecoration: 'none', marginBottom: '8px' }}>
         <IconBack size={18} /> Archivio
       </a>
-      <h1 class="page-title">{longDate(date)}</h1>
+      <h1 class="page-title">{edition ? longDate(edition.date) : 'Edizione'}</h1>
+      {edition && <p class="muted" style={{ margin: '0 0 4px' }}>Edizione {SLOT_LABEL[editionSlot(edition)]}</p>}
       {edition === undefined && <p class="muted">Carico…</p>}
       {edition === null && <p class="muted">Edizione non disponibile offline.</p>}
       {edition && (

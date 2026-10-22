@@ -1465,3 +1465,61 @@ h3 {
 .habit-check {
   filter: grayscale(1);
 }
+/* Puzzle di scacchi dentro le card */
+.chess-puzzle.compact .board {
+  max-width: 300px;
+  margin: 8px 0;
+}
+.slide .chess-puzzle .btn.ghost {
+  color: #fff;
+  border-color: rgb(255 255 255 / 30%);
+}
+.slide .chess-puzzle .row {
+  justify-content: flex-start !important;
+}
+.slide .chess-puzzle {
+  max-width: 300px;
+}
+.new-edition {
+  position: absolute;
+  top: calc(var(--top-h) + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  font-size: 0.88rem;
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+  animation: fade 0.25s ease;
+}
+.screen .new-edition {
+  position: sticky;
+  display: block;
+  margin: 8px auto 0;
+  transform: none;
+  left: auto;
+}
+.slide.chess {
+  justify-content: flex-start;
+}
+.slide.chess .slide-head {
+  padding-top: calc(var(--top-h) + 4px);
+  gap: 6px;
+}
+.slide.chess .slide-title {
+  font-size: 1.35rem;
+}
+.chess-puzzle.compact .board {
+  max-width: min(300px, 40vh);
+}
+.chess-puzzle.compact .row {
+  flex-wrap: nowrap !important;
+  gap: 6px;
+}
+.chess-puzzle.compact [role='status'] {
+  margin: 4px 0;
+}

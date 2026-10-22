@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import type { EditionIndex, Item } from '../../shared/types';
+import { editionId, type EditionIndex, type Item } from '../../shared/types';
 import { MiniRow } from '../cards/ItemCards';
 import { fetchEdition, fetchIndex } from '../lib/data';
 import { hash, today } from '../lib/dates';
@@ -133,8 +133,8 @@ export function Nearby() {
     fetchIndex().then(async (idx) => {
       setIndex(idx);
       if (!idx?.latest || !city.id) return setEvents([]);
-      // Eventi dalle ultime due edizioni, i più recenti prima.
-      const eds = await Promise.all(idx.editions.slice(0, 2).map((e) => fetchEdition(e.date)));
+      // Eventi dalle ultime edizioni, i più recenti prima.
+      const eds = await Promise.all(idx.editions.slice(0, 4).map((e) => fetchEdition(editionId(e))));
       const seen = new Set<string>();
       setEvents(
         eds

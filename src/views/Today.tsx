@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import type { Edition, EditionIndex, Item } from '../../shared/types';
+import { SLOT_LABEL, editionId, editionSlot, type Edition, type EditionIndex, type Item } from '../../shared/types';
 import { EndCard, ExerciseCard, FinishedCard, PauseCard, QuizCard, RecallCard, WeekCard } from '../cards/Specials';
 import { Post, Slide } from '../cards/ItemCards';
-import { markSeen } from '../lib/actions';
+import { markSeen, toast } from '../lib/actions';
 import { fetchEdition, fetchIndex } from '../lib/data';
 import { addDays, isoWeek, longDate, today } from '../lib/dates';
 import { exercisesFor, type FeedExercise } from '../lib/exercises';
 import { composeEdition } from '../lib/ranking';
 import { getState, setState, updateSettings, useAppState, type FeedOrder, type SavedEntry } from '../lib/store';
-import { IconList, IconStack } from '../ui/icons';
+import { IconList, IconRefresh, IconStack } from '../ui/icons';
 
 type Entry =
   | { k: 'item'; item: Item; explored: boolean; main: boolean }
@@ -22,16 +22,25 @@ type Entry =
 
 const entryKey = (e: Entry, i: number) => (e.k === 'item' ? e.item.id : `${e.k}-${i}`);
 
-/** Ordine dell'edizione: calcolato una volta al giorno e poi stabile. */
+/** Ordine dell'edizione: calcolato una volta e poi stabile. */
 function ensureOrder(edition: Edition): FeedOrder {
   const s = getState();
-  const existing = s.orders[edition.date];
-  const ids = new Set(edition.items.map((i) => i.id));
-  if (existing && existing.ids.filter((id) => ids.has(id)).length >= existing.ids.length * 0.6) return existing;
-  const order = composeEdition(edition.items, s.weights, s.settings.editionSize, edition.date);
-  setState((st) => ({ orders: { ...st.orders, [edition.date]: order } }));
+  const key = editionId(edition);
+  const existing = s.orders[key];
+  if (existing && existing.generatedAt === edition.generatedAt) return existing;
+  // Non riproporre ciò che hai già visto (nelle edizioni precedenti o in una versione precedente di questa).
+  const seen = new Set(Object.keys(s.seen));
+  const fresh = edition.items.filter((i) => !seen.has(i.id));
+  const order = { ...composeEdition(fresh.length >= 10 ? fresh : edition.items, s.weights, s.settings.editionSize, key), generatedAt: edition.generatedAt };
+  setState((st) => ({ orders: { ...st.orders, [key]: order } }));
   return order;
 }
+
+const NEXT_EDITION: Record<string, string> = {
+  mattina: 'La prossima edizione arriva nel primo pomeriggio.',
+  pomeriggio: 'La prossima edizione arriva in serata.',
+  sera: 'La prossima edizione arriva domattina.',
+};
 
 export function Today() {
   const s = useAppState();
@@ -44,18 +53,47 @@ export function Today() {
   const [deepDone, setDeepDone] = useState(false);
   const [current, setCurrent] = useState(0);
   const [snooze, setSnooze] = useState(0);
+  const [newer, setNewer] = useState<EditionIndex | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const loadingDeep = useRef(false);
 
+  const openEdition = async (idx: EditionIndex | null) => {
+    setIndex(idx);
+    setNewer(null);
+    setDeep(false);
+    setDeepList([]);
+    setDeepCursor(0);
+    setDeepDone(false);
+    setCurrent(0);
+    rootRef.current?.scrollTo(0, 0);
+    if (!idx?.latest) return setEdition(null);
+    setEdition(await fetchEdition(idx.latest, true));
+  };
+
   useEffect(() => {
-    fetchIndex().then(async (idx) => {
-      setIndex(idx);
-      if (!idx?.latest) return setEdition(null);
-      setEdition(await fetchEdition(idx.latest));
-    });
+    fetchIndex().then(openEdition);
   }, []);
 
-  const date = edition?.date ?? '';
+  const key = edition ? editionId(edition) : '';
+
+  /** C'è un'edizione più recente? Non la sostituisce mentre leggi: la propone. */
+  const checkUpdates = async (manual = false) => {
+    const idx = await fetchIndex();
+    const latest = idx?.editions.find((e) => editionId(e) === idx.latest);
+    const changed = latest && (idx!.latest !== key || (latest.generatedAt && latest.generatedAt !== edition?.generatedAt));
+    if (changed) setNewer(idx);
+    else if (manual) toast(idx ? `Sei in pari. ${NEXT_EDITION[editionSlot(edition ?? {})]}` : 'Sei offline: riprova più tardi');
+  };
+  useEffect(() => {
+    if (!key) return;
+    const onShow = () => document.visibilityState === 'visible' && checkUpdates();
+    document.addEventListener('visibilitychange', onShow);
+    const t = setInterval(() => checkUpdates(), 10 * 60_000);
+    return () => {
+      document.removeEventListener('visibilitychange', onShow);
+      clearInterval(t);
+    };
+  }, [key]);
   const order = useMemo(() => (edition ? ensureOrder(edition) : null), [edition]);
   // Il ripasso e il riepilogo si decidono all'apertura e restano fermi durante la lettura.
   const recall = useMemo(() => {
@@ -63,13 +101,13 @@ export function Today() {
     return Object.values(getState().saved)
       .filter((e) => e.review && e.review.next <= t)
       .sort((a, b) => a.review!.next.localeCompare(b.review!.next))[0];
-  }, [date]);
+  }, [key]);
   const showWeek = useMemo(() => {
     const st = getState();
     const dow = new Date().getDay();
     const hasStats = Object.keys(st.stats).some((d) => d >= addDays(today(), -7) && d < today());
     return (dow === 0 || dow === 1) && st.recapSeen !== isoWeek(today()) && hasStats;
-  }, [date]);
+  }, [key]);
 
   const mainItems = useMemo(() => {
     if (!edition || !order) return [];
@@ -81,7 +119,7 @@ export function Today() {
     if (!edition || !order) return [];
     const out: Entry[] = [];
     if (showWeek && s.recapSeen !== isoWeek(today())) out.push({ k: 'week' });
-    const [ex1, ex2] = exercisesFor(date);
+    const [ex1, ex2] = exercisesFor(key);
     mainItems.forEach((item, i) => {
       if (i === 6) out.push({ k: 'ex', ex: ex1 });
       if (i === 12 && recall) out.push({ k: 'recall', entry: recall });
@@ -100,7 +138,7 @@ export function Today() {
     return out;
   }, [edition, order, mainItems, deep, deepList, deepDone, recall, showWeek, s.recapSeen]);
 
-  /** Approfondimenti: il resto di oggi, poi le edizioni precedenti (fino a una settimana). */
+  /** Approfondimenti: il resto di questa edizione, poi quelle precedenti (circa tre giorni). */
   const loadMoreDeep = async () => {
     if (!edition || !index || deepDone || loadingDeep.current) return;
     loadingDeep.current = true;
@@ -112,15 +150,16 @@ export function Today() {
   };
   const loadNextChunk = async () => {
     if (!edition || !index) return;
-    const dates = index.editions.map((e) => e.date).filter((d) => d <= edition.date).slice(0, 7);
+    const ids = index.editions.map(editionId);
+    const ids2 = ids.slice(Math.max(0, ids.indexOf(key)), Math.max(0, ids.indexOf(key)) + 9);
     let cursor = deepCursor;
-    while (cursor < dates.length) {
-      const ed = cursor === 0 ? edition : await fetchEdition(dates[cursor]);
+    while (cursor < ids2.length) {
+      const ed = cursor === 0 ? edition : await fetchEdition(ids2[cursor]);
       cursor++;
       if (!ed) continue;
       const st = getState();
       const exclude = new Set([...Object.keys(st.seen), ...(order?.ids ?? []), ...deepList.map((d) => d.item.id)]);
-      const pick = composeEdition(ed.items, st.weights, ed.items.length, `${ed.date}-deep`, exclude);
+      const pick = composeEdition(ed.items, st.weights, ed.items.length, `${editionId(ed)}-deep`, exclude);
       const byId = new Map(ed.items.map((i) => [i.id, i]));
       const chunk = pick.ids.map((id) => ({ item: byId.get(id)!, explored: pick.explore.includes(id) }));
       if (chunk.length) {
@@ -196,13 +235,15 @@ export function Today() {
       <div class="page">
         <div class="empty">
           <h3>Nessuna edizione disponibile</h3>
-          <p>La prima edizione viene preparata ogni mattina. Se sei offline, riprova quando torni in rete.</p>
+          <p>Le edizioni escono tre volte al giorno. Se sei offline, riprova quando torni in rete.</p>
         </div>
       </div>
     );
   }
 
   const stale = edition.date !== today();
+  const slot = editionSlot(edition);
+  const editionName = `Edizione ${SLOT_LABEL[slot]}`;
   const toggle = () => updateSettings({ view: view === 'immersive' ? 'list' : 'immersive' });
   const top = (
     <header class={`topbar ${view === 'immersive' ? 'over' : 'solid'}`}>
@@ -210,12 +251,19 @@ export function Today() {
         <div class="wordmark">
           Boomscroll<i>.</i>
         </div>
-        {view === 'list' && <div class="muted small" style={{ marginTop: '-4px' }}>{stale ? `Edizione di ${longDate(edition.date).toLowerCase()}` : longDate(edition.date)}</div>}
+        {view === 'list' && (
+          <div class="muted small" style={{ marginTop: '-4px' }}>
+            {editionName} · {stale ? longDate(edition.date).toLowerCase() : longDate(edition.date)}
+          </div>
+        )}
       </div>
       <div class="row" style={{ gap: '8px' }}>
         <span class="progress-pill" aria-live="polite">
           {inDeep ? 'Approfondimenti' : `${Math.min(seenMain, total)}/${total}`}
         </span>
+        <button class="icon-btn" onClick={() => checkUpdates(true)} aria-label="Cerca una nuova edizione">
+          <IconRefresh size={19} />
+        </button>
         <button class="icon-btn" onClick={toggle} aria-label={view === 'immersive' ? 'Passa alla vista a lista' : 'Passa alla vista a schermo intero'}>
           {view === 'immersive' ? <IconList size={20} /> : <IconStack size={20} />}
         </button>
@@ -234,9 +282,9 @@ export function Today() {
       case 'week':
         return <WeekCard />;
       case 'quiz':
-        return <QuizCard items={mainItems} date={date} />;
+        return <QuizCard items={mainItems} date={key} />;
       case 'end':
-        return <EndCard date={date} isToday={!stale} onMore={startDeep} />;
+        return <EndCard date={key} name={editionName} next={NEXT_EDITION[slot]} isToday={!stale} onMore={startDeep} />;
       case 'pause':
         return <PauseCard n={e.n} count={e.count} />;
       case 'finished':
@@ -262,10 +310,17 @@ export function Today() {
     </div>
   );
 
+  const newerBanner = newer && (
+    <button class="new-edition" onClick={() => openEdition(newer)}>
+      È uscita una nuova edizione · Apri
+    </button>
+  );
+
   if (view === 'immersive') {
     return (
       <div style={{ position: 'relative' }}>
         {top}
+        {newerBanner}
         <div class="immersive" ref={rootRef}>
           {entries.map((e, i) =>
             e.k === 'item' ? (
@@ -287,9 +342,10 @@ export function Today() {
   return (
     <div class="screen" ref={rootRef}>
       {top}
+      {newerBanner}
       <div class="list-feed">
         {stale && (
-          <p class="list-special muted small">L’edizione di oggi non è ancora pronta: ecco la più recente.</p>
+          <p class="list-special muted small">La prima edizione di oggi non è ancora pronta: ecco la più recente.</p>
         )}
         {entries.map((e, i) => (
           <div key={entryKey(e, i)} data-idx={i} class={e.k === 'item' ? undefined : 'list-special'}>

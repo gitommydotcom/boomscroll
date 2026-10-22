@@ -41,9 +41,10 @@ export default defineConfig({
             options: { cacheName: 'bs-index', networkTimeoutSeconds: 4 },
           },
           {
+            // Prima la rete (un'edizione può essere rigenerata), la cache se sei offline.
             urlPattern: ({ url }) => url.pathname.includes('/data/editions/'),
-            handler: 'StaleWhileRevalidate',
-            options: { cacheName: 'bs-editions', expiration: { maxEntries: 40 } },
+            handler: 'NetworkFirst',
+            options: { cacheName: 'bs-editions', networkTimeoutSeconds: 5, expiration: { maxEntries: 60 } },
           },
           {
             urlPattern: ({ request, sameOrigin }) => !sameOrigin && request.destination === 'image',

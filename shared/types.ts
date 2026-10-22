@@ -106,7 +106,18 @@ export interface SourceReport {
   error?: string;
 }
 
+export type Slot = 'mattina' | 'pomeriggio' | 'sera';
+export const SLOTS: Slot[] = ['mattina', 'pomeriggio', 'sera'];
+export const SLOT_LABEL: Record<Slot, string> = { mattina: 'del mattino', pomeriggio: 'del pomeriggio', sera: 'della sera' };
+
+/** Le edizioni vecchie (una al giorno) non hanno id: valgono come edizione del mattino. */
+export const editionId = (e: { id?: string; date: string }) => e.id ?? e.date;
+export const editionSlot = (e: { slot?: Slot }): Slot => e.slot ?? 'mattina';
+
 export interface Edition {
+  /** Data e fascia, es. "2026-10-22-sera". */
+  id?: string;
+  slot?: Slot;
   date: string;
   generatedAt: string;
   items: Item[];
@@ -117,6 +128,9 @@ export interface Edition {
 }
 
 export interface EditionIndexEntry {
+  id?: string;
+  slot?: Slot;
+  generatedAt?: string;
   date: string;
   count: number;
   highlights: string[];
@@ -124,6 +138,7 @@ export interface EditionIndexEntry {
 }
 
 export interface EditionIndex {
+  /** Id dell'edizione più recente. */
   latest: string | null;
   updatedAt: string;
   editions: EditionIndexEntry[];

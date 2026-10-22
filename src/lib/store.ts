@@ -77,6 +77,8 @@ export interface JournalEntry {
 export interface FeedOrder {
   ids: string[];
   explore: string[];
+  /** Versione dell'edizione su cui è stato calcolato l'ordine. */
+  generatedAt?: string;
 }
 
 export interface State {

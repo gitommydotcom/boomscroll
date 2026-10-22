@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'preact/hooks';
 import { CATEGORIES } from '../../shared/categories';
-import type { Edition } from '../../shared/types';
+import { editionSlot, type Edition } from '../../shared/types';
 import { WeekSummary, sumDays } from '../cards/Specials';
 import { adjustWeight, toast } from '../lib/actions';
+import { ACTIONS_URL, getToken, lastRun, setToken, startEdition, type RunStatus } from '../lib/github';
 import { fetchEdition, fetchIndex } from '../lib/data';
 import { longDate, today } from '../lib/dates';
 import { MAX_W, keyC } from '../lib/ranking';
@@ -94,7 +95,7 @@ function Sources() {
     <>
       <h2 class="section-title">Fonti dell’ultima edizione</h2>
       <p class="muted small" style={{ marginTop: 0 }}>
-        {longDate(ed.date)} · {ok.length} fonti raggiunte su {ed.sources.length} · riassunti: {ed.ai.model ?? 'non disponibili (estratti delle fonti)'}
+        {longDate(ed.date)}, {editionSlot(ed)} · {ok.length} fonti raggiunte su {ed.sources.length} · riassunti: {ed.ai.model ?? 'non disponibili (estratti delle fonti)'}
       </p>
       <button class="btn ghost small" onClick={() => setOpen(!open)}>
         {open ? 'Nascondi' : 'Mostra'} l’elenco
@@ -109,6 +110,98 @@ function Sources() {
           ))}
         </div>
       )}
+    </>
+  );
+}
+
+function Editions() {
+  const [run, setRun] = useState<RunStatus | null>(null);
+  const [token, setTok] = useState(getToken());
+  const [draft, setDraft] = useState('');
+  const [busy, setBusy] = useState(false);
+  const refresh = () => lastRun().then(setRun);
+  useEffect(() => {
+    refresh();
+  }, []);
+  const running = run && run.status !== 'completed';
+  const start = async () => {
+    setBusy(true);
+    const r = await startEdition();
+    setBusy(false);
+    if (r === 'ok') {
+      toast('Edizione in preparazione: pronta tra circa un’ora');
+      setTimeout(refresh, 4000);
+    } else if (r === 'unauthorized') toast('Token non valido o senza il permesso Actions');
+    else toast('Non riesco a contattare GitHub: riprova più tardi');
+  };
+  const time = (iso: string) => new Date(iso).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+
+  return (
+    <>
+      <h2 class="section-title">Edizioni</h2>
+      <p class="muted small" style={{ marginTop: 0 }}>
+        Tre edizioni al giorno, ognuna con contenuti nuovi: mattina (pronta verso le 6:30), pomeriggio (verso le 13) e sera (verso le 19).
+        Quando ne esce una nuova, in Oggi compare l’avviso “È uscita una nuova edizione”.
+      </p>
+      {run && (
+        <p class="small" style={{ margin: '0 0 10px' }}>
+          {running
+            ? `⏳ Edizione in preparazione dalle ${time(run.startedAt)}`
+            : run.conclusion === 'success'
+              ? `✓ Ultima preparazione completata alle ${time(run.updatedAt)}`
+              : `Ultima preparazione non riuscita (${time(run.updatedAt)}): l’edizione precedente resta disponibile`}
+        </p>
+      )}
+      {token ? (
+        <div class="row" style={{ flexWrap: 'wrap' }}>
+          <button class="btn small" onClick={start} disabled={busy || !!running}>
+            {running ? 'Già in preparazione' : 'Crea un’edizione adesso'}
+          </button>
+          <button
+            class="btn ghost small"
+            onClick={() => {
+              setToken('');
+              setTok('');
+            }}
+          >
+            Rimuovi token
+          </button>
+        </div>
+      ) : (
+        <details>
+          <summary class="small" style={{ cursor: 'pointer' }}>
+            Vuoi poter creare un’edizione quando vuoi?
+          </summary>
+          <ol class="small muted" style={{ paddingLeft: '18px' }}>
+            <li>
+              Su GitHub apri <i>Settings → Developer settings → Personal access tokens → Fine-grained tokens</i> e crea un token.
+            </li>
+            <li>
+              Repository: solo <b>boomscroll</b>. Permessi: <b>Actions → Read and write</b>.
+            </li>
+            <li>Incollalo qui sotto: resta solo su questo telefono.</li>
+          </ol>
+          <div class="row">
+            <input type="password" value={draft} onInput={(e) => setDraft(e.currentTarget.value)} placeholder="github_pat_…" aria-label="Token GitHub" />
+            <button
+              class="btn small"
+              disabled={!draft.trim()}
+              onClick={() => {
+                setToken(draft);
+                setTok(draft.trim());
+                setDraft('');
+              }}
+            >
+              Salva
+            </button>
+          </div>
+        </details>
+      )}
+      <p class="small" style={{ margin: '10px 0 0' }}>
+        <a href={ACTIONS_URL} target="_blank" rel="noopener">
+          Oppure avviala da GitHub: “Run workflow”
+        </a>
+      </p>
     </>
   );
 }
@@ -225,6 +318,8 @@ export function Profile() {
           </select>
         </div>
 
+        <Editions />
+
         <Sources />
 
         <h2 class="section-title">I tuoi dati</h2>
@@ -261,7 +356,7 @@ export function Profile() {
         <h2 class="section-title">Come funziona</h2>
         <div class="stack muted small">
           <p style={{ margin: 0 }}>
-            Ogni mattina un programma su GitHub raccoglie contenuti da decine di fonti affidabili, elimina i doppioni e li riassume in italiano.
+            Tre volte al giorno un programma su GitHub raccoglie contenuti da decine di fonti affidabili, elimina i doppioni e li riassume in italiano.
             L’app sceglie per te circa {st.editionSize} contenuti dell’edizione in base alle tue reazioni, con qualche scoperta fuori dalle tue abitudini.
           </p>
           <p style={{ margin: 0 }}>

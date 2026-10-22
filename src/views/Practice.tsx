@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import type { Item } from '../../shared/types';
+import { editionId, type Item } from '../../shared/types';
 import { ChessPuzzle } from '../cards/Chess';
 import { Breath } from '../cards/Specials';
 import { langName } from '../cards/common';
@@ -414,8 +414,8 @@ function ChessToday() {
   const [item, setItem] = useState<Item | null | undefined>(undefined);
   useEffect(() => {
     fetchIndex().then(async (idx) => {
-      for (const e of idx?.editions.slice(0, 3) ?? []) {
-        const ed = await fetchEdition(e.date);
+      for (const e of idx?.editions.slice(0, 6) ?? []) {
+        const ed = await fetchEdition(editionId(e));
         const c = ed?.items.find((i) => i.kind === 'chess');
         if (c) return setItem(c);
       }
