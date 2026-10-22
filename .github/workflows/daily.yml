@@ -40,9 +40,15 @@ jobs:
       - run: npm ci
       - name: Avvia l'IA locale (modello open source sul runner, gratis)
         if: env.HAS_GEMINI != 'true'
+        # Se l'IA locale non parte, l'edizione esce comunque con gli estratti delle fonti.
+        continue-on-error: true
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
-          for i in $(seq 1 30); do curl -sf http://127.0.0.1:11434/api/version && break; sleep 1; done
+          # Su alcuni runner systemd non è attivo e il servizio non parte da solo.
+          if ! curl -sf http://127.0.0.1:11434/api/version > /dev/null; then
+            nohup ollama serve > "$RUNNER_TEMP/ollama.log" 2>&1 &
+          fi
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:11434/api/version && break; sleep 1; done
           ollama pull "$OLLAMA_MODEL"
           echo "OLLAMA_HOST=127.0.0.1:11434" >> "$GITHUB_ENV"
       - name: Raccogli e riassumi i contenuti
