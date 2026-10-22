@@ -1,7 +1,7 @@
 import { CATEGORY_IDS } from '../shared/categories';
 import { isHardLang, type CategoryId, type Quiz } from '../shared/types';
 import type { RawItem } from './fetchers';
-import { http, sleep } from './util';
+import { sleep } from './util';
 
 export interface AiResult {
   titleIt?: string;
@@ -14,7 +14,11 @@ export interface AiResult {
   word?: { word: string; definitionIt: string; example?: string; exampleIt?: string };
 }
 
-const ENDPOINT = 'https://models.github.ai/inference/chat/completions';
+// Endpoint di GitHub Models: il primo è quello attuale, il secondo quello storico (nomi senza prefisso).
+const ENDPOINTS = [
+  { url: 'https://models.github.ai/inference/chat/completions', model: (m: string) => m },
+  { url: 'https://models.inference.ai.azure.com/chat/completions', model: (m: string) => m.split('/').pop()! },
+];
 const DEFAULT_MODELS = ['openai/gpt-4.1-mini', 'openai/gpt-4o-mini', 'openai/gpt-4.1-nano'];
 const BATCH = 8;
 
@@ -37,6 +41,7 @@ Regole:
 Rispondi SOLO con un oggetto {"items": [...]} con un elemento per ogni contenuto ricevuto, con lo stesso "id".`;
 
 class FatalAiError extends Error {}
+class EndpointError extends Error {}
 
 function pickString(x: unknown, max = 600): string | undefined {
   return typeof x === 'string' && x.trim() && x.trim().toLowerCase() !== 'null' ? x.trim().slice(0, max) : undefined;
@@ -78,28 +83,52 @@ export function validate(raw: any, item: RawItem): AiResult | null {
   };
 }
 
-async function call(model: string, token: string, payload: unknown[]): Promise<any[]> {
+/** POST che segue i reindirizzamenti senza trasformarsi in GET. */
+async function post(url: string, headers: Record<string, string>, body: string): Promise<Response> {
+  for (let hop = 0; hop < 4; hop++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 90_000);
+    try {
+      const res = await fetch(url, { method: 'POST', headers, body, redirect: 'manual', signal: ctrl.signal });
+      const loc = res.headers.get('location');
+      if (res.status >= 300 && res.status < 400 && loc) {
+        url = new URL(loc, url).toString();
+        console.log(`  ↪️  reindirizzato a ${url}`);
+        continue;
+      }
+      return res;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw new EndpointError('troppi reindirizzamenti');
+}
+
+async function call(endpoint: (typeof ENDPOINTS)[number], model: string, token: string, payload: unknown[]): Promise<any[]> {
+  const body = JSON.stringify({
+    model: endpoint.model(model),
+    temperature: 0.3,
+    max_tokens: 3800,
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: SYSTEM },
+      { role: 'user', content: JSON.stringify(payload) },
+    ],
+  });
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'boomscroll-pipeline',
+  };
   for (let attempt = 0; attempt < 4; attempt++) {
-    const res = await http(ENDPOINT, {
-      method: 'POST',
-      timeoutMs: 90_000,
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        model,
-        temperature: 0.3,
-        max_tokens: 3800,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: SYSTEM },
-          { role: 'user', content: JSON.stringify(payload) },
-        ],
-      }),
-    });
-    if (res.status === 401 || res.status === 403) throw new FatalAiError(`accesso negato (${res.status}): ${await res.text()}`);
-    if (res.status === 404 || res.status === 400) {
-      const body = await res.text();
-      if (/model|unknown|not found|unavailable/i.test(body)) throw new Error(`modello non disponibile: ${body.slice(0, 200)}`);
-      throw new Error(`richiesta rifiutata: ${body.slice(0, 200)}`);
+    const res = await post(endpoint.url, headers, body);
+    const text = await res.text();
+    if (res.status === 401 || res.status === 403) throw new FatalAiError(`accesso negato (${res.status}): ${text.slice(0, 300)}`);
+    if (res.status === 404 || res.status === 400 || res.status === 422) {
+      if (/model/i.test(text)) throw new Error(`modello non disponibile: ${text.slice(0, 200)}`);
+      throw new EndpointError(`richiesta rifiutata (${res.status}): ${text.slice(0, 200)}`);
     }
     if (res.status === 429) {
       const wait = Number(res.headers.get('retry-after') ?? '60');
@@ -112,13 +141,18 @@ async function call(model: string, token: string, payload: unknown[]): Promise<a
       await sleep(5000 * (attempt + 1));
       continue;
     }
-    const data = (await res.json()) as any;
-    const text: string = data.choices?.[0]?.message?.content ?? '';
+    let data: any;
     try {
-      const parsed = JSON.parse(text.replace(/^```(?:json)?\s*|\s*```$/g, ''));
+      data = JSON.parse(text);
+    } catch {
+      throw new EndpointError(`risposta non JSON (HTTP ${res.status}, ${res.headers.get('content-type')}): ${text.slice(0, 120)}`);
+    }
+    const content: string = data.choices?.[0]?.message?.content ?? '';
+    try {
+      const parsed = JSON.parse(content.replace(/^```(?:json)?\s*|\s*```$/g, ''));
       if (Array.isArray(parsed.items)) return parsed.items;
     } catch {
-      // risposta non valida: riprova
+      // risposta del modello non valida: riprova
     }
     await sleep(2000);
   }
@@ -141,6 +175,7 @@ export async function summarize(items: RawItem[]): Promise<AiRun> {
   }
   const models = (process.env.BOOMSCROLL_MODELS?.split(',') ?? DEFAULT_MODELS).map((m) => m.trim()).filter(Boolean);
   let modelIdx = 0;
+  let endpointIdx = 0;
 
   for (let i = 0; i < items.length; i += BATCH) {
     const batch = items.slice(i, i + BATCH);
@@ -156,7 +191,7 @@ export async function summarize(items: RawItem[]): Promise<AiRun> {
     while (modelIdx < models.length) {
       try {
         run.calls++;
-        const out = await call(models[modelIdx], token, payload);
+        const out = await call(ENDPOINTS[endpointIdx], models[modelIdx], token, payload);
         run.model = models[modelIdx];
         for (const r of out) {
           const k = Number(String(r?.id ?? '').replace(/^i/, ''));
@@ -174,6 +209,11 @@ export async function summarize(items: RawItem[]): Promise<AiRun> {
           return run;
         }
         const msg = (e as Error).message;
+        if (e instanceof EndpointError && endpointIdx < ENDPOINTS.length - 1) {
+          console.log(`  ↪️  ${ENDPOINTS[endpointIdx].url}: ${msg}`);
+          endpointIdx++;
+          continue;
+        }
         if (msg.startsWith('modello non disponibile')) {
           console.log(`  ↪️  ${models[modelIdx]}: ${msg}`);
           modelIdx++;

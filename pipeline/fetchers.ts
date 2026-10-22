@@ -1,6 +1,6 @@
 import { Chess } from 'chess.js';
 import type { Item, ItemKind } from '../shared/types';
-import { parseFeed } from './rss';
+import { parseFeed, type FeedEntry } from './rss';
 import type { SourceDef } from './sources';
 import { getJson, getText, htmlToText, http, itemId, readingMinutes } from './util';
 
@@ -35,9 +35,21 @@ const fresh = (src: SourceDef, ctx: FetchContext, d?: Date) =>
 const matches = (src: SourceDef, text: string) => (src.match ?? []).every((re) => re.test(text));
 
 async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
-  const xml = await getText(src.url!, { Accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*' });
-  const entries = parseFeed(xml);
-  if (!entries.length) throw new Error('feed vuoto o non riconosciuto');
+  let entries: FeedEntry[] = [];
+  let lastError: unknown;
+  for (const url of [src.url!, ...(src.alt ?? [])]) {
+    try {
+      entries = parseFeed(await getText(url, { Accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.8' }));
+      if (entries.length) {
+        if (url !== src.url) console.log(`  ℹ️  ${src.id}: funziona l'indirizzo alternativo ${url}`);
+        break;
+      }
+      lastError = new Error('feed vuoto o non riconosciuto');
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  if (!entries.length) throw lastError;
   return entries
     .filter((e) => e.title && fresh(src, ctx, e.publishedAt))
     .filter((e) => !e.url.includes('/shorts/'))
@@ -125,30 +137,31 @@ async function fetchApod(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> 
   }
 }
 
-async function fetchMet(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
-  const base = 'https://collectionapi.metmuseum.org/public/collection/v1';
-  const search = await getJson<{ objectIDs: number[] }>(`${base}/search?isHighlight=true&hasImages=true&q=*`);
-  const ids = search.objectIDs ?? [];
-  for (let attempt = 0; attempt < 10 && ids.length; attempt++) {
-    const id = ids[Math.floor(ctx.rng() * ids.length)];
-    const url = `https://www.metmuseum.org/art/collection/search/${id}`;
+async function fetchCleveland(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
+  const base = 'https://openaccess-api.clevelandart.org/api/artworks/?cc0=1&has_image=1&type=Painting';
+  const head = await getJson<{ info: { total: number } }>(`${base}&limit=1`);
+  const total = head.info?.total ?? 0;
+  for (let attempt = 0; attempt < 6 && total; attempt++) {
+    const skip = Math.floor(ctx.rng() * total);
+    const data = await getJson<{ data: any[] }>(`${base}&limit=1&skip=${skip}`);
+    const a = data.data?.[0];
+    const image = a?.images?.web?.url;
+    if (!a || !image) continue;
+    const url = a.url ?? `https://www.clevelandart.org/art/${a.accession_number}`;
     if (ctx.seen.has(itemId(url))) continue;
-    const o = await getJson<any>(`${base}/objects/${id}`).catch(() => null);
-    if (!o?.isPublicDomain || !o.primaryImageSmall) continue;
-    const meta = [o.artistDisplayName, o.artistDisplayBio, o.objectDate, o.medium, o.culture, o.department]
-      .filter(Boolean)
-      .join(' · ');
+    const artist = a.creators?.[0]?.description;
+    const desc = htmlToText([a.wall_description, a.description, a.fun_fact].filter(Boolean).join(' '));
     return [
       {
         source: src,
         url,
-        title: o.title,
-        text: `${o.title}. ${meta}.`,
-        image: o.primaryImageSmall,
-        imageAlt: o.title,
+        title: a.title,
+        text: `${a.title}. ${artist ?? ''}. ${a.creation_date ?? ''}. ${a.technique ?? ''}. ${a.culture?.[0] ?? ''}. ${desc}`,
+        image,
+        imageAlt: a.title,
         kind: 'artwork',
         lang: 'en',
-        extra: { art: { artist: o.artistDisplayName || undefined, date: o.objectDate || undefined, medium: o.medium || undefined, museum: 'The Metropolitan Museum of Art, New York' } },
+        extra: { art: { artist: artist?.replace(/\s*\(.*\)$/, '') || undefined, date: a.creation_date || undefined, medium: a.technique || undefined, museum: 'Cleveland Museum of Art' } },
       },
     ];
   }
@@ -164,15 +177,21 @@ async function fetchAic(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
     },
     fields: ['id', 'title', 'artist_display', 'artist_title', 'date_display', 'medium_display', 'image_id', 'thumbnail', 'short_description', 'description'],
     limit: 20,
-    from: Math.floor(ctx.rng() * 40) * 20,
+    from: 0,
   };
-  const res = await http('https://api.artic.edu/api/v1/artworks/search', {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: { 'Content-Type': 'application/json', 'AIC-User-Agent': 'Boomscroll (personal feed)' },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = (await res.json()) as any;
+  const search = async (from: number) => {
+    const res = await http('https://api.artic.edu/api/v1/artworks/search', {
+      method: 'POST',
+      body: JSON.stringify({ ...body, from }),
+      headers: { 'Content-Type': 'application/json', 'AIC-User-Agent': 'Boomscroll (personal feed)' },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as any;
+  };
+  // Prima pagina per conoscere il totale, poi una pagina a caso (l'API si ferma a 10.000 risultati).
+  const first = await search(0);
+  const total = Math.min(first.pagination?.total ?? 0, 9_980);
+  const data = total > 20 ? await search(Math.floor(ctx.rng() * (total - 20))) : first;
   const iiif = data.config?.iiif_url ?? 'https://www.artic.edu/iiif/2';
   const candidates = (data.data ?? []).filter((a: any) => a.image_id && !ctx.seen.has(itemId(`https://www.artic.edu/artworks/${a.id}`)));
   if (!candidates.length) return [];
@@ -331,8 +350,8 @@ export async function fetchSource(src: SourceDef, ctx: FetchContext): Promise<Ra
     case 'apod':
       items = await fetchApod(src, ctx);
       break;
-    case 'met':
-      items = await fetchMet(src, ctx);
+    case 'cleveland':
+      items = await fetchCleveland(src, ctx);
       break;
     case 'aic':
       items = await fetchAic(src, ctx);

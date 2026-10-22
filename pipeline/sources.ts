@@ -6,7 +6,7 @@ export type SourceType =
   | 'hn'
   | 'hfpapers'
   | 'apod'
-  | 'met'
+  | 'cleveland'
   | 'aic'
   | 'wikipedia'
   | 'xkcd'
@@ -17,6 +17,8 @@ export interface SourceDef {
   name: string;
   type: SourceType;
   url?: string;
+  /** Indirizzi alternativi, provati in ordine se il primo non risponde. */
+  alt?: string[];
   category: CategoryId;
   /** L'IA può spostare il contenuto in un'altra categoria (fonti generaliste). */
   mixed?: boolean;
@@ -57,17 +59,18 @@ export const SOURCES: SourceDef[] = [
   { id: 'lemonde', name: 'Le Monde', type: 'rss', url: 'https://www.lemonde.fr/international/rss_full.xml', category: 'notizie', lang: 'fr', quality: 0.8, max: 2, maxAgeDays: 1.5 },
   { id: 'elpais', name: 'El País', type: 'rss', url: 'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada', category: 'notizie', lang: 'es', quality: 0.75, max: 1, maxAgeDays: 1.5 },
   { id: 'tagesschau', name: 'Tagesschau', type: 'rss', url: 'https://www.tagesschau.de/xml/rss2', category: 'notizie', lang: 'de', quality: 0.8, max: 1, maxAgeDays: 1.5 },
-  { id: 'nhk', name: 'NHK ニュース', type: 'rss', url: 'https://www3.nhk.or.jp/rss/news/cat0.xml', category: 'notizie', lang: 'ja', quality: 0.75, max: 1, maxAgeDays: 1.5 },
+  { id: 'nhk', name: 'NHK ニュース', type: 'rss', url: 'https://www3.nhk.or.jp/rss/news/cat0.xml', alt: ['https://www3.nhk.or.jp/rss/news/cat1.xml'], category: 'notizie', lang: 'ja', quality: 0.75, max: 1, maxAgeDays: 1.5 },
+  { id: 'bbc-zhongwen', name: 'BBC 中文', type: 'rss', url: 'https://feeds.bbci.co.uk/zhongwen/simp/rss.xml', category: 'notizie', lang: 'zh', quality: 0.75, max: 1, maxAgeDays: 2 },
   { id: 'restofworld', name: 'Rest of World', type: 'rss', url: 'https://restofworld.org/feed/latest', category: 'tech', mixed: true, lang: 'en', quality: 0.8, max: 1, maxAgeDays: 4 },
 
   // ── Scienza ─────────────────────────────────────────────────────────────
   { id: 'quanta', name: 'Quanta Magazine', type: 'rss', url: 'https://api.quantamagazine.org/feed/', category: 'scienza', lang: 'en', quality: 0.95, max: 2, maxAgeDays: 5 },
   { id: 'nature', name: 'Nature', type: 'rss', url: 'https://www.nature.com/nature.rss', category: 'scienza', lang: 'en', quality: 0.9, max: 2, maxAgeDays: 3 },
   { id: 'sciencenews', name: 'Science News', type: 'rss', url: 'https://www.sciencenews.org/feed', category: 'scienza', lang: 'en', quality: 0.85, max: 2, maxAgeDays: 3 },
-  { id: 'newscientist', name: 'New Scientist', type: 'rss', url: 'https://www.newscientist.com/feed/home/', category: 'scienza', lang: 'en', quality: 0.75, max: 2, maxAgeDays: 2 },
+  { id: 'newscientist', name: 'New Scientist', type: 'rss', url: 'https://www.newscientist.com/feed/home/', alt: ['https://www.newscientist.com/subject/space/feed/'], category: 'scienza', lang: 'en', quality: 0.75, max: 2, maxAgeDays: 2 },
   { id: 'nautilus', name: 'Nautilus', type: 'rss', url: 'https://nautil.us/feed/', category: 'scienza', mixed: true, lang: 'en', quality: 0.9, max: 1, maxAgeDays: 7 },
   { id: 'knowable', name: 'Knowable Magazine', type: 'rss', url: 'https://knowablemagazine.org/rss', category: 'scienza', mixed: true, lang: 'en', quality: 0.9, max: 1, maxAgeDays: 7 },
-  { id: 'lescienze', name: 'Le Scienze', type: 'rss', url: 'https://www.lescienze.it/rss/all/rss2.0.xml', category: 'scienza', lang: 'it', quality: 0.85, max: 2, maxAgeDays: 3 },
+  { id: 'lescienze', name: 'Le Scienze', type: 'rss', url: 'https://www.lescienze.it/rss/all/rss2.0.xml', alt: ['https://www.lescienze.it/feed', 'https://www.lescienze.it/rss', 'https://www.lescienze.it/news/rss'], category: 'scienza', lang: 'it', quality: 0.85, max: 2, maxAgeDays: 3 },
   { id: 'apod', name: 'NASA APOD', type: 'apod', category: 'scienza', lang: 'en', kind: 'image', quality: 0.9, max: 1 },
   yt('yt-3b1b', '3Blue1Brown', 'UCYO_jab_esuFRV4b17AJtAw', 'scienza', 0.9),
   yt('yt-veritasium', 'Veritasium', 'UCHnyfMqiRRG1u-2MsSQLbXA', 'scienza'),
@@ -82,7 +85,7 @@ export const SOURCES: SourceDef[] = [
   { id: 'hfpapers', name: 'Hugging Face Papers', type: 'hfpapers', category: 'tech', lang: 'en', kind: 'paper', quality: 0.75, max: 2 },
 
   // ── Arte ────────────────────────────────────────────────────────────────
-  { id: 'met', name: 'The Met', type: 'met', category: 'arte', lang: 'en', kind: 'artwork', quality: 0.95, max: 1 },
+  { id: 'cleveland', name: 'Cleveland Museum of Art', type: 'cleveland', category: 'arte', lang: 'en', kind: 'artwork', quality: 0.95, max: 1 },
   { id: 'aic', name: 'Art Institute of Chicago', type: 'aic', category: 'arte', lang: 'en', kind: 'artwork', quality: 0.95, max: 1 },
   { id: 'pdr', name: 'The Public Domain Review', type: 'rss', url: 'https://publicdomainreview.org/rss.xml', category: 'arte', mixed: true, lang: 'en', quality: 0.9, max: 1, maxAgeDays: 14 },
   { id: 'colossal', name: 'Colossal', type: 'rss', url: 'https://www.thisiscolossal.com/feed/', category: 'arte', lang: 'en', quality: 0.8, max: 2, maxAgeDays: 3 },
@@ -92,15 +95,15 @@ export const SOURCES: SourceDef[] = [
   // ── Design ──────────────────────────────────────────────────────────────
   { id: 'dezeen', name: 'Dezeen', type: 'rss', url: 'https://www.dezeen.com/feed/', category: 'design', lang: 'en', quality: 0.8, max: 2, maxAgeDays: 3 },
   { id: 'designboom', name: 'designboom', type: 'rss', url: 'https://www.designboom.com/feed/', category: 'design', lang: 'en', quality: 0.75, max: 1, maxAgeDays: 3 },
-  { id: 'itsnicethat', name: "It's Nice That", type: 'rss', url: 'https://www.itsnicethat.com/rss', category: 'design', lang: 'en', quality: 0.8, max: 1, maxAgeDays: 4 },
-  { id: 'eyeondesign', name: 'AIGA Eye on Design', type: 'rss', url: 'https://eyeondesign.aiga.org/feed/', category: 'design', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 7 },
+  { id: 'itsnicethat', name: "It's Nice That", type: 'rss', url: 'https://www.itsnicethat.com/rss', alt: ['https://www.itsnicethat.com/feed', 'https://www.itsnicethat.com/rss.xml', 'https://feeds.feedburner.com/itsnicethat/SlXC'], category: 'design', lang: 'en', quality: 0.8, max: 1, maxAgeDays: 4 },
+  { id: 'eyeondesign', name: 'AIGA Eye on Design', type: 'rss', url: 'https://eyeondesign.aiga.org/feed/', alt: ['https://www.aiga.org/eye-on-design/feed', 'https://www.aiga.org/rss/eye-on-design'], category: 'design', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 7 },
   { id: 'smashing', name: 'Smashing Magazine', type: 'rss', url: 'https://www.smashingmagazine.com/feed/', category: 'design', lang: 'en', quality: 0.8, max: 1, maxAgeDays: 7 },
 
   // ── Università, lezioni e paper ────────────────────────────────────────
   { id: 'mitnews', name: 'MIT News', type: 'rss', url: 'https://news.mit.edu/rss/feed', category: 'universita', lang: 'en', quality: 0.9, max: 2, maxAgeDays: 3 },
   { id: 'harvard', name: 'Harvard Gazette', type: 'rss', url: 'https://news.harvard.edu/gazette/feed/', category: 'universita', lang: 'en', quality: 0.9, max: 2, maxAgeDays: 3 },
-  { id: 'stanford', name: 'Stanford Report', type: 'rss', url: 'https://news.stanford.edu/feed/', category: 'universita', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 4 },
-  { id: 'brown', name: 'Brown University', type: 'rss', url: 'https://www.brown.edu/news/rss.xml', category: 'universita', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 5 },
+  { id: 'stanford', name: 'Stanford Report', type: 'rss', url: 'https://news.stanford.edu/feed/', alt: ['https://news.stanford.edu/rss', 'https://news.stanford.edu/stories/feed'], category: 'universita', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 4 },
+  { id: 'brown', name: 'Brown University', type: 'rss', url: 'https://www.brown.edu/news/rss.xml', alt: ['https://www.brown.edu/news/feed', 'https://www.brown.edu/news/rss'], category: 'universita', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 5 },
   { id: 'yale', name: 'Yale News', type: 'rss', url: 'https://news.yale.edu/news-rss', category: 'universita', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 4 },
   { id: 'openculture', name: 'Open Culture', type: 'rss', url: 'https://www.openculture.com/feed', category: 'universita', mixed: true, lang: 'en', quality: 0.8, max: 1, maxAgeDays: 4 },
   yt('yt-mitocw', 'MIT OpenCourseWare', 'UCEBb1b_L6zDS3xTUrIALZOw', 'universita', 0.95),
@@ -109,7 +112,7 @@ export const SOURCES: SourceDef[] = [
   yt('yt-royalinstitution', 'The Royal Institution', 'UCYeF244yNGuFefuFKqxIAXw', 'universita', 0.9),
 
   // ── Poesia ──────────────────────────────────────────────────────────────
-  { id: 'poemaday', name: 'Poem-a-Day', type: 'rss', url: 'https://poets.org/poem-a-day/feed', category: 'poesia', lang: 'en', kind: 'poem', quality: 0.9, max: 1, maxAgeDays: 2 },
+  { id: 'poemaday', name: 'Poem-a-Day', type: 'rss', url: 'https://poets.org/poem-a-day/feed', alt: ['https://poets.org/poem-a-day/rss.xml', 'https://poets.org/feed/poem-a-day', 'https://api.poets.org/feeds/poem-a-day'], category: 'poesia', lang: 'en', kind: 'poem', quality: 0.9, max: 1, maxAgeDays: 2 },
   { id: 'poetryfoundation', name: 'Poetry Foundation', type: 'rss', url: 'https://www.poetryfoundation.org/feeds/poem-of-the-day', category: 'poesia', lang: 'en', kind: 'poem', quality: 0.9, max: 1, maxAgeDays: 2 },
   { id: 'marginalian', name: 'The Marginalian', type: 'rss', url: 'https://www.themarginalian.org/feed/', category: 'poesia', mixed: true, lang: 'en', quality: 0.85, max: 1, maxAgeDays: 7 },
 
@@ -119,7 +122,7 @@ export const SOURCES: SourceDef[] = [
   { id: 'aeon', name: 'Aeon', type: 'rss', url: 'https://aeon.co/feed.rss', category: 'antropologia', mixed: true, lang: 'en', quality: 0.9, max: 2, maxAgeDays: 5 },
   { id: 'psyche', name: 'Psyche', type: 'rss', url: 'https://psyche.co/feed', category: 'psicologia', mixed: true, lang: 'en', quality: 0.9, max: 2, maxAgeDays: 5 },
   { id: 'greatergood', name: 'Greater Good (Berkeley)', type: 'rss', url: 'https://greatergood.berkeley.edu/site/rss/articles', category: 'psicologia', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 7 },
-  { id: 'bpsdigest', name: 'BPS Research Digest', type: 'rss', url: 'https://www.bps.org.uk/research-digest/rss.xml', category: 'psicologia', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 7 },
+  { id: 'bpsdigest', name: 'BPS Research Digest', type: 'rss', url: 'https://www.bps.org.uk/research-digest/rss.xml', alt: ['https://www.bps.org.uk/research-digest/feed', 'https://www.bps.org.uk/research-digest.xml'], category: 'psicologia', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 7 },
   { id: 'conversation', name: 'The Conversation', type: 'rss', url: 'https://theconversation.com/global/articles.atom', category: 'psicologia', mixed: true, lang: 'en', quality: 0.8, max: 3, maxAgeDays: 2 },
   { id: 'iltascabile', name: 'Il Tascabile', type: 'rss', url: 'https://www.iltascabile.com/feed/', category: 'antropologia', mixed: true, lang: 'it', quality: 0.9, max: 1, maxAgeDays: 7 },
 
@@ -150,8 +153,8 @@ const EVENT_WORDS =
   /\b(event[oi]|mostr[ae]|concert[oi]|festival|spettacol[oi]|teatro|rassegn[ae]|inaugurazione|visit[ae] guidat[ae]|escursion[ei]|sagr[ae]|presentazione|convegno|laboratori?o?|incontr[oi]|cinema|proiezione|musica|danza|libr[oi]|letture|passeggiat[ae]|degustazion[ei]|mercatin[oi]|fiera|workshop)\b/i;
 
 export const LOCAL_SOURCES: SourceDef[] = [
-  { id: 'ilcapoluogo', name: 'Il Capoluogo', type: 'rss', url: 'https://www.ilcapoluogo.it/feed/', category: 'vicino', lang: 'it', kind: 'event', quality: 0.7, max: 6, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS] },
+  { id: 'ilcapoluogo', name: 'Il Capoluogo', type: 'rss', url: 'https://www.ilcapoluogo.it/feed/', alt: ['https://www.ilcapoluogo.it/feed', 'https://www.ilcapoluogo.it/rss', 'https://www.ilcapoluogo.it/rss.xml'], category: 'vicino', lang: 'it', kind: 'event', quality: 0.7, max: 6, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS] },
   { id: 'laquilablog', name: 'AQ Blog', type: 'rss', url: 'https://www.laquilablog.it/feed/', category: 'vicino', lang: 'it', kind: 'event', quality: 0.65, max: 4, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS] },
   { id: 'newstown', name: 'NewsTown', type: 'rss', url: 'https://www.news-town.it/feed', category: 'vicino', lang: 'it', kind: 'event', quality: 0.65, max: 4, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS] },
-  { id: 'abruzzoweb', name: 'AbruzzoWeb', type: 'rss', url: 'https://www.abruzzoweb.it/feed/', category: 'vicino', lang: 'it', kind: 'event', quality: 0.6, max: 3, maxAgeDays: 4, city: 'laquila', match: [/\b(l'aquila|aquilan[oi]|gran sasso)\b/i, EVENT_WORDS] },
+  { id: 'abruzzoweb', name: 'AbruzzoWeb', type: 'rss', url: 'https://www.abruzzoweb.it/feed/', alt: ['https://www.abruzzoweb.it/rss', 'https://www.abruzzoweb.it/rss.xml'], category: 'vicino', lang: 'it', kind: 'event', quality: 0.6, max: 3, maxAgeDays: 4, city: 'laquila', match: [/\b(l'aquila|aquilan[oi]|gran sasso)\b/i, EVENT_WORDS] },
 ];

@@ -1,7 +1,7 @@
 import type { RawItem } from './fetchers';
 import { decodeEntities, http, mapLimit } from './util';
 
-const SKIP = new Set(['youtube', 'apod', 'met', 'aic', 'wikipedia', 'xkcd', 'lichess']);
+const SKIP = new Set(['youtube', 'apod', 'cleveland', 'aic', 'wikipedia', 'xkcd', 'lichess']);
 
 function meta(html: string, ...names: string[]): string | undefined {
   for (const name of names) {
