@@ -132,8 +132,25 @@ async function fetchApod(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> 
       },
     ];
   } catch {
-    const items = await fetchRss({ ...src, url: 'https://apod.nasa.gov/apod.rss', maxAgeDays: 2 }, ctx);
-    return items.slice(0, 1).map((i) => ({ ...i, kind: 'image' }));
+    // La chiave dimostrativa ha limiti stretti: leggiamo la pagina del giorno.
+    const base = 'https://apod.nasa.gov/apod/';
+    const html = await getText(`${base}astropix.html`);
+    const img = /<img[^>]+src="(image\/[^"]+)"/i.exec(html)?.[1];
+    const title = /<center>\s*<b>\s*([^<]+?)\s*<\/b>/i.exec(html)?.[1];
+    const expl = /Explanation:\s*<\/b>([\s\S]*?)<p>/i.exec(html)?.[1];
+    if (!img || !title) return [];
+    return [
+      {
+        source: src,
+        url: `${base}astropix.html`.replace('astropix.html', `ap${ctx.date.slice(2).replaceAll('-', '')}.html`),
+        title: htmlToText(title),
+        text: htmlToText(expl ?? ''),
+        image: base + img,
+        imageAlt: htmlToText(title),
+        kind: 'image',
+        lang: 'en',
+      },
+    ];
   }
 }
 

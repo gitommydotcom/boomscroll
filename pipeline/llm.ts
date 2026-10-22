@@ -1,7 +1,7 @@
 import { CATEGORY_IDS } from '../shared/categories';
 import { isHardLang, type CategoryId, type Quiz } from '../shared/types';
 import type { RawItem } from './fetchers';
-import { sleep } from './util';
+import { http, sleep } from './util';
 
 export interface AiResult {
   titleIt?: string;
@@ -13,14 +13,6 @@ export interface AiResult {
   quiz?: Quiz;
   word?: { word: string; definitionIt: string; example?: string; exampleIt?: string };
 }
-
-// Endpoint di GitHub Models: il primo è quello attuale, il secondo quello storico (nomi senza prefisso).
-const ENDPOINTS = [
-  { url: 'https://models.github.ai/inference/chat/completions', model: (m: string) => m },
-  { url: 'https://models.inference.ai.azure.com/chat/completions', model: (m: string) => m.split('/').pop()! },
-];
-const DEFAULT_MODELS = ['openai/gpt-4.1-mini', 'openai/gpt-4o-mini', 'openai/gpt-4.1-nano'];
-const BATCH = 8;
 
 const SYSTEM = `Sei il redattore di Boomscroll, un feed personale di qualità in italiano.
 Ricevi contenuti da fonti affidabili e per ciascuno restituisci dati in JSON.
@@ -40,8 +32,6 @@ Regole:
 
 Rispondi SOLO con un oggetto {"items": [...]} con un elemento per ogni contenuto ricevuto, con lo stesso "id".`;
 
-class FatalAiError extends Error {}
-class EndpointError extends Error {}
 
 function pickString(x: unknown, max = 600): string | undefined {
   return typeof x === 'string' && x.trim() && x.trim().toLowerCase() !== 'null' ? x.trim().slice(0, max) : undefined;
@@ -83,80 +73,140 @@ export function validate(raw: any, item: RawItem): AiResult | null {
   };
 }
 
-/** POST che segue i reindirizzamenti senza trasformarsi in GET. */
-async function post(url: string, headers: Record<string, string>, body: string): Promise<Response> {
-  for (let hop = 0; hop < 4; hop++) {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 90_000);
-    try {
-      const res = await fetch(url, { method: 'POST', headers, body, redirect: 'manual', signal: ctrl.signal });
-      const loc = res.headers.get('location');
-      if (res.status >= 300 && res.status < 400 && loc) {
-        url = new URL(loc, url).toString();
-        console.log(`  ↪️  reindirizzato a ${url}`);
-        continue;
-      }
-      return res;
-    } finally {
-      clearTimeout(timer);
-    }
-  }
-  throw new EndpointError('troppi reindirizzamenti');
+/** Errore che rende inutilizzabile un provider (chiave mancante, quota finita, servizio giù). */
+class ProviderDown extends Error {}
+
+interface Provider {
+  name: string;
+  /** Contenuti per richiesta. */
+  batch: number;
+  /** Pausa tra una richiesta e l'altra. */
+  pauseMs: number;
+  complete(payload: unknown[]): Promise<any[]>;
 }
 
-async function call(endpoint: (typeof ENDPOINTS)[number], model: string, token: string, payload: unknown[]): Promise<any[]> {
-  const body = JSON.stringify({
-    model: endpoint.model(model),
-    temperature: 0.3,
-    max_tokens: 3800,
-    response_format: { type: 'json_object' },
-    messages: [
-      { role: 'system', content: SYSTEM },
-      { role: 'user', content: JSON.stringify(payload) },
-    ],
-  });
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-    'X-GitHub-Api-Version': '2022-11-28',
-    'User-Agent': 'boomscroll-pipeline',
-  };
-  for (let attempt = 0; attempt < 4; attempt++) {
-    const res = await post(endpoint.url, headers, body);
-    const text = await res.text();
-    if (res.status === 401 || res.status === 403) throw new FatalAiError(`accesso negato (${res.status}): ${text.slice(0, 300)}`);
-    if (res.status === 404 || res.status === 400 || res.status === 422) {
-      if (/model/i.test(text)) throw new Error(`modello non disponibile: ${text.slice(0, 200)}`);
-      throw new EndpointError(`richiesta rifiutata (${res.status}): ${text.slice(0, 200)}`);
-    }
-    if (res.status === 429) {
-      const wait = Number(res.headers.get('retry-after') ?? '60');
-      if (wait > 120) throw new FatalAiError(`limite giornaliero raggiunto (riprova tra ${wait}s)`);
-      console.log(`  ⏳ limite di frequenza, attendo ${wait}s`);
-      await sleep((wait + 1) * 1000);
-      continue;
-    }
-    if (res.status >= 500) {
-      await sleep(5000 * (attempt + 1));
-      continue;
-    }
-    let data: any;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new EndpointError(`risposta non JSON (HTTP ${res.status}, ${res.headers.get('content-type')}): ${text.slice(0, 120)}`);
-    }
-    const content: string = data.choices?.[0]?.message?.content ?? '';
-    try {
-      const parsed = JSON.parse(content.replace(/^```(?:json)?\s*|\s*```$/g, ''));
-      if (Array.isArray(parsed.items)) return parsed.items;
-    } catch {
-      // risposta del modello non valida: riprova
-    }
-    await sleep(2000);
+const messages = (payload: unknown[]) => [
+  { role: 'system', content: SYSTEM },
+  { role: 'user', content: JSON.stringify(payload) },
+];
+
+function parseItems(content: string): any[] | null {
+  try {
+    const parsed = JSON.parse(content.replace(/^```(?:json)?\s*|\s*```$/g, ''));
+    if (Array.isArray(parsed.items)) return parsed.items;
+    if (Array.isArray(parsed)) return parsed;
+  } catch {
+    // risposta non valida
   }
-  throw new Error('nessuna risposta valida dopo vari tentativi');
+  return null;
+}
+
+/** Provider con API compatibile OpenAI (Gemini, Groq, GitHub Models…), con modelli di riserva. */
+function openAiCompatible(name: string, url: string, key: string, models: string[], batch: number, pauseMs: number): Provider {
+  let idx = 0;
+  return {
+    name,
+    batch,
+    pauseMs,
+    async complete(payload) {
+      for (let attempt = 0; attempt < 5; attempt++) {
+        if (idx >= models.length) throw new ProviderDown('nessun modello disponibile');
+        const res = await http(url, {
+          method: 'POST',
+          timeoutMs: 120_000,
+          headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            model: models[idx],
+            temperature: 0.3,
+            max_tokens: 4000,
+            response_format: { type: 'json_object' },
+            messages: messages(payload),
+          }),
+        });
+        const text = await res.text();
+        if (res.status === 401 || res.status === 403) throw new ProviderDown(`accesso negato (${res.status}): ${text.slice(0, 200)}`);
+        if (res.status === 404 || (res.status === 400 && /model/i.test(text))) {
+          console.log(`  ↪️  ${name}: modello ${models[idx]} non disponibile`);
+          idx++;
+          continue;
+        }
+        if (res.status === 429) {
+          const wait = Number(res.headers.get('retry-after') ?? '30');
+          if (wait > 120 || attempt >= 3) throw new ProviderDown(`limite raggiunto (${text.slice(0, 160)})`);
+          console.log(`  ⏳ ${name}: limite di frequenza, attendo ${wait}s`);
+          await sleep((wait + 1) * 1000);
+          continue;
+        }
+        if (res.status >= 500) {
+          await sleep(4000 * (attempt + 1));
+          continue;
+        }
+        let data: any;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new ProviderDown(`risposta non JSON (HTTP ${res.status}): ${text.slice(0, 80)}`);
+        }
+        const items = parseItems(data.choices?.[0]?.message?.content ?? '');
+        if (items) return items;
+        await sleep(1500);
+      }
+      throw new Error('nessuna risposta valida dopo vari tentativi');
+    },
+  };
+}
+
+/** Modello open source che gira sul runner di GitHub Actions tramite Ollama. */
+function ollama(host: string, model: string): Provider {
+  return {
+    name: `ollama/${model}`,
+    batch: 3,
+    pauseMs: 0,
+    async complete(payload) {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const res = await http(`${host}/api/chat`, {
+          method: 'POST',
+          timeoutMs: 600_000,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model,
+            stream: false,
+            format: 'json',
+            keep_alive: '30m',
+            options: { temperature: 0.3, num_ctx: 6144, num_predict: 1500 },
+            messages: messages(payload),
+          }),
+        });
+        if (!res.ok) throw new ProviderDown(`HTTP ${res.status}: ${(await res.text()).slice(0, 160)}`);
+        const data = (await res.json()) as any;
+        const items = parseItems(data.message?.content ?? '');
+        if (items) return items;
+      }
+      throw new Error('risposta non valida');
+    },
+  };
+}
+
+function providers(): Provider[] {
+  const list: Provider[] = [];
+  const env = process.env;
+  if (env.GEMINI_API_KEY) {
+    const models = env.GEMINI_MODEL?.split(',') ?? ['gemini-flash-lite-latest', 'gemini-2.5-flash-lite', 'gemini-flash-latest', 'gemini-2.5-flash'];
+    // Il piano gratuito di Gemini ha limiti al minuto: lotti grandi e una pausa tra le richieste.
+    list.push(openAiCompatible('Gemini', 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', env.GEMINI_API_KEY, models, 10, 5000));
+  }
+  if (env.GROQ_API_KEY) {
+    const models = env.GROQ_MODEL?.split(',') ?? ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
+    list.push(openAiCompatible('Groq', 'https://api.groq.com/openai/v1/chat/completions', env.GROQ_API_KEY, models, 6, 3000));
+  }
+  if (env.GITHUB_TOKEN && !env.BOOMSCROLL_SKIP_GITHUB_MODELS) {
+    list.push(openAiCompatible('GitHub Models', 'https://models.github.ai/inference/chat/completions', env.GITHUB_TOKEN, ['openai/gpt-4.1-mini', 'openai/gpt-4o-mini'], 8, 1500));
+  }
+  if (env.OLLAMA_HOST || env.OLLAMA_MODEL) {
+    const host = env.OLLAMA_HOST?.startsWith('http') ? env.OLLAMA_HOST : `http://${env.OLLAMA_HOST ?? '127.0.0.1:11434'}`;
+    list.push(ollama(host, env.OLLAMA_MODEL ?? 'gemma3:4b'));
+  }
+  return list;
 }
 
 export interface AiRun {
@@ -166,19 +216,32 @@ export interface AiRun {
   failures: number;
 }
 
+/**
+ * Riassume i contenuti con il primo provider disponibile; se uno smette di funzionare
+ * passa al successivo. Entro il tempo massimo (BOOMSCROLL_AI_MINUTES, default 45):
+ * quello che resta fuori usa l'estratto della fonte.
+ */
 export async function summarize(items: RawItem[]): Promise<AiRun> {
   const run: AiRun = { results: new Map(), model: null, calls: 0, failures: 0 };
-  const token = process.env.GITHUB_TOKEN || process.env.GH_MODELS_TOKEN;
-  if (!token || process.env.BOOMSCROLL_NO_AI) {
-    console.log('ℹ️  IA disattivata: uso gli estratti delle fonti');
+  if (process.env.BOOMSCROLL_NO_AI) return run;
+  const queue = [...providers()];
+  if (!queue.length) {
+    console.log('ℹ️  Nessuna IA configurata: uso gli estratti delle fonti');
     return run;
   }
-  const models = (process.env.BOOMSCROLL_MODELS?.split(',') ?? DEFAULT_MODELS).map((m) => m.trim()).filter(Boolean);
-  let modelIdx = 0;
-  let endpointIdx = 0;
+  const deadline = Date.now() + Number(process.env.BOOMSCROLL_AI_MINUTES ?? 45) * 60_000;
+  // Prima le lingue difficili (serve la traduzione), poi il resto in ordine di qualità.
+  const todo = [...items].sort((a, b) => Number(isHardLang(b.lang)) - Number(isHardLang(a.lang)) || b.source.quality - a.source.quality);
+  const used = new Set<string>();
 
-  for (let i = 0; i < items.length; i += BATCH) {
-    const batch = items.slice(i, i + BATCH);
+  let i = 0;
+  while (i < todo.length && queue.length) {
+    if (Date.now() > deadline) {
+      console.log(`  ⏱️  tempo scaduto: ${todo.length - i} contenuti senza riassunto automatico`);
+      break;
+    }
+    const p = queue[0];
+    const batch = todo.slice(i, i + p.batch);
     const payload = batch.map((it, k) => ({
       id: `i${k}`,
       kind: it.kind,
@@ -188,47 +251,36 @@ export async function summarize(items: RawItem[]): Promise<AiRun> {
       text: it.text.slice(0, it.kind === 'poem' ? 1200 : 900),
       ...(it.source.mixed ? { allowed_categories: CATEGORY_IDS.filter((c) => c !== 'vicino') } : {}),
     }));
-    while (modelIdx < models.length) {
-      try {
-        run.calls++;
-        const out = await call(ENDPOINTS[endpointIdx], models[modelIdx], token, payload);
-        run.model = models[modelIdx];
-        for (const r of out) {
-          const k = Number(String(r?.id ?? '').replace(/^i/, ''));
-          const item = batch[k];
-          if (!item) continue;
-          const v = validate(r, item);
-          if (v) run.results.set(item, v);
+    const started = Date.now();
+    try {
+      run.calls++;
+      const out = await p.complete(payload);
+      let ok = 0;
+      for (const r of out) {
+        const k = Number(String(r?.id ?? '').replace(/^i/, ''));
+        const item = batch[k];
+        if (!item) continue;
+        const v = validate(r, item);
+        if (v) {
+          run.results.set(item, v);
+          ok++;
         }
-        console.log(`  🤖 lotto ${i / BATCH + 1}/${Math.ceil(items.length / BATCH)}: ${out.length} risposte (${models[modelIdx]})`);
-        break;
-      } catch (e) {
-        if (e instanceof FatalAiError) {
-          console.log(`  ⚠️  IA interrotta: ${e.message}`);
-          run.failures++;
-          return run;
-        }
-        const msg = (e as Error).message;
-        if (e instanceof EndpointError && endpointIdx < ENDPOINTS.length - 1) {
-          console.log(`  ↪️  ${ENDPOINTS[endpointIdx].url}: ${msg}`);
-          endpointIdx++;
-          continue;
-        }
-        if (msg.startsWith('modello non disponibile')) {
-          console.log(`  ↪️  ${models[modelIdx]}: ${msg}`);
-          modelIdx++;
-          continue;
-        }
-        console.log(`  ⚠️  lotto ${i / BATCH + 1} fallito: ${msg}`);
-        run.failures++;
-        break;
       }
+      used.add(p.name);
+      console.log(`  🤖 ${p.name}: ${ok}/${batch.length} in ${((Date.now() - started) / 1000).toFixed(1)}s (${i + batch.length}/${todo.length})`);
+      i += batch.length;
+      if (p.pauseMs) await sleep(p.pauseMs);
+    } catch (e) {
+      run.failures++;
+      if (e instanceof ProviderDown) {
+        console.log(`  ⚠️  ${p.name} non disponibile: ${(e as Error).message}`);
+        queue.shift();
+        continue;
+      }
+      console.log(`  ⚠️  ${p.name}: lotto saltato (${(e as Error).message})`);
+      i += batch.length;
     }
-    if (modelIdx >= models.length) {
-      console.log('  ⚠️  nessun modello disponibile');
-      return run;
-    }
-    await sleep(1500);
   }
+  run.model = [...used].join(' + ') || null;
   return run;
 }

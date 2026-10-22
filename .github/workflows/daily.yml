@@ -26,7 +26,11 @@ concurrency:
 jobs:
   edition:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
+    env:
+      # Facoltativo: con una chiave gratuita di Google AI Studio i riassunti sono migliori e più veloci.
+      HAS_GEMINI: ${{ secrets.GEMINI_API_KEY != '' }}
+      OLLAMA_MODEL: gemma3:4b
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -34,11 +38,21 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Avvia l'IA locale (modello open source sul runner, gratis)
+        if: env.HAS_GEMINI != 'true'
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:11434/api/version && break; sleep 1; done
+          ollama pull "$OLLAMA_MODEL"
+          echo "OLLAMA_HOST=127.0.0.1:11434" >> "$GITHUB_ENV"
       - name: Raccogli e riassumi i contenuti
         run: npm run pipeline
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           NASA_API_KEY: ${{ secrets.NASA_API_KEY }}
+          BOOMSCROLL_AI_MINUTES: 55
       - name: Salva l'edizione nel repository
         run: |
           git config user.name "boomscroll-bot"
