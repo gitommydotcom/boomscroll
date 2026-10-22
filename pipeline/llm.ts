@@ -46,7 +46,7 @@ export function validate(raw: any, item: RawItem): AiResult | null {
   const interest = Math.min(5, Math.max(1, Math.round(Number(raw.interest) || 3)));
   let quiz: Quiz | undefined;
   const q = raw.quiz;
-  if (q && typeof q.q === 'string' && Array.isArray(q.options) && q.options.length === 3 && q.options.every((o: unknown) => typeof o === 'string')) {
+  if (q && pickString(q.q) && Array.isArray(q.options) && q.options.length === 3 && q.options.every((o: unknown) => !!pickString(o, 200))) {
     const answer = Number(q.answer);
     if (answer >= 0 && answer <= 2) quiz = { q: q.q, options: q.options, answer };
   }
@@ -156,9 +156,11 @@ function openAiCompatible(name: string, url: string, key: string, models: string
   };
 }
 
-const nullableString = { type: ['string', 'null'] };
-
-/** Schema JSON imposto al modello locale: i modelli piccoli altrimenti saltano dei campi. */
+/**
+ * Schema JSON imposto al modello locale (i modelli piccoli altrimenti saltano dei campi).
+ * Solo tipi semplici: una stringa vuota vale "nessun valore".
+ */
+const str = { type: 'string' };
 const ITEMS_SCHEMA = {
   type: 'object',
   properties: {
@@ -167,34 +169,25 @@ const ITEMS_SCHEMA = {
       items: {
         type: 'object',
         properties: {
-          id: { type: 'string' },
-          title_it: nullableString,
-          summary: { type: 'string' },
-          excerpt_it: nullableString,
-          tags: { type: 'array', items: { type: 'string' } },
+          id: str,
+          title_it: str,
+          summary: str,
+          excerpt_it: str,
+          tags: { type: 'array', items: str },
           interest: { type: 'integer' },
-          category: nullableString,
+          category: str,
           quiz: {
-            type: ['object', 'null'],
-            properties: {
-              q: { type: 'string' },
-              options: { type: 'array', items: { type: 'string' } },
-              answer: { type: 'integer' },
-            },
+            type: 'object',
+            properties: { q: str, options: { type: 'array', items: str }, answer: { type: 'integer' } },
             required: ['q', 'options', 'answer'],
           },
           word: {
-            type: ['object', 'null'],
-            properties: {
-              word: { type: 'string' },
-              definition_it: { type: 'string' },
-              example: { type: 'string' },
-              example_it: { type: 'string' },
-            },
-            required: ['word', 'definition_it'],
+            type: 'object',
+            properties: { word: str, definition_it: str, example: str, example_it: str },
+            required: ['word', 'definition_it', 'example', 'example_it'],
           },
         },
-        required: ['id', 'title_it', 'summary', 'tags', 'interest', 'quiz'],
+        required: ['id', 'title_it', 'summary', 'excerpt_it', 'tags', 'interest', 'category', 'quiz', 'word'],
       },
     },
   },
@@ -204,6 +197,7 @@ const ITEMS_SCHEMA = {
 /** Modello open source che gira sul runner di GitHub Actions tramite Ollama. */
 function ollama(host: string, model: string): Provider {
   let consecutiveErrors = 0;
+  let useSchema = true;
   return {
     name: `ollama/${model}`,
     batch: 3,
@@ -218,7 +212,7 @@ function ollama(host: string, model: string): Provider {
           body: JSON.stringify({
             model,
             stream: false,
-            format: ITEMS_SCHEMA,
+            format: useSchema ? ITEMS_SCHEMA : 'json',
             keep_alive: '30m',
             options: { temperature: 0.3, repeat_penalty: 1.15, num_ctx: 6144, num_predict: 1600 },
             messages: messages(payload),
@@ -230,6 +224,11 @@ function ollama(host: string, model: string): Provider {
       if (!res.ok) {
         // Un errore del modello su un lotto (es. ripetizioni) non deve fermare tutta l'edizione.
         const text = (await res.text()).slice(0, 160);
+        if (useSchema && /schema|format|grammar/i.test(text)) {
+          console.log(`  ↪️  schema non supportato, passo al JSON semplice: ${text}`);
+          useSchema = false;
+          return this.complete(payload);
+        }
         if (++consecutiveErrors >= 3) throw new ProviderDown(`HTTP ${res.status}: ${text}`);
         throw new Error(`HTTP ${res.status}: ${text}`);
       }

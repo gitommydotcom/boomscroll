@@ -126,6 +126,15 @@ describe('validate', () => {
     const v = validate({ summary: 'Un riassunto chiaro di almeno venti caratteri.', category: 'arte', interest: 3 }, raw({ source: src({ mixed: true }) }));
     expect(v?.category).toBe('arte');
   });
+  it('tratta le stringhe vuote dello schema come valori assenti', () => {
+    const v = validate(
+      { summary: 'Un riassunto chiaro di almeno venti caratteri.', title_it: '', excerpt_it: '', category: '', interest: 3, quiz: { q: '', options: ['', '', ''], answer: 0 } },
+      raw({ lang: 'de' }),
+    );
+    expect(v?.titleIt).toBeUndefined();
+    expect(v?.excerptIt).toBeUndefined();
+    expect(v?.quiz).toBeUndefined();
+  });
   it('rifiuta riassunti vuoti', () => {
     expect(validate({ summary: '' }, raw())).toBeNull();
   });
