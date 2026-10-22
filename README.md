@@ -13,7 +13,7 @@
 ```
 GitHub Actions, ogni mattina (~05:15)          GitHub Pages
 ┌─────────────────────────────────┐            ┌──────────────────────────────┐
-│ pipeline/  ~75 fonti RSS e API  │  commit →  │ PWA statica (Preact)          │
+│ pipeline/ ~110 fonti, 39 YouTube│  commit →  │ PWA statica (Preact)          │
 │ → doppioni → riassunti con IA   │            │ ordina l'edizione sul telefono│
 │ → public/data/editions/*.json   │            │ gusti e salvati in IndexedDB  │
 └─────────────────────────────────┘            └──────────────────────────────┘
@@ -35,7 +35,7 @@ Se nessuno risponde, l'edizione esce lo stesso con gli estratti delle fonti.
 
 ## Pubblicazione
 
-1. **Una volta sola:** *Settings → Pages → Build and deployment → Source: **GitHub Actions***.
+1. **Una volta sola:** *Settings → Pages → Build and deployment → Source: **GitHub Actions*** (non "Deploy from a branch", che pubblicherebbe i file sorgente non compilati).
 2. Ogni push su `main` e ogni edizione quotidiana ripubblicano il sito su `https://gitommydotcom.github.io/boomscroll/`.
 3. Sul telefono apri il sito, poi *Condividi → Aggiungi a schermata Home* (iPhone) o *Installa app* (Android).
 
