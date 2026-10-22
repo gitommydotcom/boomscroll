@@ -3,9 +3,9 @@ import type { Item } from '../../shared/types';
 import { react, share, toggleSave } from '../lib/actions';
 import { getState, useAppState } from '../lib/store';
 import { openDetail, openMenu } from '../lib/ui';
-import { IconBookmark, IconHeart, IconMore, IconShare, IconThumbDown } from '../ui/icons';
-import { useState } from 'preact/hooks';
-import { CatTag, KIND_EMOJI, bodyText, initials, metaBits, titles } from './common';
+import { IconBookmark, IconExternal, IconHeart, IconMore, IconShare, IconThumbDown, IconUp } from '../ui/icons';
+import { useEffect, useRef, useState } from 'preact/hooks';
+import { CatTag, bodyText, initials, metaBits, titles } from './common';
 import { ChessBoard } from './Chess';
 import { VideoBox } from './Video';
 
@@ -18,86 +18,155 @@ function useImage(src?: string) {
 
 /* ── Vista immersiva ────────────────────────────────────────────────────── */
 
+/**
+ * Testo del contenuto: sale dal basso sopra l'immagine quando tocchi la card,
+ * e si richiude da solo quando scorri alla card successiva.
+ */
+function SlideText({ item, explored, onClose }: { item: Item; explored?: boolean; onClose: () => void }) {
+  const s = useAppState();
+  const mode = s.settings.summaryMode;
+  const t = titles(item, mode);
+  return (
+    <div class="slide-text" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={t.main}>
+      <button class="slide-text-grip" onClick={onClose} aria-label="Chiudi il testo" />
+      <h2>{t.main}</h2>
+      <p class="slide-summary">{bodyText(item, mode)}</p>
+      {item.excerptIt && (
+        <div class="quote">
+          {item.excerptIt}
+          <small>Traduzione dell’estratto</small>
+        </div>
+      )}
+      <div class="row">
+        <a class="btn small" href={item.url} target="_blank" rel="noopener">
+          Leggi l’originale <IconExternal size={16} />
+        </a>
+        <button class="btn ghost small" onClick={() => openDetail(item, explored)}>
+          Dettagli
+        </button>
+        <button class="btn ghost small" onClick={onClose}>
+          Chiudi
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** Richiude il pannello del testo quando la card esce dallo schermo. */
+function useCloseWhenHidden(open: boolean, close: () => void) {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!open || !ref.current) return;
+    const io = new IntersectionObserver(([e]) => e.intersectionRatio < 0.5 && close(), { threshold: [0.5] });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [open]);
+  return ref;
+}
+
 export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
   const s = useAppState();
   const mode = s.settings.summaryMode;
   const img = useImage(item.image);
   const t = titles(item, mode);
-  const color = categoryMeta(item.category).color;
-  const open = () => openDetail(item, explored);
+  const [textOpen, setTextOpen] = useState(false);
+  const ref = useCloseWhenHidden(textOpen, () => setTextOpen(false));
   const video = item.kind === 'video' && !!item.youtubeId;
   const showFull = FULL_IMAGE.has(item.kind) && img.ok;
   const typo = !video && (!img.ok || item.kind === 'poem' || item.kind === 'word' || item.kind === 'chess');
+  const meta = (
+    <div class="slide-meta">
+      <CatTag item={item} light />
+      <span>
+        {video ? '▶ ' : ''}
+        {metaBits(item).join(' · ')}
+      </span>
+    </div>
+  );
 
+  // Video: il player in alto, poi titolo e testo.
   if (video) {
     return (
-      <article class="slide video" style={{ background: '#0d0c0a' }}>
+      <article class={`slide video${textOpen ? ' text-open' : ''}`} ref={ref}>
         <div class="slide-blur" style={{ backgroundImage: `url("https://i.ytimg.com/vi/${item.youtubeId}/hqdefault.jpg")` }} />
         <VideoBox item={item} class="top" />
-        <div class="slide-body" onClick={open} role="button" tabIndex={0} aria-label={`Apri: ${t.main}`}>
-          <div class="slide-meta">
-            <CatTag item={item} light />
-            <span>▶ {metaBits(item).join(' · ')}</span>
-          </div>
+        <div class="slide-head" onClick={() => setTextOpen(true)}>
+          {meta}
           <h2 class="slide-title">{t.main}</h2>
           {t.sub && <div class="slide-orig">{t.sub}</div>}
-          <p class="slide-summary">{bodyText(item, mode)}</p>
-          <span class="slide-more">Leggi di più</span>
+          <p class="slide-summary clamp">{bodyText(item, mode)}</p>
+        </div>
+        <Rail item={item} explored={explored} />
+        {textOpen && <SlideText item={item} explored={explored} onClose={() => setTextOpen(false)} />}
+      </article>
+    );
+  }
+
+  // Senza immagine (parole, poesie, scacchi, testi): titolo e testo su fondo neutro.
+  if (typo) {
+    return (
+      <article class="slide typo" ref={ref}>
+        <div class="slide-head" onClick={() => openDetail(item, explored)}>
+          {meta}
+          {item.kind === 'word' && item.word ? (
+            <>
+              <h2 class="slide-title huge">{item.word.word}</h2>
+              <p class="slide-summary">{item.word.definitionIt}</p>
+              {item.word.example && <p class="slide-orig">“{item.word.example}”</p>}
+            </>
+          ) : item.kind === 'poem' ? (
+            <>
+              <h2 class="slide-title">{t.main}</h2>
+              {item.author && <div class="slide-orig">{item.author}</div>}
+              {item.excerpt && <div class="poem-lines">{item.excerpt.split('\n').slice(0, 8).join('\n')}</div>}
+            </>
+          ) : item.kind === 'chess' && item.chess ? (
+            <>
+              <h2 class="slide-title">{t.main}</h2>
+              <div style={{ maxWidth: '260px', width: '70%', pointerEvents: 'none' }}>
+                <ChessBoard fen={item.chess.fen} />
+              </div>
+              <p class="slide-summary">{item.summary}</p>
+            </>
+          ) : (
+            <>
+              <h2 class={`slide-title${t.main.length < 70 ? ' huge' : ''}`}>{t.main}</h2>
+              {t.sub && <div class="slide-orig">{t.sub}</div>}
+              <p class="slide-summary">{bodyText(item, mode)}</p>
+            </>
+          )}
+          <span class="slide-more">{item.kind === 'chess' ? 'Risolvi il puzzle' : 'Apri'}</span>
         </div>
         <Rail item={item} explored={explored} />
       </article>
     );
   }
 
+  // Con immagine: prima l'immagine a schermo intero e il titolo, il testo con un tocco.
   return (
-    <article class={`slide${typo ? ' typo' : ''}`} style={{ background: typo ? color : '#0d0c0a' }}>
-      {showFull && (
+    <article class={`slide${textOpen ? ' text-open' : ''}`} ref={ref} onClick={() => setTextOpen(!textOpen)}>
+      {showFull ? (
         <>
           <div class="slide-blur" style={{ backgroundImage: `url("${item.image}")` }} />
           <img class="slide-bg contain" src={item.image} alt={item.imageAlt ?? ''} loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
         </>
-      )}
-      {!typo && !showFull && (
+      ) : (
         <img class="slide-bg" src={item.image} alt={item.imageAlt ?? ''} loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
       )}
-      {!typo && <div class="slide-shade" />}
-
-      <div class="slide-body" onClick={open} role="button" tabIndex={0} aria-label={`Apri: ${t.main}`}>
-        <div class="slide-meta">
-          <CatTag item={item} light />
-          <span>{metaBits(item).join(' · ')}</span>
-        </div>
-        {img.ok && item.imageNote && <div class="img-note">Immagine illustrativa</div>}
-        {item.kind === 'word' && item.word ? (
-          <>
-            <h2 class="slide-title huge">{item.word.word}</h2>
-            <p class="slide-summary">{item.word.definitionIt}</p>
-            {item.word.example && <p class="slide-orig">“{item.word.example}”</p>}
-          </>
-        ) : item.kind === 'poem' ? (
-          <>
-            <h2 class="slide-title">{t.main}</h2>
-            {item.author && <div class="slide-orig">{item.author}</div>}
-            {item.excerpt && <div class="poem-lines">{item.excerpt.split('\n').slice(0, 8).join('\n')}</div>}
-          </>
-        ) : item.kind === 'chess' && item.chess ? (
-          <>
-            <h2 class="slide-title">{t.main}</h2>
-            <div style={{ maxWidth: '260px', width: '70%', pointerEvents: 'none' }}>
-              <ChessBoard fen={item.chess.fen} />
-            </div>
-            <p class="slide-summary">{item.summary}</p>
-          </>
-        ) : (
-          <>
-            <h2 class={`slide-title${typo && t.main.length < 70 ? ' huge' : ''}`}>{t.main}</h2>
-            {t.sub && <div class="slide-orig">{t.sub}</div>}
-            <p class="slide-summary">{bodyText(item, mode)}</p>
-          </>
-        )}
-        <span class="slide-more">{item.kind === 'chess' ? 'Risolvi il puzzle' : 'Leggi di più'}</span>
+      <div class="slide-shade" />
+      <div class="slide-head" role="button" tabIndex={0} aria-expanded={textOpen} aria-label={`Leggi: ${t.main}`}>
+        {meta}
+        <h2 class="slide-title">{t.main}</h2>
+        {t.sub && <div class="slide-orig">{t.sub}</div>}
+        {item.imageNote && <div class="img-note">Immagine illustrativa</div>}
+        <span class="slide-more">
+          <IconUp size={15} /> Leggi
+        </span>
       </div>
-      <Rail item={item} explored={explored} />
+      <div onClick={(e) => e.stopPropagation()}>
+        <Rail item={item} explored={explored} />
+      </div>
+      {textOpen && <SlideText item={item} explored={explored} onClose={() => setTextOpen(false)} />}
     </article>
   );
 }
@@ -142,57 +211,52 @@ function Rail({ item, explored }: { item: Item; explored?: boolean }) {
   );
 }
 
-/* ── Vista a lista ──────────────────────────────────────────────────────── */
+/* ── Vista a lista: immagine, poi titolo, poi testo ─────────────────────── */
 
 export function Post({ item, explored }: { item: Item; explored?: boolean }) {
   const s = useAppState();
   const mode = s.settings.summaryMode;
   const img = useImage(item.image);
   const t = titles(item, mode);
-  const c = categoryMeta(item.category);
   const open = () => openDetail(item, explored);
   const tall = FULL_IMAGE.has(item.kind);
 
   return (
     <article class="post">
-      <div class="avatar" style={{ background: c.color }} aria-hidden="true">
-        {initials(item.sourceName)}
-      </div>
-      <div style={{ minWidth: 0 }}>
+      {item.kind === 'video' && item.youtubeId ? (
+        <div class="post-media video">
+          <VideoBox item={item} />
+        </div>
+      ) : item.kind === 'chess' && item.chess ? (
+        <div style={{ padding: '16px 16px 0', maxWidth: '360px', pointerEvents: 'none' }}>
+          <ChessBoard fen={item.chess.fen} />
+        </div>
+      ) : (
+        img.ok && (
+          <div class={`post-media${tall ? ' tall' : ''}`} onClick={open}>
+            <img src={item.image} alt={item.imageAlt ?? ''} loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
+          </div>
+        )
+      )}
+      <div class="post-body">
         <div class="post-head">
+          <span class="avatar" aria-hidden="true">
+            {initials(item.sourceName)}
+          </span>
           <b>{item.sourceName}</b>
-          <span class="muted">· {metaBits(item).slice(1).join(' · ')}</span>
+          <span>· {metaBits(item).slice(1).join(' · ')}</span>
+          <CatTag item={item} />
         </div>
-        <CatTag item={item} />
-        <div onClick={open} role="button" tabIndex={0} style={{ cursor: 'pointer' }}>
-          <h2 class="post-title">
-            {KIND_EMOJI[item.kind] && item.kind !== 'artwork' ? `${KIND_EMOJI[item.kind]} ` : ''}
-            {t.main}
-          </h2>
-          {t.sub && <p class="muted small" style={{ margin: '-2px 0 6px', fontStyle: 'italic' }}>{t.sub}</p>}
-          {item.kind === 'poem' && item.excerpt ? (
-            <p class="quote poem" style={{ margin: '6px 0' }}>{item.excerpt.split('\n').slice(0, 6).join('\n')}</p>
-          ) : (
-            <p class="post-summary">{bodyText(item, mode)}</p>
-          )}
-          {item.kind === 'chess' && item.chess && (
-            <div style={{ maxWidth: '240px', marginTop: '10px', pointerEvents: 'none' }}>
-              <ChessBoard fen={item.chess.fen} />
-            </div>
-          )}
-          {item.kind === 'video' && item.youtubeId ? (
-            <div class="post-media video" onClick={(e) => e.stopPropagation()}>
-              <VideoBox item={item} />
-            </div>
-          ) : (
-            img.ok && (
-              <div class={`post-media${tall ? ' tall' : ''}`}>
-                <img src={item.image} alt={item.imageAlt ?? ''} loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
-              </div>
-            )
-          )}
-          {img.ok && item.imageNote && <p class="img-note muted" style={{ margin: '4px 0 0' }}>Immagine illustrativa · Wikipedia</p>}
-        </div>
+        <h2 class="post-title" onClick={open}>
+          {t.main}
+        </h2>
+        {t.sub && <p class="muted small" style={{ margin: '-2px 0 6px' }}>{t.sub}</p>}
+        {item.kind === 'poem' && item.excerpt ? (
+          <p class="quote poem" style={{ margin: '6px 0' }}>{item.excerpt.split('\n').slice(0, 6).join('\n')}</p>
+        ) : (
+          <p class="post-summary">{bodyText(item, mode)}</p>
+        )}
+        {img.ok && item.imageNote && <p class="img-note muted" style={{ margin: '6px 0 0' }}>Immagine illustrativa · Wikipedia</p>}
         <Actions item={item} explored={explored} />
       </div>
     </article>
@@ -239,7 +303,7 @@ export function MiniRow({ item, note }: { item: Item; note?: string }) {
       {img.ok ? (
         <img src={item.image} alt="" loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
       ) : (
-        <div class="ph" style={{ background: c.color, color: '#fff' }} aria-hidden="true">
+        <div class="ph" style={{ background: 'var(--paper-2)' }} aria-hidden="true">
           {c.emoji}
         </div>
       )}

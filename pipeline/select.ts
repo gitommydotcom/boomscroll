@@ -65,6 +65,9 @@ export function poemExcerpt(text: string, lines = 10): string {
     .join('\n');
 }
 
+/** Toglie la formattazione Markdown che a volte arriva da feed e IA (*corsivo*, **grassetto**). */
+export const plain = (s: string) => s.replace(/(\*\*|__|\*|_)(?=\S)([^*_]+?)(?<=\S)\1/g, '$2').replace(/`/g, '');
+
 export function buildItem(raw: RawItem, ai: AiResult | undefined, now: Date): Item {
   const text = raw.text.trim();
   const fallbackSummary = raw.presummarized ? text : truncate(text || raw.title, 320);
@@ -78,8 +81,8 @@ export function buildItem(raw: RawItem, ai: AiResult | undefined, now: Date): It
     sourceId: raw.source.id,
     sourceName: raw.source.name,
     url: raw.url,
-    title: raw.title,
-    summary: raw.presummarized ? text : (ai?.summary ?? fallbackSummary),
+    title: plain(raw.title),
+    summary: plain(raw.presummarized ? text : (ai?.summary ?? fallbackSummary)),
     lang: raw.lang,
     publishedAt: (raw.publishedAt ?? now).toISOString(),
     tags: ai?.tags ?? [],
@@ -87,7 +90,7 @@ export function buildItem(raw: RawItem, ai: AiResult | undefined, now: Date): It
     ai: !!ai && !raw.presummarized,
     ...raw.extra,
   };
-  if (ai?.titleIt) item.titleIt = ai.titleIt;
+  if (ai?.titleIt) item.titleIt = plain(ai.titleIt);
   if (excerpt && excerpt !== item.summary) item.excerpt = excerpt;
   if (ai?.excerptIt) item.excerptIt = ai.excerptIt;
   if (ai?.interest) item.interest = ai.interest;

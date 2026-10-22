@@ -1,6 +1,3 @@
-import '@fontsource-variable/fraunces';
-import '@fontsource-variable/fraunces/wght-italic.css';
-import '@fontsource-variable/inter';
 import { render } from 'preact';
 import { registerSW } from 'virtual:pwa-register';
 import { App } from './app';

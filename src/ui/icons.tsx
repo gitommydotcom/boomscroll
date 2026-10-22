@@ -154,3 +154,8 @@ export const IconMinus = (p: P) => (
     <path d="M5 12h14" />
   </Svg>
 );
+export const IconUp = (p: P) => (
+  <Svg {...p}>
+    <path d="M6 15l6-6 6 6" />
+  </Svg>
+);

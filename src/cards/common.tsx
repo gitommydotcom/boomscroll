@@ -35,8 +35,8 @@ export function bodyText(item: Item, mode: Settings['summaryMode']): string {
 export function CatTag({ item, light }: { item: Item; light?: boolean }) {
   const c = categoryMeta(item.category);
   return (
-    <span class="cat-tag" style={light ? undefined : { color: c.color }}>
-      <span aria-hidden="true">{c.emoji}</span> {c.label}
+    <span class="cat-tag" style={light ? undefined : { color: 'var(--ink-3)' }}>
+      {c.label}
     </span>
   );
 }

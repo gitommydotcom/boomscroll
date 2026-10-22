@@ -118,6 +118,11 @@ describe('selezione', () => {
     expect(ids).toContain('https://ex.org/3');
   });
 
+  it('toglie il Markdown dai testi', async () => {
+    const { plain } = await import('./select');
+    expect(plain('Progettazione *de novo* di **catalizzatori** e snake_case')).toBe('Progettazione de novo di catalizzatori e snake_case');
+  });
+
   it('mantiene i versi delle poesie', () => {
     expect(poemExcerpt('Verso uno\n\nVerso due\nVerso tre', 2)).toBe('Verso uno\nVerso due');
   });
