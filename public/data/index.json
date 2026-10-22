@@ -1,0 +1,38 @@
+{
+ "latest": "2026-10-22",
+ "updatedAt": "2026-10-22T07:01:00.012Z",
+ "editions": [
+  {
+   "date": "2026-10-22",
+   "count": 78,
+   "highlights": [
+    "See Inside Cells Like Never Before in These Vivid Microscopic Images",
+    "AI Proved the Quasi-Riemann Hypothesis. What Happens Now?",
+    "Startup plans to rejuvenate the nuclear power industry with a new manufacturing approach"
+   ],
+   "categories": {
+    "scienza": 11,
+    "lingue": 2,
+    "curiosita": 8,
+    "divertimento": 3,
+    "universita": 9,
+    "antropologia": 4,
+    "psicologia": 5,
+    "arte": 6,
+    "notizie": 12,
+    "tech": 12,
+    "poesia": 1,
+    "produttivita": 1,
+    "design": 4
+   }
+  }
+ ],
+ "cities": [
+  {
+   "id": "laquila",
+   "name": "L'Aquila",
+   "lat": 42.3498,
+   "lon": 13.3995
+  }
+ ]
+}
