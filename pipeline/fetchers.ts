@@ -32,7 +32,7 @@ export interface FetchContext {
 const fresh = (src: SourceDef, ctx: FetchContext, d?: Date) =>
   !d || ctx.now.getTime() - d.getTime() <= (src.maxAgeDays ?? 3) * 86_400_000;
 
-const matches = (src: SourceDef, text: string) => (src.match ?? []).every((re) => re.test(text));
+const matches = (src: SourceDef, title: string) => (src.match ?? []).every((re) => re.test(title)) && !src.exclude?.test(title);
 
 async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
   let entries: FeedEntry[] = [];
@@ -53,7 +53,7 @@ async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
   return entries
     .filter((e) => e.title && fresh(src, ctx, e.publishedAt))
     .filter((e) => !e.url.includes('/shorts/'))
-    .filter((e) => matches(src, `${e.title}\n${e.text}`))
+    .filter((e) => matches(src, e.title))
     .sort((a, b) => (b.publishedAt?.getTime() ?? 0) - (a.publishedAt?.getTime() ?? 0))
     .map((e): RawItem => {
       const words = e.text.split(/\s+/).length;

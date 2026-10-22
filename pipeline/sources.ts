@@ -32,8 +32,10 @@ export interface SourceDef {
   maxAgeDays?: number;
   /** Solo per le fonti locali: id della città. */
   city?: string;
-  /** Filtri sul titolo+testo: devono passare tutti (es. solo eventi). */
+  /** Filtri sul titolo: devono passare tutti (es. solo eventi). */
   match?: RegExp[];
+  /** Scarta i contenuti il cui titolo corrisponde (es. cronaca). */
+  exclude?: RegExp;
 }
 
 const yt = (id: string, name: string, channelId: string, category: CategoryId, quality = 0.8): SourceDef => ({
@@ -150,11 +152,14 @@ export const SOURCES: SourceDef[] = [
 export const CITIES = [{ id: 'laquila', name: "L'Aquila", lat: 42.3498, lon: 13.3995 }];
 
 const EVENT_WORDS =
-  /\b(event[oi]|mostr[ae]|concert[oi]|festival|spettacol[oi]|teatro|rassegn[ae]|inaugurazione|visit[ae] guidat[ae]|escursion[ei]|sagr[ae]|presentazione|convegno|laboratori?o?|incontr[oi]|cinema|proiezione|musica|danza|libr[oi]|letture|passeggiat[ae]|degustazion[ei]|mercatin[oi]|fiera|workshop)\b/i;
+  /\b(mostr[ae]|concert[oi]|festival|spettacol[oi]|teatro|rassegn[ae]|inaugura|visit[ae] guidat[ae]|escursion[ei]|sagr[ae]|presentazione|convegno|laboratori|cinema|proiezion[ei]|danza|letture|passeggiat[ae]|degustazion[ei]|mercatin[oi]|fiera|workshop|event[oi]|serata|appuntament[oi]|in scena|calici|biglietti|esaurito|apre|riapre)\b/i;
+
+const NOT_EVENTS =
+  /\b(incident[ei]|incendi[oi]|arrest|morto|morta|mort[ei]|ferit[oi]|denunc|polizia|carabinieri|sequestr|indagat|processo|tribunale|sindacat|bilancio|assemblea|consiglio comunale|elezioni|truffa|furto|rapina|violenz|sciopero)/i;
 
 export const LOCAL_SOURCES: SourceDef[] = [
-  { id: 'ilcapoluogo', name: 'Il Capoluogo', type: 'rss', url: 'https://www.ilcapoluogo.it/feed/', alt: ['https://www.ilcapoluogo.it/feed', 'https://www.ilcapoluogo.it/rss', 'https://www.ilcapoluogo.it/rss.xml'], category: 'vicino', lang: 'it', kind: 'event', quality: 0.7, max: 6, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS] },
-  { id: 'laquilablog', name: 'AQ Blog', type: 'rss', url: 'https://www.laquilablog.it/feed/', category: 'vicino', lang: 'it', kind: 'event', quality: 0.65, max: 4, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS] },
-  { id: 'newstown', name: 'NewsTown', type: 'rss', url: 'https://www.news-town.it/feed', category: 'vicino', lang: 'it', kind: 'event', quality: 0.65, max: 4, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS] },
-  { id: 'abruzzoweb', name: 'AbruzzoWeb', type: 'rss', url: 'https://www.abruzzoweb.it/feed/', alt: ['https://www.abruzzoweb.it/rss', 'https://www.abruzzoweb.it/rss.xml'], category: 'vicino', lang: 'it', kind: 'event', quality: 0.6, max: 3, maxAgeDays: 4, city: 'laquila', match: [/\b(l'aquila|aquilan[oi]|gran sasso)\b/i, EVENT_WORDS] },
+  { id: 'ilcapoluogo', name: 'Il Capoluogo', type: 'rss', url: 'https://www.ilcapoluogo.it/feed/', alt: ['https://www.ilcapoluogo.it/feed', 'https://www.ilcapoluogo.it/rss', 'https://www.ilcapoluogo.it/rss.xml'], category: 'vicino', lang: 'it', kind: 'event', quality: 0.7, max: 6, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS], exclude: NOT_EVENTS },
+  { id: 'laquilablog', name: 'AQ Blog', type: 'rss', url: 'https://www.laquilablog.it/feed/', category: 'vicino', lang: 'it', kind: 'event', quality: 0.65, max: 4, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS], exclude: NOT_EVENTS },
+  { id: 'newstown', name: 'NewsTown', type: 'rss', url: 'https://www.news-town.it/feed', category: 'vicino', lang: 'it', kind: 'event', quality: 0.65, max: 4, maxAgeDays: 4, city: 'laquila', match: [EVENT_WORDS], exclude: NOT_EVENTS },
+  { id: 'abruzzoweb', name: 'AbruzzoWeb', type: 'rss', url: 'https://www.abruzzoweb.it/feed/', alt: ['https://www.abruzzoweb.it/rss', 'https://www.abruzzoweb.it/rss.xml'], category: 'vicino', lang: 'it', kind: 'event', quality: 0.6, max: 3, maxAgeDays: 4, city: 'laquila', match: [/\b(l'aquila|aquilan[oi]|gran sasso)\b/i, EVENT_WORDS], exclude: NOT_EVENTS },
 ];

@@ -62,3 +62,12 @@ jobs:
           git commit -m "Edizione del $(TZ=Europe/Rome date +%F)"
           git pull --rebase origin main
           git push origin HEAD:main
+
+  deploy:
+    needs: edition
+    if: github.event_name != 'workflow_dispatch' || inputs.deploy
+    uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

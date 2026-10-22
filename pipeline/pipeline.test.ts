@@ -138,3 +138,16 @@ describe('puzzlePosition', () => {
     expect(puzzlePosition('e4 e5', 1, 'a1a8')).toBeNull();
   });
 });
+
+describe('eventi locali', () => {
+  it('tiene gli eventi e scarta la cronaca', async () => {
+    const { LOCAL_SOURCES } = await import('./sources');
+    const src = LOCAL_SOURCES[0];
+    const ok = (t: string) => (src.match ?? []).every((re) => re.test(t)) && !src.exclude?.test(t);
+    expect(ok('Grotte di Stiffe: il 15 novembre torna “Calici in Grotta”, alla scoperta del vino')).toBe(true);
+    expect(ok('Street Fitness: è subito tutto esaurito per il ritorno all’Aquila')).toBe(true);
+    expect(ok('Al Ridotto del Teatro Comunale la rassegna di musica da camera')).toBe(true);
+    expect(ok('Pendolare denuncia principio di incendio su un mezzo, le precisazioni di Tua')).toBe(false);
+    expect(ok('Assemblea Upi ad Imperia, Caruso: «Evitare tagli alle Province nella legge di bilancio»')).toBe(false);
+  });
+});
