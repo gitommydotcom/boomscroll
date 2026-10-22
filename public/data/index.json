@@ -1,7 +1,33 @@
 {
- "latest": "2026-10-22",
- "updatedAt": "2026-10-22T13:01:44.854Z",
+ "latest": "2026-10-22-sera",
+ "updatedAt": "2026-10-22T20:23:25.072Z",
  "editions": [
+  {
+   "id": "2026-10-22-sera",
+   "slot": "sera",
+   "date": "2026-10-22",
+   "generatedAt": "2026-10-22T19:35:12.486Z",
+   "count": 79,
+   "highlights": [
+    "Quando ha iniziato a bruciare",
+    "Depressione e ansia adolescenziale previste dallo sviluppo cerebrale infantile",
+    "Alcune nane “bianche” brillano in realtà di colore verde, rosa o viola"
+   ],
+   "categories": {
+    "arte": 9,
+    "scienza": 16,
+    "poesia": 1,
+    "divertimento": 1,
+    "lingue": 3,
+    "universita": 9,
+    "curiosita": 7,
+    "psicologia": 3,
+    "produttivita": 2,
+    "tech": 11,
+    "notizie": 12,
+    "design": 5
+   }
+  },
   {
    "date": "2026-10-22",
    "count": 88,
