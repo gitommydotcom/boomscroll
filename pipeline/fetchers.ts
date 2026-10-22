@@ -32,6 +32,15 @@ export interface FetchContext {
 const fresh = (src: SourceDef, ctx: FetchContext, d?: Date) =>
   !d || ctx.now.getTime() - d.getTime() <= (src.maxAgeDays ?? 3) * 86_400_000;
 
+/** Le descrizioni di YouTube sono piene di link, sponsor e capitoli: teniamo solo il testo. */
+export function cleanVideoText(text: string): string {
+  return text
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l && !/https?:\/\/|www\.|patreon|sponsor|subscribe|merch|instagram|twitter|tiktok|discord|newsletter|^#|^\d{1,2}:\d{2}|^[-–—_=*]{3,}/i.test(l))
+    .join('\n');
+}
+
 const matches = (src: SourceDef, title: string) => (src.match ?? []).every((re) => re.test(title)) && !src.exclude?.test(title);
 
 async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
@@ -62,7 +71,7 @@ async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
         source: src,
         url: e.url,
         title: e.title,
-        text: e.text,
+        text: src.type === 'youtube' ? cleanVideoText(e.text) : e.text,
         image: e.youtubeId ? `https://i.ytimg.com/vi/${e.youtubeId}/hqdefault.jpg` : e.image,
         publishedAt: e.publishedAt,
         author: e.author,

@@ -38,18 +38,79 @@ export interface SourceDef {
   exclude?: RegExp;
 }
 
-const yt = (id: string, name: string, channelId: string, category: CategoryId, quality = 0.8): SourceDef => ({
-  id,
+interface YtOptions {
+  quality?: number;
+  lang?: string;
+  /** Nome utente storico: indirizzo alternativo del feed. */
+  user?: string;
+  mixed?: boolean;
+  maxAgeDays?: number;
+}
+
+const yt = (id: string, name: string, channelId: string, category: CategoryId, o: YtOptions = {}): SourceDef => ({
+  id: `yt-${id}`,
   name,
   type: 'youtube',
   url: `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`,
+  alt: o.user ? [`https://www.youtube.com/feeds/videos.xml?user=${o.user}`] : undefined,
   category,
-  lang: 'en',
+  mixed: o.mixed,
+  lang: o.lang ?? 'en',
   kind: 'video',
-  quality,
+  quality: o.quality ?? 0.8,
   max: 1,
-  maxAgeDays: 5,
+  maxAgeDays: o.maxAgeDays ?? 7,
 });
+
+/** Canali YouTube: lezioni, divulgazione e saggi video. Un video al giorno al massimo per canale. */
+export const YOUTUBE: SourceDef[] = [
+  // Scienza
+  yt('3b1b', '3Blue1Brown', 'UCYO_jab_esuFRV4b17AJtAw', 'scienza', { quality: 0.95, maxAgeDays: 14 }),
+  yt('veritasium', 'Veritasium', 'UCHnyfMqiRRG1u-2MsSQLbXA', 'scienza', { quality: 0.85 }),
+  yt('kurzgesagt', 'Kurzgesagt', 'UCsXVk37bltHxD1rDPwtNM8Q', 'scienza', { quality: 0.85, maxAgeDays: 14 }),
+  yt('numberphile', 'Numberphile', 'UCoxcjq-8xIDTYp3uz647V5A', 'scienza', { user: 'numberphile' }),
+  yt('minutephysics', 'MinutePhysics', 'UCUHW94eEFW7hkUMVaZz4eDg', 'scienza', { user: 'minutephysics', maxAgeDays: 14 }),
+  yt('pbsspacetime', 'PBS Space Time', 'UC7_gcs09iThXybpVgjHZ_7g', 'scienza', { quality: 0.85 }),
+  yt('scishow', 'SciShow', 'UCZYTClx2T1of7BRZ86-8fow', 'scienza', { user: 'scishow', quality: 0.75, maxAgeDays: 3 }),
+  yt('smartereveryday', 'Smarter Every Day', 'UC6107grRI4m0o2-emgoDnAA', 'scienza', { user: 'destinws2', maxAgeDays: 14 }),
+  yt('stevemould', 'Steve Mould', 'UCEIwxahdLz7bap-VDs9h35A', 'scienza', { maxAgeDays: 14 }),
+  yt('sixtysymbols', 'Sixty Symbols', 'UCvBqzzvUBLCs8Y7Axb-jZew', 'scienza', { user: 'sixtysymbols', maxAgeDays: 14 }),
+  yt('primer', 'Primer', 'UCKzJFdi57J53Vr_BkTfN3uQ', 'scienza', { quality: 0.9, maxAgeDays: 30 }),
+  // Tech
+  yt('computerphile', 'Computerphile', 'UC9-y-6csu5WGm29I7JiwpnA', 'tech', { user: 'Computerphile' }),
+  yt('twominutepapers', 'Two Minute Papers', 'UCbfYPyITQ-7l4upoX8nvctg', 'tech', { quality: 0.75 }),
+  yt('realengineering', 'Real Engineering', 'UCR1IuLEqb6UEA_zQ81kwXfg', 'tech', { maxAgeDays: 14 }),
+  // Arte e design
+  yt('artassignment', 'The Art Assignment', 'UCmQThz1OLYt8mb2PU540LOA', 'arte', { user: 'theartassignment', quality: 0.85, maxAgeDays: 21 }),
+  yt('nerdwriter', 'Nerdwriter1', 'UCJkMlOu7faDgqh4PfzbpLdg', 'arte', { quality: 0.85, maxAgeDays: 30 }),
+  yt('thefutur', 'The Futur', 'UC-b3c7kxa5vU-bnmaROgvog', 'design', { quality: 0.7, maxAgeDays: 7 }),
+  // Lingue
+  yt('langfocus', 'Langfocus', 'UCNhX3WQEkraW3VHPyup8jkQ', 'lingue', { quality: 0.85, maxAgeDays: 21 }),
+  yt('easygerman', 'Easy German', 'UCbxb2fqe9oNgglAoYqsYOtQ', 'lingue', { lang: 'de', maxAgeDays: 5 }),
+  // Persone, mente, abitudini
+  yt('schooloflife', 'The School of Life', 'UC7IcJI8PUf5Z3zKxnZvTBog', 'psicologia', { user: 'schooloflifechannel', maxAgeDays: 7 }),
+  yt('bigthink', 'Big Think', 'UCvQECJukTDE2i6aCoMnS-Vg', 'psicologia', { mixed: true, quality: 0.75, maxAgeDays: 3 }),
+  yt('aliabdaal', 'Ali Abdaal', 'UCoOae5nYA7VqaXzerajD0lg', 'produttivita', { quality: 0.65, maxAgeDays: 7 }),
+  yt('thomasfrank', 'Thomas Frank', 'UCG-KntY7aVnIGXYEBQvmBAQ', 'abitudini', { quality: 0.7, maxAgeDays: 14 }),
+  yt('historiacivilis', 'Historia Civilis', 'UCv_vLHiWVBh_FR9vbeuiY-A', 'antropologia', { quality: 0.85, maxAgeDays: 60 }),
+  // Università e lezioni
+  yt('mitocw', 'MIT OpenCourseWare', 'UCEBb1b_L6zDS3xTUrIALZOw', 'universita', { quality: 0.95, user: 'MIT' }),
+  yt('stanford', 'Stanford', 'UCBa5G_ESCn8Yd4vw5U-gIcg', 'universita', { quality: 0.85, user: 'stanforduniversity' }),
+  yt('harvard', 'Harvard University', 'UCWwgaK7x0_FR1goeSRazfsQ', 'universita', { quality: 0.85, user: 'Harvard' }),
+  yt('yalecourses', 'Yale Courses', 'UC4EY_qnSeAP1xGsh61eOoJA', 'universita', { quality: 0.9, user: 'YaleCourses', maxAgeDays: 14 }),
+  yt('royalinstitution', 'The Royal Institution', 'UCYeF244yNGuFefuFKqxIAXw', 'universita', { quality: 0.9, user: 'TheRoyalInstitution' }),
+  yt('crashcourse', 'Crash Course', 'UCX6b17PVsYBQ0ip5gyeme-Q', 'universita', { user: 'crashcourse', mixed: true }),
+  yt('ted', 'TED', 'UCAuUUnT6oDeKwE6v1NGQxug', 'universita', { user: 'TEDtalksDirector', mixed: true, quality: 0.75, maxAgeDays: 3 }),
+  // Curiosità e divertimento
+  yt('teded', 'TED-Ed', 'UCsooa4yRKGN_zEE8iknghZA', 'curiosita', { user: 'TEDEducation' }),
+  yt('vsauce', 'Vsauce', 'UC6nSFpj9HTCZ5t-N3Rm3-HA', 'curiosita', { user: 'vsauce', maxAgeDays: 60 }),
+  yt('cgpgrey', 'CGP Grey', 'UC2C_jShtL725hvbm1arSV9w', 'curiosita', { user: 'CGPGrey', quality: 0.85, maxAgeDays: 60 }),
+  yt('wendover', 'Wendover Productions', 'UC9RM-iSvTu1uPJb8X5yp3EQ', 'curiosita', { maxAgeDays: 14 }),
+  yt('halfasinteresting', 'Half as Interesting', 'UCuCkxoKLYO_EQ2GeFtbM_bw', 'curiosita', { quality: 0.7, maxAgeDays: 7 }),
+  yt('johnnyharris', 'Johnny Harris', 'UCmGSJVG3mCRXVOP4yZrU1Dw', 'notizie', { mixed: true, quality: 0.75, maxAgeDays: 7 }),
+  yt('vox', 'Vox', 'UCLXo7UDZvByw2ixzpQCufnA', 'notizie', { user: 'voxdotcom', mixed: true, quality: 0.7, maxAgeDays: 3 }),
+  yt('markrober', 'Mark Rober', 'UCY1kMZp36IQSyNx_9h4mpCg', 'divertimento', { maxAgeDays: 30 }),
+];
 
 export const SOURCES: SourceDef[] = [
   // ── Notizie ─────────────────────────────────────────────────────────────
@@ -75,10 +136,6 @@ export const SOURCES: SourceDef[] = [
   { id: 'knowable', name: 'Knowable Magazine', type: 'rss', url: 'https://knowablemagazine.org/rss', category: 'scienza', mixed: true, lang: 'en', quality: 0.9, max: 1, maxAgeDays: 7 },
   { id: 'lescienze', name: 'Le Scienze', type: 'rss', url: 'https://www.lescienze.it/rss/all/rss2.0.xml', alt: ['https://www.lescienze.it/feed', 'https://www.lescienze.it/rss', 'https://www.lescienze.it/news/rss'], category: 'scienza', lang: 'it', quality: 0.85, max: 2, maxAgeDays: 3 },
   { id: 'apod', name: 'NASA APOD', type: 'apod', category: 'scienza', lang: 'en', kind: 'image', quality: 0.9, max: 1 },
-  yt('yt-3b1b', '3Blue1Brown', 'UCYO_jab_esuFRV4b17AJtAw', 'scienza', 0.9),
-  yt('yt-veritasium', 'Veritasium', 'UCHnyfMqiRRG1u-2MsSQLbXA', 'scienza'),
-  yt('yt-kurzgesagt', 'Kurzgesagt', 'UCsXVk37bltHxD1rDPwtNM8Q', 'scienza'),
-  yt('yt-numberphile', 'Numberphile', 'UCoxcjq-8xIDTYp3uz647V5A', 'scienza'),
 
   // ── Tech ────────────────────────────────────────────────────────────────
   { id: 'ars', name: 'Ars Technica', type: 'rss', url: 'https://feeds.arstechnica.com/arstechnica/index', category: 'tech', mixed: true, lang: 'en', quality: 0.8, max: 2, maxAgeDays: 2 },
@@ -107,10 +164,6 @@ export const SOURCES: SourceDef[] = [
   { id: 'stanford', name: 'Stanford Report', type: 'rss', url: 'https://news.stanford.edu/feed/', alt: ['https://news.stanford.edu/rss', 'https://news.stanford.edu/stories/feed'], category: 'universita', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 4 },
   { id: 'yale', name: 'Yale News', type: 'rss', url: 'https://news.yale.edu/news-rss', category: 'universita', lang: 'en', quality: 0.85, max: 1, maxAgeDays: 4 },
   { id: 'openculture', name: 'Open Culture', type: 'rss', url: 'https://www.openculture.com/feed', category: 'universita', mixed: true, lang: 'en', quality: 0.8, max: 1, maxAgeDays: 4 },
-  yt('yt-mitocw', 'MIT OpenCourseWare', 'UCEBb1b_L6zDS3xTUrIALZOw', 'universita', 0.95),
-  yt('yt-stanford', 'Stanford', 'UCBa5G_ESCn8Yd4vw5U-gIcg', 'universita', 0.85),
-  yt('yt-yalecourses', 'Yale Courses', 'UC4EY_qnSeAP1xGsh61eOoJA', 'universita', 0.9),
-  yt('yt-royalinstitution', 'The Royal Institution', 'UCYeF244yNGuFefuFKqxIAXw', 'universita', 0.9),
 
   // ── Poesia ──────────────────────────────────────────────────────────────
   { id: 'poetryfoundation', name: 'Poetry Foundation', type: 'rss', url: 'https://www.poetryfoundation.org/feeds/poem-of-the-day', category: 'poesia', lang: 'en', kind: 'poem', quality: 0.9, max: 1, maxAgeDays: 2 },
@@ -142,7 +195,6 @@ export const SOURCES: SourceDef[] = [
   { id: 'atlasobscura', name: 'Atlas Obscura', type: 'rss', url: 'https://www.atlasobscura.com/feeds/latest', category: 'curiosita', lang: 'en', quality: 0.8, max: 2, maxAgeDays: 4 },
   { id: 'smithsonian', name: 'Smithsonian Magazine', type: 'rss', url: 'https://www.smithsonianmag.com/rss/latest_articles/', category: 'curiosita', mixed: true, lang: 'en', quality: 0.85, max: 2, maxAgeDays: 3 },
   { id: 'futility', name: 'Futility Closet', type: 'rss', url: 'https://www.futilitycloset.com/feed/', category: 'divertimento', lang: 'en', quality: 0.75, max: 1, maxAgeDays: 5 },
-  yt('yt-teded', 'TED-Ed', 'UCsooa4yRKGN_zEE8iknghZA', 'curiosita', 0.8),
   { id: 'xkcd', name: 'xkcd', type: 'xkcd', category: 'divertimento', lang: 'en', kind: 'comic', quality: 0.8, max: 1 },
   { id: 'lichess', name: 'Lichess', type: 'lichess', category: 'divertimento', lang: 'it', kind: 'chess', quality: 0.85, max: 1 },
 ];

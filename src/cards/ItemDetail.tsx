@@ -4,11 +4,12 @@ import { isHardLang, type Item } from '../../shared/types';
 import { addFlashcard, lessOf, share } from '../lib/actions';
 import { explain } from '../lib/ranking';
 import { useAppState } from '../lib/store';
-import { closeDetail, closeMenu, useUi } from '../lib/ui';
+import { closeDetail, closeMenu, stopVideo, useUi } from '../lib/ui';
 import { IconExternal, IconInfo, IconMute, IconPlay, IconShare, IconTranslate } from '../ui/icons';
 import { Sheet } from '../ui/Sheet';
 import { ChessPuzzle } from './Chess';
 import { Actions } from './ItemCards';
+import { embedUrl, useYtThumb } from './Video';
 import { CatTag, langName, metaBits, titles } from './common';
 
 function Why({ item, explored }: { item: Item; explored?: boolean }) {
@@ -32,6 +33,7 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
   const [play, setPlay] = useState(false);
   const [imgOk, setImgOk] = useState(true);
   const [showIt, setShowIt] = useState(false);
+  const thumb = useYtThumb(item.youtubeId ?? '');
   const [why, setWhy] = useState(false);
   const t = titles(item, mode);
   const foreign = !item.lang.startsWith('it');
@@ -44,14 +46,21 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
         play ? (
           <iframe
             class="video-frame"
-            src={`https://www.youtube-nocookie.com/embed/${item.youtubeId}?autoplay=1&rel=0`}
+            src={embedUrl(item.youtubeId)}
             title={item.title}
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowFullScreen
           />
         ) : (
-          <button onClick={() => setPlay(true)} style={{ position: 'relative', display: 'block', width: '100%' }} aria-label="Guarda il video">
-            <img class="detail-img" src={item.image} alt="" referrerpolicy="no-referrer" />
+          <button
+            onClick={() => {
+              stopVideo();
+              setPlay(true);
+            }}
+            style={{ position: 'relative', display: 'block', width: '100%' }}
+            aria-label="Guarda il video"
+          >
+            <img class="detail-img" src={thumb.src} onError={thumb.onError} onLoad={thumb.onLoad} alt="" referrerpolicy="no-referrer" />
             <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#fff' }}>
               <span style={{ background: 'rgb(0 0 0 / 55%)', borderRadius: '999px', padding: '18px' }}>
                 <IconPlay size={32} />
@@ -63,7 +72,10 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
         item.image &&
         imgOk &&
         item.kind !== 'chess' && (
-          <img class="detail-img" src={item.image} alt={item.imageAlt ?? ''} referrerpolicy="no-referrer" onError={() => setImgOk(false)} />
+          <figure style={{ margin: 0 }}>
+            <img class="detail-img" src={item.image} alt={item.imageAlt ?? ''} referrerpolicy="no-referrer" onError={() => setImgOk(false)} />
+            {item.imageNote && <figcaption class="muted small" style={{ marginTop: '6px' }}>{item.imageNote}</figcaption>}
+          </figure>
         )
       )}
 

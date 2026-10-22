@@ -3,10 +3,11 @@ import type { Item } from '../../shared/types';
 import { react, share, toggleSave } from '../lib/actions';
 import { getState, useAppState } from '../lib/store';
 import { openDetail, openMenu } from '../lib/ui';
-import { IconBookmark, IconHeart, IconMore, IconPlay, IconShare, IconThumbDown } from '../ui/icons';
+import { IconBookmark, IconHeart, IconMore, IconShare, IconThumbDown } from '../ui/icons';
 import { useState } from 'preact/hooks';
 import { CatTag, KIND_EMOJI, bodyText, initials, metaBits, titles } from './common';
 import { ChessBoard } from './Chess';
+import { VideoBox } from './Video';
 
 const FULL_IMAGE = new Set(['artwork', 'image', 'comic']);
 
@@ -24,8 +25,29 @@ export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
   const t = titles(item, mode);
   const color = categoryMeta(item.category).color;
   const open = () => openDetail(item, explored);
+  const video = item.kind === 'video' && !!item.youtubeId;
   const showFull = FULL_IMAGE.has(item.kind) && img.ok;
-  const typo = !img.ok || item.kind === 'poem' || item.kind === 'word' || item.kind === 'chess';
+  const typo = !video && (!img.ok || item.kind === 'poem' || item.kind === 'word' || item.kind === 'chess');
+
+  if (video) {
+    return (
+      <article class="slide video" style={{ background: '#0d0c0a' }}>
+        <div class="slide-blur" style={{ backgroundImage: `url("https://i.ytimg.com/vi/${item.youtubeId}/hqdefault.jpg")` }} />
+        <VideoBox item={item} class="top" />
+        <div class="slide-body" onClick={open} role="button" tabIndex={0} aria-label={`Apri: ${t.main}`}>
+          <div class="slide-meta">
+            <CatTag item={item} light />
+            <span>▶ {metaBits(item).join(' · ')}</span>
+          </div>
+          <h2 class="slide-title">{t.main}</h2>
+          {t.sub && <div class="slide-orig">{t.sub}</div>}
+          <p class="slide-summary">{bodyText(item, mode)}</p>
+          <span class="slide-more">Leggi di più</span>
+        </div>
+        <Rail item={item} explored={explored} />
+      </article>
+    );
+  }
 
   return (
     <article class={`slide${typo ? ' typo' : ''}`} style={{ background: typo ? color : '#0d0c0a' }}>
@@ -45,6 +67,7 @@ export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
           <CatTag item={item} light />
           <span>{metaBits(item).join(' · ')}</span>
         </div>
+        {img.ok && item.imageNote && <div class="img-note">Immagine illustrativa</div>}
         {item.kind === 'word' && item.word ? (
           <>
             <h2 class="slide-title huge">{item.word.word}</h2>
@@ -72,17 +95,7 @@ export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
             <p class="slide-summary">{bodyText(item, mode)}</p>
           </>
         )}
-        <span class="slide-more">
-          {item.kind === 'video' ? (
-            <span class="row" style={{ gap: '6px' }}>
-              <IconPlay size={14} /> Guarda
-            </span>
-          ) : item.kind === 'chess' ? (
-            'Risolvi il puzzle'
-          ) : (
-            'Leggi di più'
-          )}
-        </span>
+        <span class="slide-more">{item.kind === 'chess' ? 'Risolvi il puzzle' : 'Leggi di più'}</span>
       </div>
       <Rail item={item} explored={explored} />
     </article>
@@ -167,11 +180,18 @@ export function Post({ item, explored }: { item: Item; explored?: boolean }) {
               <ChessBoard fen={item.chess.fen} />
             </div>
           )}
-          {img.ok && (
-            <div class={`post-media${tall ? ' tall' : ''}`}>
-              <img src={item.image} alt={item.imageAlt ?? ''} loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
+          {item.kind === 'video' && item.youtubeId ? (
+            <div class="post-media video" onClick={(e) => e.stopPropagation()}>
+              <VideoBox item={item} />
             </div>
+          ) : (
+            img.ok && (
+              <div class={`post-media${tall ? ' tall' : ''}`}>
+                <img src={item.image} alt={item.imageAlt ?? ''} loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
+              </div>
+            )
           )}
+          {img.ok && item.imageNote && <p class="img-note muted" style={{ margin: '4px 0 0' }}>Immagine illustrativa · Wikipedia</p>}
         </div>
         <Actions item={item} explored={explored} />
       </div>

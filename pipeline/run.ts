@@ -7,10 +7,11 @@
  */
 import type { Edition, Item, SourceReport } from '../shared/types';
 import { enrich } from './enrich';
+import { illustrate } from './images';
 import { fetchSource, type FetchContext, type RawItem } from './fetchers';
 import { summarize } from './llm';
 import { buildItem, dedupe, finalize, preselect } from './select';
-import { CITIES, LOCAL_SOURCES, SOURCES, type SourceDef } from './sources';
+import { CITIES, LOCAL_SOURCES, SOURCES, YOUTUBE, type SourceDef } from './sources';
 import { readIndex, recentIds, writeEdition } from './store';
 import { mapLimit, romeDate, seeded } from './util';
 
@@ -26,7 +27,7 @@ async function main() {
   const ctx: FetchContext = { date, now, rng: seeded(date), seen };
   console.log(`📰 Boomscroll · edizione del ${date} · ${seen.size} contenuti già visti nelle ultime edizioni`);
 
-  const all: SourceDef[] = [...SOURCES, ...LOCAL_SOURCES].filter((s) => !only || only.includes(s.id));
+  const all: SourceDef[] = [...SOURCES, ...YOUTUBE, ...LOCAL_SOURCES].filter((s) => !only || only.includes(s.id));
   const reports: SourceReport[] = [];
   const fetched = await mapLimit(all, 8, async (src) => {
     try {
@@ -56,6 +57,8 @@ async function main() {
   for (const city of CITIES) {
     localByCity[city.id] = local.filter((r) => r.source.city === city.id).map((r) => buildItem(r, ai.results.get(r), now));
   }
+  const illustrated = await illustrate([...items, ...Object.values(localByCity).flat()]);
+  console.log(`🖼️  ${items.filter((i) => i.image).length}/${items.length} con immagine (${illustrated} illustrative da Wikipedia), ${items.filter((i) => i.kind === 'video').length} video`);
 
   const edition: Edition = {
     date,

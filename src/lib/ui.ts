@@ -8,6 +8,8 @@ export interface OpenItem {
 
 let detail: OpenItem | null = null;
 let menu: OpenItem | null = null;
+/** Id del contenuto il cui video è in riproduzione nel feed (uno solo alla volta). */
+let playing: string | null = null;
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 
@@ -28,6 +30,16 @@ export const closeMenu = () => {
   emit();
 };
 
+export const playVideo = (id: string) => {
+  playing = id;
+  emit();
+};
+export const stopVideo = () => {
+  if (!playing) return;
+  playing = null;
+  emit();
+};
+
 export function useUi() {
   const [, setTick] = useState(0);
   const force = () => setTick((x) => x + 1);
@@ -37,5 +49,5 @@ export function useUi() {
       listeners.delete(force);
     };
   }, []);
-  return { detail, menu };
+  return { detail, menu, playing };
 }

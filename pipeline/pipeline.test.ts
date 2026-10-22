@@ -63,6 +63,18 @@ describe('parseFeed', () => {
   });
 });
 
+describe('immagini', () => {
+  it('ingrandisce le miniature della BBC', async () => {
+    const { upgradeImage } = await import('./images');
+    expect(upgradeImage('https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/x.jpg')).toBe('https://ichef.bbci.co.uk/ace/standard/976/cpsprodpb/x.jpg');
+    expect(upgradeImage('https://ex.org/a.jpg')).toBe('https://ex.org/a.jpg');
+  });
+  it('pulisce le descrizioni dei video', async () => {
+    const { cleanVideoText } = await import('./fetchers');
+    expect(cleanVideoText('Un video sui buchi neri.\nSponsor: Brilliant https://x.y\n00:00 Intro\nPatreon: …\nAltro testo')).toBe('Un video sui buchi neri.\nAltro testo');
+  });
+});
+
 describe('util', () => {
   it('normalizza i link togliendo il tracciamento', () => {
     expect(normalizeUrl('http://ex.org/a/?utm_source=x&id=2#top')).toBe('https://ex.org/a/?id=2');

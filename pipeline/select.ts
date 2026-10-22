@@ -1,6 +1,7 @@
 import type { CategoryId, Item } from '../shared/types';
 import type { RawItem } from './fetchers';
 import type { AiResult } from './llm';
+import { upgradeImage } from './images';
 import { itemId, truncate } from './util';
 
 const tokens = (s: string) =>
@@ -42,13 +43,15 @@ const ALWAYS_KEEP = new Set(['chess', 'word', 'artwork', 'comic', 'image', 'poem
 export function preselect(items: RawItem[], now: Date, perCategory = 14, total = 140): RawItem[] {
   const score = (i: RawItem) => {
     const ageH = i.publishedAt ? (now.getTime() - i.publishedAt.getTime()) / 3_600_000 : 24;
-    return i.source.quality + Math.max(0, 1 - ageH / 72) * 0.3 + (i.image ? 0.05 : 0);
+    return i.source.quality + Math.max(0, 1 - ageH / 72) * 0.3 + (i.image ? 0.08 : 0) + (i.kind === 'video' ? 0.1 : 0);
   };
   const byCat = new Map<string, RawItem[]>();
   for (const i of [...items].sort((a, b) => score(b) - score(a))) {
-    const list = byCat.get(i.source.category) ?? [];
-    if (list.length < perCategory) list.push(i);
-    byCat.set(i.source.category, list);
+    // I video hanno un loro gruppo, così non tolgono spazio agli articoli della stessa categoria.
+    const key = i.kind === 'video' ? 'video' : i.source.category;
+    const list = byCat.get(key) ?? [];
+    if (list.length < (key === 'video' ? 18 : perCategory)) list.push(i);
+    byCat.set(key, list);
   }
   return [...byCat.values()].flat().sort((a, b) => score(b) - score(a)).slice(0, total);
 }
@@ -90,7 +93,7 @@ export function buildItem(raw: RawItem, ai: AiResult | undefined, now: Date): It
   if (ai?.interest) item.interest = ai.interest;
   if (ai?.quiz) item.quiz = ai.quiz;
   if (raw.author) item.author = truncate(raw.author, 80);
-  if (raw.image) item.image = raw.image;
+  if (raw.image) item.image = upgradeImage(raw.image);
   if (raw.imageAlt) item.imageAlt = truncate(raw.imageAlt, 200);
   if (ai?.word) item.word = { ...ai.word, lang: raw.lang };
   return item;
@@ -104,9 +107,11 @@ export function finalize(items: Item[], perCategory = 12, total = 110): Item[] {
   const rank = (i: Item) => i.quality + (i.interest ?? 3) / 5;
   const counts = new Map<string, number>();
   // Opere, poesie, parole e giochi sono pochi e scelti apposta: entrano sempre.
-  const out: Item[] = pool.filter((i) => ALWAYS_KEEP.has(i.kind));
-  for (const i of out) counts.set(i.category, (counts.get(i.category) ?? 0) + 1);
-  for (const i of pool.filter((i) => !ALWAYS_KEEP.has(i.kind)).sort((a, b) => rank(b) - rank(a))) {
+  // I video, fino a 16, non contano nel limite per categoria.
+  const videos = pool.filter((i) => i.kind === 'video').sort((a, b) => rank(b) - rank(a)).slice(0, 16);
+  const out: Item[] = [...pool.filter((i) => ALWAYS_KEEP.has(i.kind)), ...videos];
+  for (const i of out) if (i.kind !== 'video') counts.set(i.category, (counts.get(i.category) ?? 0) + 1);
+  for (const i of pool.filter((i) => !ALWAYS_KEEP.has(i.kind) && !videos.includes(i)).sort((a, b) => rank(b) - rank(a))) {
     const c = counts.get(i.category) ?? 0;
     if (c >= perCategory) continue;
     counts.set(i.category, c + 1);

@@ -80,6 +80,8 @@ export interface Item {
   author?: string;
   image?: string;
   imageAlt?: string;
+  /** Presente quando l'immagine non viene dalla fonte (es. illustrativa da Wikipedia). */
+  imageNote?: string;
   publishedAt: string;
   readingMinutes?: number;
   tags: string[];
