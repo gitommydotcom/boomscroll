@@ -1,29 +1,29 @@
 {
  "latest": "2026-10-22",
- "updatedAt": "2026-10-22T09:33:19.786Z",
+ "updatedAt": "2026-10-22T13:01:44.854Z",
  "editions": [
   {
    "date": "2026-10-22",
-   "count": 85,
+   "count": 88,
    "highlights": [
-    "L'IA ha dimostrato il quasi-ipotesi di Riemann. Cosa succede ora?",
-    "Le Origini Sorprendenti dei Nativi hawaiani”,",
-    "Quando ha iniziato a bruciare"
+    "AI Proved the Quasi-Riemann Hypothesis. What Happens Now?",
+    "Startup: nuovi metodi per il settore nucleare",
+    "Progettazione de novo di fotocatalizzatori metalloenzimatici enantioselettivi"
    ],
    "categories": {
     "arte": 10,
     "lingue": 4,
-    "divertimento": 3,
-    "universita": 11,
-    "scienza": 15,
-    "curiosita": 5,
-    "psicologia": 5,
-    "notizie": 12,
-    "tech": 12,
-    "produttivita": 1,
-    "design": 5,
+    "curiosita": 9,
     "poesia": 1,
-    "antropologia": 1
+    "divertimento": 3,
+    "universita": 9,
+    "scienza": 16,
+    "psicologia": 5,
+    "notizie": 13,
+    "design": 5,
+    "tech": 10,
+    "produttivita": 1,
+    "antropologia": 2
    }
   }
  ],
