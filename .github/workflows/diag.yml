@@ -17,7 +17,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Catalogo
-        run: curl -sS -i https://models.github.ai/catalog/models -H "Authorization: Bearer $GH_TOKEN" | head -c 1500; echo
+        run: |
+          curl -sS -i https://models.github.ai/catalog/models -H "Authorization: Bearer $GH_TOKEN" | head -c 1500; echo
       - name: Chat (inference)
         run: |
           for m in openai/gpt-4.1-mini openai/gpt-4o-mini; do
