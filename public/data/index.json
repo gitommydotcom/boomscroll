@@ -1,28 +1,28 @@
 {
  "latest": "2026-10-22",
- "updatedAt": "2026-10-22T07:36:04.032Z",
+ "updatedAt": "2026-10-22T09:33:19.786Z",
  "editions": [
   {
    "date": "2026-10-22",
-   "count": 77,
+   "count": 85,
    "highlights": [
-    "See Inside Cells Like Never Before in These Vivid Microscopic Images",
-    "AI Dimostra l'Ipotesi Quasi-Riemanniana. Cosa Succede Ora?",
-    "The Surprising Origins of Native Hawaiians"
+    "L'IA ha dimostrato il quasi-ipotesi di Riemann. Cosa succede ora?",
+    "Le Origini Sorprendenti dei Nativi hawaiani”,",
+    "Quando ha iniziato a bruciare"
    ],
    "categories": {
-    "arte": 8,
-    "lingue": 2,
-    "curiosita": 6,
+    "arte": 10,
+    "lingue": 4,
     "divertimento": 3,
-    "scienza": 12,
+    "universita": 11,
+    "scienza": 15,
+    "curiosita": 5,
+    "psicologia": 5,
     "notizie": 12,
-    "universita": 9,
-    "psicologia": 4,
     "tech": 12,
-    "poesia": 1,
-    "produttivita": 2,
+    "produttivita": 1,
     "design": 5,
+    "poesia": 1,
     "antropologia": 1
    }
   }
