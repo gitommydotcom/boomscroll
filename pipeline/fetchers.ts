@@ -1,5 +1,4 @@
 import { Chess } from 'chess.js';
-import { XMLParser } from 'fast-xml-parser';
 import type { Item, ItemKind } from '../shared/types';
 import { parseFeed, type FeedEntry } from './rss';
 import type { SourceDef } from './sources';
@@ -49,7 +48,12 @@ async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
   let lastError: unknown;
   for (const url of [src.url!, ...(src.alt ?? [])]) {
     try {
-      entries = parseFeed(await getText(url, { Accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.8' }));
+      const xml = await getText(url, { Accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.8' }).catch((e: Error) => {
+        // Alcuni server rifiutano l'intestazione Accept dei feed (HTTP 415): riproviamo con quella generica.
+        if (/HTTP 415/.test(e.message)) return getText(url, { Accept: '*/*' });
+        throw e;
+      });
+      entries = parseFeed(xml);
       if (entries.length) {
         if (url !== src.url) console.log(`  ℹ️  ${src.id}: funziona l'indirizzo alternativo ${url}`);
         break;
@@ -396,50 +400,6 @@ async function fetchPoetryDB(src: SourceDef, ctx: FetchContext): Promise<RawItem
   ];
 }
 
-/** Cerca in profondità il primo oggetto con il campo indicato (XML dalla forma incerta). */
-function findWith(node: any, key: string): any {
-  if (!node || typeof node !== 'object') return undefined;
-  if (Array.isArray(node)) {
-    for (const n of node) {
-      const hit = findWith(n, key);
-      if (hit) return hit;
-    }
-    return undefined;
-  }
-  if (key in node) return node;
-  for (const v of Object.values(node)) {
-    const hit = findWith(v, key);
-    if (hit) return hit;
-  }
-  return undefined;
-}
-
-/** Parola del giorno in altre lingue (Transparent Language): parola, traduzione inglese ed esempio. */
-async function fetchTransparent(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
-  const xml = await getText(`https://wotd.transparent.com/rss/${src.url}-widget.xml`);
-  const w = findWith(new XMLParser({ parseTagValue: false, processEntities: true }).parse(xml), 'word');
-  const text = (x: unknown) => htmlToText(String(x ?? '')).trim();
-  const word = text(w?.word);
-  if (!word) throw new Error('parola non trovata nel feed');
-  const parts = [
-    `${word}${w.wordtype ? ` (${text(w.wordtype)})` : ''}`,
-    w.translation && `In inglese: ${text(w.translation)}.`,
-    w.fnphrase && `Esempio: ${text(w.fnphrase)}`,
-    w.enphrase && `Traduzione inglese dell'esempio: ${text(w.enphrase)}`,
-  ];
-  return [
-    {
-      source: src,
-      url: `https://www.transparent.com/word-of-the-day/today/${src.url}.html?d=${ctx.date}`,
-      title: word,
-      text: parts.filter(Boolean).join('\n'),
-      kind: 'word',
-      lang: src.lang,
-      publishedAt: ctx.now,
-    },
-  ];
-}
-
 /** Un'opera in pubblico dominio dalla Galleria Nazionale di Danimarca (SMK Open). */
 async function fetchSmk(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
   const base = 'https://api.smk.dk/api/v1/art/search/?keys=*&filters=%5Bhas_image:true%5D,%5Bpublic_domain:true%5D&lang=en';
@@ -506,9 +466,6 @@ export async function fetchSource(src: SourceDef, ctx: FetchContext): Promise<Ra
       break;
     case 'poetrydb':
       items = await fetchPoetryDB(src, ctx);
-      break;
-    case 'transparent':
-      items = await fetchTransparent(src, ctx);
       break;
     case 'smk':
       items = await fetchSmk(src, ctx);

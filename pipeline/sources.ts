@@ -12,7 +12,6 @@ export type SourceType =
   | 'xkcd'
   | 'lichess'
   | 'poetrydb'
-  | 'transparent'
   | 'smk';
 
 export interface SourceDef {
@@ -221,7 +220,7 @@ export const SOURCES: SourceDef[] = [
   rss('wired', 'WIRED', 'https://www.wired.com/feed/rss', 'tech', 'en', 0.75, 2, 2, 'Come la tecnologia cambia la vita', { mixed: true }),
   rss('wired-it', 'Wired Italia', 'https://www.wired.it/feed/rss', 'tech', 'it', 0.7, 2, 2, 'Tecnologia e innovazione in italiano', { mixed: true }),
   rss('simonw', 'Simon Willison', 'https://simonwillison.net/atom/everything/', 'tech', 'en', 0.85, 1, 3, 'Intelligenza artificiale, con occhio critico'),
-  rss('lobsters', 'Lobsters', 'https://lobste.rs/hottest.rss', 'tech', 'en', 0.65, 1, 2, 'Una comunità di programmatori'),
+  rss('lobsters', 'Lobsters', 'https://lobste.rs/rss', 'tech', 'en', 0.65, 1, 2, 'Una comunità di programmatori'),
   { id: 'hn', name: 'Hacker News', type: 'hn', category: 'tech', mixed: true, lang: 'en', quality: 0.65, max: 3, about: 'I link più votati dalla comunità di Y Combinator', home: 'https://news.ycombinator.com' },
   { id: 'hfpapers', name: 'Hugging Face Papers', type: 'hfpapers', category: 'tech', lang: 'en', kind: 'paper', quality: 0.75, max: 2, about: 'I paper di IA più discussi del giorno', home: 'https://huggingface.co/papers' },
 
@@ -233,9 +232,7 @@ export const SOURCES: SourceDef[] = [
   rss('colossal', 'Colossal', 'https://www.thisiscolossal.com/feed/', 'arte', 'en', 0.8, 2, 3, 'Arte, artigianato e cultura visiva'),
   rss('hyperallergic', 'Hyperallergic', 'https://hyperallergic.com/feed/', 'arte', 'en', 0.75, 1, 3, 'Arte contemporanea, con spirito critico'),
   rss('juxtapoz', 'Juxtapoz', 'https://www.juxtapoz.com/news/?format=feed&type=rss', 'arte', 'en', 0.7, 1, 5, 'Arte urbana, illustrazione e pop surrealism'),
-  rss('smarthistory', 'Smarthistory', 'https://smarthistory.org/feed/', 'arte', 'en', 0.85, 1, 14, 'Storia dell’arte, scritta da storici dell’arte'),
   rss('artribune', 'Artribune', 'https://www.artribune.com/feed/', 'arte', 'it', 0.7, 2, 3, 'Arte e cultura contemporanea in Italia', { mixed: true }),
-  rss('finestre', 'Finestre sull’Arte', 'https://www.finestresullarte.info/rss', 'arte', 'it', 0.75, 2, 3, 'Arte antica e moderna, mostre e musei', { alt: ['https://www.finestresullarte.info/feed', 'https://www.finestresullarte.info/rss.xml'] }),
 
   // ── Design ──────────────────────────────────────────────────────────────
   rss('dezeen', 'Dezeen', 'https://www.dezeen.com/feed/', 'design', 'en', 0.8, 2, 3, 'Architettura e design'),
@@ -257,8 +254,6 @@ export const SOURCES: SourceDef[] = [
   rss('parisreview', 'The Paris Review', 'https://www.theparisreview.org/blog/feed/', 'cultura', 'en', 0.9, 1, 7, 'Letteratura e scrittori dal 1953'),
   rss('lithub', 'Literary Hub', 'https://lithub.com/feed/', 'cultura', 'en', 0.8, 2, 3, 'Il meglio della letteratura, ogni giorno'),
   rss('npr-books', 'NPR Libri', 'https://feeds.npr.org/1032/rss.xml', 'cultura', 'en', 0.8, 1, 4, 'Libri e autori dalla radio pubblica americana'),
-  rss('quietus', 'The Quietus', 'https://thequietus.com/feed', 'cultura', 'en', 0.75, 1, 5, 'Musica, recensioni e interviste'),
-  rss('pitchfork', 'Pitchfork · Best New Music', 'https://pitchfork.com/rss/reviews/best/albums/', 'cultura', 'en', 0.75, 1, 7, 'I dischi migliori, scelti dai critici'),
   rss('doppiozero', 'Doppiozero', 'https://www.doppiozero.com/rss.xml', 'cultura', 'it', 0.85, 2, 5, 'Rivista di cultura: libri, arte, cinema, idee', { mixed: true }),
   rss('rivistastudio', 'Rivista Studio', 'https://www.rivistastudio.com/feed/', 'cultura', 'it', 0.75, 1, 4, 'Cultura, società e costume', { mixed: true }),
   rss('illibraio', 'Il Libraio', 'https://www.illibraio.it/feed/', 'cultura', 'it', 0.7, 1, 4, 'Libri, autori e consigli di lettura'),
@@ -279,7 +274,6 @@ export const SOURCES: SourceDef[] = [
   // ── Poesia ──────────────────────────────────────────────────────────────
   { id: 'poetrydb', name: 'PoetryDB · classici', type: 'poetrydb', category: 'poesia', lang: 'en', kind: 'poem', quality: 0.85, max: 2, about: 'Poesie classiche in lingua inglese', home: 'https://poetrydb.org' },
   rss('marginalian', 'The Marginalian', 'https://www.themarginalian.org/feed/', 'poesia', 'en', 0.85, 1, 7, 'Letture lente su poesia, arte e senso della vita', { mixed: true }),
-  rss('internopoesia', 'Interno Poesia', 'https://www.internopoesia.com/feed/', 'poesia', 'it', 0.8, 1, 5, 'Una poesia al giorno, in italiano'),
   rss('poetarumsilva', 'Poetarum Silva', 'https://poetarumsilva.com/feed/', 'poesia', 'it', 0.75, 1, 7, 'Poesia e letteratura, italiana e tradotta'),
 
   // ── Antropologia, psicologia, idee ─────────────────────────────────────
@@ -301,16 +295,11 @@ export const SOURCES: SourceDef[] = [
   rss('seth', 'Seth Godin', 'https://seths.blog/feed/', 'produttivita', 'en', 0.7, 1, 2, 'Un pensiero breve ogni giorno'),
   rss('austinkleon', 'Austin Kleon', 'https://austinkleon.com/feed/', 'produttivita', 'en', 0.75, 1, 5, 'Creatività, quaderni e lavoro artistico'),
   rss('jamesclear', 'James Clear', 'https://jamesclear.com/feed', 'abitudini', 'en', 0.8, 1, 10, 'L’autore di Atomic Habits'),
-  rss('zenhabits', 'Zen Habits', 'https://zenhabits.net/feed/', 'abitudini', 'en', 0.75, 1, 10, 'Semplicità e abitudini consapevoli'),
   rss('raptitude', 'Raptitude', 'https://www.raptitude.com/feed/', 'abitudini', 'en', 0.75, 1, 10, 'Essere umani, con un po’ più di attenzione'),
 
   // ── Lingue ──────────────────────────────────────────────────────────────
   rss('mw-wotd', 'Merriam-Webster', 'https://www.merriam-webster.com/wotd/feed/rss2', 'lingue', 'en', 0.9, 1, 2, 'La parola inglese del giorno', { kind: 'word' }),
   rss('wiktionary-wotd', 'Wiktionary', 'https://en.wiktionary.org/w/api.php?action=featuredfeed&feed=wotd&feedformat=atom', 'lingue', 'en', 0.8, 1, 2, 'Il dizionario libero', { kind: 'word' }),
-  { id: 'wotd-fr', name: 'Le mot du jour', type: 'transparent', url: 'french', category: 'lingue', lang: 'fr', kind: 'word', quality: 0.8, max: 1, about: 'Una parola francese al giorno', home: 'https://www.transparent.com/word-of-the-day/' },
-  { id: 'wotd-es', name: 'La palabra del día', type: 'transparent', url: 'spanish', category: 'lingue', lang: 'es', kind: 'word', quality: 0.8, max: 1, about: 'Una parola spagnola al giorno', home: 'https://www.transparent.com/word-of-the-day/' },
-  { id: 'wotd-de', name: 'Das Wort des Tages', type: 'transparent', url: 'german', category: 'lingue', lang: 'de', kind: 'word', quality: 0.8, max: 1, about: 'Una parola tedesca al giorno', home: 'https://www.transparent.com/word-of-the-day/' },
-  { id: 'wotd-ja', name: '今日の言葉', type: 'transparent', url: 'japanese', category: 'lingue', lang: 'ja', kind: 'word', quality: 0.8, max: 1, about: 'Una parola giapponese al giorno', home: 'https://www.transparent.com/word-of-the-day/' },
 
   // ── Curiosità e divertimento ───────────────────────────────────────────
   { id: 'wikipedia', name: 'Wikipedia', type: 'wikipedia', category: 'curiosita', lang: 'it', quality: 0.85, max: 3, about: 'Voce in vetrina, accadde oggi e foto del giorno', home: 'https://it.wikipedia.org' },
@@ -319,7 +308,6 @@ export const SOURCES: SourceDef[] = [
   rss('kottke', 'kottke.org', 'https://feeds.kottke.org/main', 'curiosita', 'en', 0.8, 2, 3, 'Le cose più interessanti del web, dal 1998', { mixed: true }),
   rss('kidshouldsee', 'The Kid Should See This', 'https://thekidshouldseethis.com/feed', 'curiosita', 'en', 0.8, 1, 5, 'Video curiosi e belli, per tutte le età'),
   rss('messynessy', 'Messy Nessy Chic', 'https://www.messynessychic.com/feed/', 'curiosita', 'en', 0.7, 1, 7, 'Storie e luoghi dimenticati'),
-  rss('amusingplanet', 'Amusing Planet', 'https://www.amusingplanet.com/feeds/posts/default', 'curiosita', 'en', 0.7, 1, 7, 'Luoghi e storie insoliti'),
   rss('futility', 'Futility Closet', 'https://www.futilitycloset.com/feed/', 'divertimento', 'en', 0.75, 1, 5, 'Enigmi, paradossi e curiosità'),
   { id: 'xkcd', name: 'xkcd', type: 'xkcd', category: 'divertimento', lang: 'en', kind: 'comic', quality: 0.8, max: 1, about: 'Fumetti su romanticismo, sarcasmo, matematica e lingua', home: 'https://xkcd.com' },
   rss('smbc', 'SMBC', 'https://www.smbc-comics.com/comic/rss', 'divertimento', 'en', 0.7, 1, 3, 'Fumetti di scienza e filosofia', { kind: 'comic' }),
