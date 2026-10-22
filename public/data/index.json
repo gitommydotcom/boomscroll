@@ -1,31 +1,36 @@
 {
  "latest": "2026-10-22-sera",
- "updatedAt": "2026-10-22T20:23:25.072Z",
+ "updatedAt": "2026-10-22T22:49:05.738Z",
  "editions": [
   {
    "id": "2026-10-22-sera",
    "slot": "sera",
    "date": "2026-10-22",
-   "generatedAt": "2026-10-22T19:35:12.486Z",
-   "count": 79,
+   "generatedAt": "2026-10-22T21:36:58.636Z",
+   "count": 133,
    "highlights": [
-    "Quando ha iniziato a bruciare",
-    "Depressione e ansia adolescenziale previste dallo sviluppo cerebrale infantile",
-    "Alcune nane “bianche” brillano in realtà di colore verde, rosa o viola"
+    "Un primo caso per CRISPR: l'editing primario potente altera direttamente il DNA nel corpo umano",
+    "Ursula K. Le Guin Sulla Significato Della Vita",
+    "Le Elezioni Presidenziali Brasiliane Collegate Alla Decennale Distruzione Ambientale – Studio"
    ],
    "categories": {
-    "arte": 9,
+    "arte": 15,
+    "natura": 8,
     "scienza": 16,
-    "poesia": 1,
-    "divertimento": 1,
-    "lingue": 3,
-    "universita": 9,
-    "curiosita": 7,
-    "psicologia": 3,
-    "produttivita": 2,
-    "tech": 11,
-    "notizie": 12,
-    "design": 5
+    "divertimento": 3,
+    "poesia": 2,
+    "lingue": 2,
+    "storia": 7,
+    "universita": 12,
+    "design": 12,
+    "tech": 16,
+    "curiosita": 5,
+    "cultura": 11,
+    "filosofia": 3,
+    "notizie": 14,
+    "antropologia": 1,
+    "psicologia": 5,
+    "produttivita": 1
    }
   },
   {
