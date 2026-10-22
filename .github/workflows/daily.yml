@@ -4,6 +4,10 @@ on:
   schedule:
     # 03:17 UTC → 05:17 in Italia con l'ora legale, 04:17 con l'ora solare
     - cron: '17 3 * * *'
+  # Quando cambiano le fonti o la pipeline, rigenera subito l'edizione di oggi.
+  push:
+    branches: [main]
+    paths: ['pipeline/**', 'shared/**', '.github/workflows/daily.yml']
   workflow_dispatch:
     inputs:
       deploy:
