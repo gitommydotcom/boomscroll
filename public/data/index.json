@@ -1,29 +1,29 @@
 {
  "latest": "2026-10-22",
- "updatedAt": "2026-10-22T07:05:44.114Z",
+ "updatedAt": "2026-10-22T07:36:04.032Z",
  "editions": [
   {
    "date": "2026-10-22",
-   "count": 82,
+   "count": 77,
    "highlights": [
     "See Inside Cells Like Never Before in These Vivid Microscopic Images",
-    "AI Proved the Quasi-Riemann Hypothesis. What Happens Now?",
-    "Startup plans to rejuvenate the nuclear power industry with a new manufacturing approach"
+    "AI Dimostra l'Ipotesi Quasi-Riemanniana. Cosa Succede Ora?",
+    "The Surprising Origins of Native Hawaiians"
    ],
    "categories": {
     "arte": 8,
     "lingue": 2,
-    "curiosita": 8,
+    "curiosita": 6,
     "divertimento": 3,
     "scienza": 12,
-    "universita": 9,
-    "antropologia": 4,
-    "psicologia": 5,
     "notizie": 12,
+    "universita": 9,
+    "psicologia": 4,
     "tech": 12,
     "poesia": 1,
-    "produttivita": 1,
-    "design": 5
+    "produttivita": 2,
+    "design": 5,
+    "antropologia": 1
    }
   }
  ],
