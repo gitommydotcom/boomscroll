@@ -360,6 +360,28 @@ async function fetchLichess(src: SourceDef): Promise<RawItem[]> {
   ];
 }
 
+/** Una poesia classica (pubblico dominio) da PoetryDB, abbastanza breve da leggersi in una card. */
+async function fetchPoetryDB(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
+  const poems = await getJson<any[]>('https://poetrydb.org/random/12');
+  const poem = poems.find((p) => {
+    const n = Number(p.linecount);
+    const url = `https://www.gutenberg.org/ebooks/search/?query=${encodeURIComponent(`${p.title} ${p.author}`)}`;
+    return n >= 4 && n <= 40 && !ctx.seen.has(itemId(url));
+  });
+  if (!poem) return [];
+  return [
+    {
+      source: src,
+      url: `https://www.gutenberg.org/ebooks/search/?query=${encodeURIComponent(`${poem.title} ${poem.author}`)}`,
+      title: poem.title,
+      text: (poem.lines as string[]).join('\n'),
+      author: poem.author,
+      kind: 'poem',
+      lang: 'en',
+    },
+  ];
+}
+
 export async function fetchSource(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
   let items: RawItem[];
   switch (src.type) {
@@ -390,6 +412,9 @@ export async function fetchSource(src: SourceDef, ctx: FetchContext): Promise<Ra
       break;
     case 'lichess':
       items = await fetchLichess(src);
+      break;
+    case 'poetrydb':
+      items = await fetchPoetryDB(src, ctx);
       break;
   }
   return items

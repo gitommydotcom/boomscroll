@@ -40,7 +40,7 @@ export function dedupe(items: RawItem[]): RawItem[] {
 const ALWAYS_KEEP = new Set(['chess', 'word', 'artwork', 'comic', 'image', 'poem']);
 
 /** Prima dell'IA: limita il numero di candidati per categoria, privilegiando qualità e freschezza. */
-export function preselect(items: RawItem[], now: Date, perCategory = 14, total = 140): RawItem[] {
+export function preselect(items: RawItem[], now: Date, perCategory = 12, total = 95): RawItem[] {
   const score = (i: RawItem) => {
     const ageH = i.publishedAt ? (now.getTime() - i.publishedAt.getTime()) / 3_600_000 : 24;
     return i.source.quality + Math.max(0, 1 - ageH / 72) * 0.3 + (i.image ? 0.08 : 0) + (i.kind === 'video' ? 0.1 : 0);
@@ -50,7 +50,7 @@ export function preselect(items: RawItem[], now: Date, perCategory = 14, total =
     // I video hanno un loro gruppo, così non tolgono spazio agli articoli della stessa categoria.
     const key = i.kind === 'video' ? 'video' : i.source.category;
     const list = byCat.get(key) ?? [];
-    if (list.length < (key === 'video' ? 18 : perCategory)) list.push(i);
+    if (list.length < (key === 'video' ? 16 : perCategory)) list.push(i);
     byCat.set(key, list);
   }
   return [...byCat.values()].flat().sort((a, b) => score(b) - score(a)).slice(0, total);
