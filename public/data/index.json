@@ -1,29 +1,29 @@
 {
  "latest": "2026-10-22",
- "updatedAt": "2026-10-22T07:01:00.012Z",
+ "updatedAt": "2026-10-22T07:05:44.114Z",
  "editions": [
   {
    "date": "2026-10-22",
-   "count": 78,
+   "count": 82,
    "highlights": [
     "See Inside Cells Like Never Before in These Vivid Microscopic Images",
     "AI Proved the Quasi-Riemann Hypothesis. What Happens Now?",
     "Startup plans to rejuvenate the nuclear power industry with a new manufacturing approach"
    ],
    "categories": {
-    "scienza": 11,
+    "arte": 8,
     "lingue": 2,
     "curiosita": 8,
     "divertimento": 3,
+    "scienza": 12,
     "universita": 9,
     "antropologia": 4,
     "psicologia": 5,
-    "arte": 6,
     "notizie": 12,
     "tech": 12,
     "poesia": 1,
     "produttivita": 1,
-    "design": 4
+    "design": 5
    }
   }
  ],
