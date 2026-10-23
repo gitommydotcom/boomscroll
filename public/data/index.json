@@ -1,7 +1,37 @@
 {
- "latest": "2026-10-23-mattina",
- "updatedAt": "2026-10-23T09:34:13.065Z",
+ "latest": "2026-10-23-pomeriggio",
+ "updatedAt": "2026-10-23T15:54:43.189Z",
  "editions": [
+  {
+   "id": "2026-10-23-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-23",
+   "generatedAt": "2026-10-23T14:12:57.655Z",
+   "count": 120,
+   "highlights": [
+    "UNEP: Opportunità persa per raggiungere il limite di riscaldamento del 1,5°C senza 'sopraesaurimento'",
+    "Kenya: crollo di un edificio in costruzione a Nairobi, operazioni di soccorso in corso",
+    "Roma: Ascesa, Caduta e Rinascita in Tre Minuti (Timelapse 3D)"
+   ],
+   "categories": {
+    "arte": 9,
+    "divertimento": 2,
+    "natura": 9,
+    "scienza": 16,
+    "universita": 12,
+    "tech": 14,
+    "filosofia": 3,
+    "cultura": 13,
+    "curiosita": 5,
+    "design": 10,
+    "storia": 5,
+    "notizie": 14,
+    "psicologia": 4,
+    "produttivita": 2,
+    "antropologia": 1,
+    "poesia": 1
+   }
+  },
   {
    "id": "2026-10-23-mattina",
    "slot": "mattina",
