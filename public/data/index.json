@@ -1,7 +1,37 @@
 {
- "latest": "2026-10-23-pomeriggio",
- "updatedAt": "2026-10-23T15:54:43.189Z",
+ "latest": "2026-10-23-sera",
+ "updatedAt": "2026-10-23T20:50:42.845Z",
  "editions": [
+  {
+   "id": "2026-10-23-sera",
+   "slot": "sera",
+   "date": "2026-10-23",
+   "generatedAt": "2026-10-23T19:09:41.905Z",
+   "count": 113,
+   "highlights": [
+    "Un team di studenti MIT vince la sfida NASA LunaRecycle, trasformando i rifiuti lunari in strumenti",
+    "Sedici anni dopo il disastro di Deepwater Horizon, la vita nel profondo marino mostra pochi segni di recupero",
+    "Gli scienziati intrappolano una particella di antimateria per mesi: potrebbe fornire indizi sull'esistenza dell'universo"
+   ],
+   "categories": {
+    "scienza": 19,
+    "arte": 10,
+    "divertimento": 3,
+    "poesia": 1,
+    "natura": 6,
+    "universita": 11,
+    "curiosita": 6,
+    "design": 9,
+    "storia": 5,
+    "cultura": 8,
+    "tech": 13,
+    "notizie": 15,
+    "abitudini": 2,
+    "filosofia": 1,
+    "psicologia": 3,
+    "antropologia": 1
+   }
+  },
   {
    "id": "2026-10-23-pomeriggio",
    "slot": "pomeriggio",
