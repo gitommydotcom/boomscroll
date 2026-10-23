@@ -1,7 +1,37 @@
 {
- "latest": "2026-10-22-sera",
- "updatedAt": "2026-10-22T22:49:05.738Z",
+ "latest": "2026-10-23-mattina",
+ "updatedAt": "2026-10-23T09:34:13.065Z",
  "editions": [
+  {
+   "id": "2026-10-23-mattina",
+   "slot": "mattina",
+   "date": "2026-10-23",
+   "generatedAt": "2026-10-23T07:53:11.227Z",
+   "count": 133,
+   "highlights": [
+    "Q&A: Come l'IA ha modellato la mente umana ‘disordinata’”, 2, 3, “intelligenza artificiale”, “ragionamento umano”, “algoritmi” , 4, null,  null, null, {“word”: {“word”: “hallucinations”, “definition_i",
+    "Veglia di Georges Saunders",
+    "Il mondo è sulla strada per 2,8 gradi Celsius di riscaldamento globale"
+   ],
+   "categories": {
+    "natura": 10,
+    "scienza": 18,
+    "arte": 10,
+    "lingue": 4,
+    "curiosita": 7,
+    "poesia": 2,
+    "divertimento": 4,
+    "universita": 13,
+    "storia": 8,
+    "cultura": 11,
+    "tech": 15,
+    "design": 10,
+    "filosofia": 2,
+    "notizie": 14,
+    "psicologia": 3,
+    "produttivita": 2
+   }
+  },
   {
    "id": "2026-10-22-sera",
    "slot": "sera",
