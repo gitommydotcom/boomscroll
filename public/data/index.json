@@ -1,7 +1,35 @@
 {
- "latest": "2026-10-24-pomeriggio",
- "updatedAt": "2026-10-24T14:16:30.172Z",
+ "latest": "2026-10-24-sera",
+ "updatedAt": "2026-10-24T18:48:05.331Z",
  "editions": [
+  {
+   "id": "2026-10-24-sera",
+   "slot": "sera",
+   "date": "2026-10-24",
+   "generatedAt": "2026-10-24T18:07:06.854Z",
+   "count": 71,
+   "highlights": [
+    "Vaccino mRNA Moderna quasi dimezza il rischio di recidiva del cancro della pelle",
+    "Un solo strato di atomi per conservare carica elettrica e controllare la luce",
+    "1918: Inizia la battaglia di Vittorio Veneto."
+   ],
+   "categories": {
+    "arte": 9,
+    "scienza": 10,
+    "divertimento": 4,
+    "poesia": 1,
+    "storia": 3,
+    "natura": 3,
+    "universita": 3,
+    "curiosita": 2,
+    "cultura": 4,
+    "design": 6,
+    "tech": 10,
+    "notizie": 14,
+    "filosofia": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-24-pomeriggio",
    "slot": "pomeriggio",
