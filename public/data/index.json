@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-24-mattina",
- "updatedAt": "2026-10-24T08:46:13.832Z",
+ "latest": "2026-10-24-pomeriggio",
+ "updatedAt": "2026-10-24T14:16:30.172Z",
  "editions": [
+  {
+   "id": "2026-10-24-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-24",
+   "generatedAt": "2026-10-24T13:16:41.296Z",
+   "count": 76,
+   "highlights": [
+    "Prospettive femministe sullo stupro",
+    "Dostoeckskij, subito dopo la revoca della pena di morte, sul significato della vita",
+    "Questi grandi e feroci uccelli hanno trovato l'amore in Australia—e hanno deposto i primi uova di cassowary meridionale all'Adelaide Zoo in 34 anni"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 2,
+    "natura": 5,
+    "universita": 4,
+    "notizie": 15,
+    "cultura": 7,
+    "curiosita": 4,
+    "filosofia": 1,
+    "scienza": 13,
+    "tech": 6,
+    "design": 8,
+    "storia": 2,
+    "produttivita": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-24-mattina",
    "slot": "mattina",
