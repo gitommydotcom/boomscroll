@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-23-sera",
- "updatedAt": "2026-10-23T20:50:42.845Z",
+ "latest": "2026-10-24-mattina",
+ "updatedAt": "2026-10-24T08:46:13.832Z",
  "editions": [
+  {
+   "id": "2026-10-24-mattina",
+   "slot": "mattina",
+   "date": "2026-10-24",
+   "generatedAt": "2026-10-24T07:34:29.773Z",
+   "count": 94,
+   "highlights": [
+    "Le Cuore delle Mogli Pipistrelli Accelerano Quando Sentono le Urla dei Bambini",
+    "Briefing Chat: Come i fisici hanno intrappolato l'antimateria equivalente dell'elettrone",
+    "Astronomi rilevano il più antico fast radio burst conosciuto, espulso da una galassia antica appena tre miliardi di anni dopo il Big Bang"
+   ],
+   "categories": {
+    "arte": 9,
+    "lingue": 2,
+    "curiosita": 8,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 7,
+    "cultura": 8,
+    "natura": 7,
+    "scienza": 14,
+    "notizie": 14,
+    "design": 8,
+    "filosofia": 1,
+    "tech": 8,
+    "storia": 2,
+    "psicologia": 2
+   }
+  },
   {
    "id": "2026-10-23-sera",
    "slot": "sera",
