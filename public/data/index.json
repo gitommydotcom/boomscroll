@@ -1,7 +1,37 @@
 {
- "latest": "2026-10-25-pomeriggio",
- "updatedAt": "2026-10-25T14:43:42.570Z",
+ "latest": "2026-10-25-sera",
+ "updatedAt": "2026-10-25T18:54:31.493Z",
  "editions": [
+  {
+   "id": "2026-10-25-sera",
+   "slot": "sera",
+   "date": "2026-10-25",
+   "generatedAt": "2026-10-25T18:23:26.045Z",
+   "count": 61,
+   "highlights": [
+    "20 Libri Preferiti da 20 Anni di The Marginalian",
+    "« L’enjeu est existentiel ! » : des milliers d’Israéliens établis à l’étranger affluent dans le pays pour voter aux élections législatives du 27 octobre",
+    "Appello urgente: proteggere le aree protette dall’attività estrattiva"
+   ],
+   "categories": {
+    "arte": 6,
+    "divertimento": 3,
+    "poesia": 1,
+    "design": 3,
+    "natura": 5,
+    "universita": 2,
+    "curiosita": 2,
+    "lingue": 1,
+    "scienza": 3,
+    "cultura": 5,
+    "storia": 3,
+    "notizie": 14,
+    "filosofia": 1,
+    "tech": 10,
+    "psicologia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-10-25-pomeriggio",
    "slot": "pomeriggio",
