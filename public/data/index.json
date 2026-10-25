@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-25-mattina",
- "updatedAt": "2026-10-25T08:39:13.608Z",
+ "latest": "2026-10-25-pomeriggio",
+ "updatedAt": "2026-10-25T14:43:42.570Z",
  "editions": [
+  {
+   "id": "2026-10-25-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-25",
+   "generatedAt": "2026-10-25T13:41:35.684Z",
+   "count": 63,
+   "highlights": [
+    "Sappiamo Cosa Vedevano i Denisovan",
+    "Ricercatori svelano i segreti di un misterioso materiale magnetico.",
+    "Quasi tutti i coralli del mondo a rischio di collasso entro 50 anni, avverte l'IUCN”, 2023-10-26, 4,"
+   ],
+   "categories": {
+    "arte": 7,
+    "poesia": 1,
+    "divertimento": 3,
+    "natura": 3,
+    "storia": 4,
+    "universita": 3,
+    "curiosita": 2,
+    "cultura": 5,
+    "scienza": 8,
+    "notizie": 14,
+    "design": 5,
+    "filosofia": 1,
+    "tech": 5,
+    "produttivita": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-25-mattina",
    "slot": "mattina",
