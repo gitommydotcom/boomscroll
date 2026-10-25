@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-24-sera",
- "updatedAt": "2026-10-24T18:48:05.331Z",
+ "latest": "2026-10-25-mattina",
+ "updatedAt": "2026-10-25T08:39:13.608Z",
  "editions": [
+  {
+   "id": "2026-10-25-mattina",
+   "slot": "mattina",
+   "date": "2026-10-25",
+   "generatedAt": "2026-10-25T07:47:22.635Z",
+   "count": 67,
+   "highlights": [
+    "ctDNA e risultati per il carcinoma polmonare resecabile",
+    "Come Essere Non-Morti: Note sul Risveglio dal Trance della Vita Quasi Vissuta",
+    "La storia interna della prova matematica da un milione di dollari di OpenAI"
+   ],
+   "categories": {
+    "arte": 5,
+    "lingue": 2,
+    "curiosita": 3,
+    "divertimento": 2,
+    "poesia": 1,
+    "universita": 3,
+    "cultura": 6,
+    "scienza": 6,
+    "natura": 3,
+    "notizie": 14,
+    "design": 7,
+    "storia": 3,
+    "tech": 9,
+    "filosofia": 2,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-24-sera",
    "slot": "sera",
