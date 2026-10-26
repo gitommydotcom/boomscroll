@@ -1,7 +1,35 @@
 {
- "latest": "2026-10-26-pomeriggio",
- "updatedAt": "2026-10-26T17:46:35.040Z",
+ "latest": "2026-10-26-sera",
+ "updatedAt": "2026-10-26T21:46:47.694Z",
  "editions": [
+  {
+   "id": "2026-10-26-sera",
+   "slot": "sera",
+   "date": "2026-10-26",
+   "generatedAt": "2026-10-26T20:28:00.487Z",
+   "count": 83,
+   "highlights": [
+    "Attività nervosa innesca la perdita di capelli autoimmune",
+    "Consigli di Walt Whitman per una Vita Vibrante e Soddisfacente",
+    "I retroscena della dimostrazione matematica da un milione di dollari di OpenAI"
+   ],
+   "categories": {
+    "arte": 8,
+    "poesia": 1,
+    "divertimento": 2,
+    "universita": 7,
+    "scienza": 12,
+    "design": 8,
+    "tech": 13,
+    "cultura": 9,
+    "natura": 2,
+    "notizie": 14,
+    "filosofia": 1,
+    "curiosita": 3,
+    "storia": 2,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-26-pomeriggio",
    "slot": "pomeriggio",
