@@ -1,7 +1,37 @@
 {
- "latest": "2026-10-25-sera",
- "updatedAt": "2026-10-25T18:54:31.493Z",
+ "latest": "2026-10-26-mattina",
+ "updatedAt": "2026-10-26T09:15:45.967Z",
  "editions": [
+  {
+   "id": "2026-10-26-mattina",
+   "slot": "mattina",
+   "date": "2026-10-26",
+   "generatedAt": "2026-10-26T08:03:44.742Z",
+   "count": 68,
+   "highlights": [
+    "Guarda l'universo emergere dalle ere oscure, con Lumina",
+    "1944: Termina la battaglia del Golfo di Leyte; le forze statunitensi assestano un colpo esiziale alla marina imperiale giapponese.",
+    "Lula eletto per un quarto mandato in Brasile"
+   ],
+   "categories": {
+    "natura": 5,
+    "scienza": 7,
+    "arte": 4,
+    "lingue": 2,
+    "curiosita": 3,
+    "poesia": 1,
+    "divertimento": 2,
+    "universita": 3,
+    "storia": 3,
+    "notizie": 14,
+    "design": 7,
+    "tech": 10,
+    "cultura": 4,
+    "filosofia": 1,
+    "antropologia": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-25-sera",
    "slot": "sera",
