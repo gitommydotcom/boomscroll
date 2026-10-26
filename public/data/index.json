@@ -1,7 +1,35 @@
 {
- "latest": "2026-10-26-mattina",
- "updatedAt": "2026-10-26T09:15:45.967Z",
+ "latest": "2026-10-26-pomeriggio",
+ "updatedAt": "2026-10-26T17:46:35.040Z",
  "editions": [
+  {
+   "id": "2026-10-26-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-26",
+   "generatedAt": "2026-10-26T16:05:18.170Z",
+   "count": 95,
+   "highlights": [
+    "Scienziati Stimano Che Il Caldo Estremo Dello Estate In Europa Ha Ucciso Più Di 50.000 Persone Nelle Aree Urbane",
+    "Il Bosco Scuro degli Uccelli d'Oro: Il capolavoro perduto di Margaret Wise Brown sulla mortalità e il significato della vita, ora illustrato",
+    "Anthropic avverte di 'rischio catastrofico' per l'umanità in vista della sua offerta pubblica"
+   ],
+   "categories": {
+    "scienza": 13,
+    "arte": 11,
+    "divertimento": 2,
+    "poesia": 2,
+    "universita": 6,
+    "cultura": 7,
+    "psicologia": 6,
+    "tech": 12,
+    "produttivita": 2,
+    "notizie": 14,
+    "natura": 5,
+    "storia": 5,
+    "curiosita": 2,
+    "design": 8
+   }
+  },
   {
    "id": "2026-10-26-mattina",
    "slot": "mattina",
