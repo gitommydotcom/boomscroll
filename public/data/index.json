@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-27-pomeriggio",
- "updatedAt": "2026-10-27T16:59:44.699Z",
+ "latest": "2026-10-27-sera",
+ "updatedAt": "2026-10-27T21:42:27.935Z",
  "editions": [
+  {
+   "id": "2026-10-27-sera",
+   "slot": "sera",
+   "date": "2026-10-27",
+   "generatedAt": "2026-10-27T20:03:06.773Z",
+   "count": 87,
+   "highlights": [
+    "La Destra Cresce in Germania",
+    "Rimozione e Scoperta di Murale nella Monastero Francese",
+    "Sylvia Plath: Vita tra Oscurità e Arte"
+   ],
+   "categories": {
+    "scienza": 13,
+    "arte": 10,
+    "natura": 5,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 7,
+    "lingue": 1,
+    "storia": 3,
+    "notizie": 16,
+    "cultura": 6,
+    "curiosita": 4,
+    "tech": 9,
+    "psicologia": 1,
+    "design": 7,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-10-27-pomeriggio",
    "slot": "pomeriggio",
