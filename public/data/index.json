@@ -1,7 +1,37 @@
 {
- "latest": "2026-10-26-sera",
- "updatedAt": "2026-10-26T21:46:47.694Z",
+ "latest": "2026-10-27-mattina",
+ "updatedAt": "2026-10-27T09:08:02.070Z",
  "editions": [
+  {
+   "id": "2026-10-27-mattina",
+   "slot": "mattina",
+   "date": "2026-10-27",
+   "generatedAt": "2026-10-27T08:18:57.641Z",
+   "count": 88,
+   "highlights": [
+    "L’immagine qualunquista della politica",
+    "Due anni dopo la fine della Seconda Guerra Mondiale, questa nave ha riportato a casa i corpi di 6.251 militari americani",
+    "L’esattezza che fece vincere Einstein"
+   ],
+   "categories": {
+    "natura": 5,
+    "arte": 8,
+    "lingue": 2,
+    "curiosita": 5,
+    "poesia": 2,
+    "divertimento": 3,
+    "cultura": 9,
+    "universita": 3,
+    "storia": 5,
+    "scienza": 12,
+    "notizie": 14,
+    "tech": 9,
+    "design": 7,
+    "filosofia": 1,
+    "psicologia": 2,
+    "abitudini": 1
+   }
+  },
   {
    "id": "2026-10-26-sera",
    "slot": "sera",
