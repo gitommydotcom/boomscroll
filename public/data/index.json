@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-28-pomeriggio",
- "updatedAt": "2026-10-28T17:33:59.771Z",
+ "latest": "2026-10-28-sera",
+ "updatedAt": "2026-10-28T21:27:17.900Z",
  "editions": [
+  {
+   "id": "2026-10-28-sera",
+   "slot": "sera",
+   "date": "2026-10-28",
+   "generatedAt": "2026-10-28T20:15:07.173Z",
+   "count": 86,
+   "highlights": [
+    "Gli scarafaggi creano una 'sostanza simile al budello' per produrre seta ultra-resistente",
+    "Depolimerizzazione dei Siliconi al Ritorno del Monomero tramite Clorurazione Ossidativa",
+    "Alexandre Chorin, un matematico che ha rivoluzionato la dinamica dei fluidi computazionale, è morto all'età di 88 anni"
+   ],
+   "categories": {
+    "scienza": 11,
+    "arte": 8,
+    "divertimento": 1,
+    "poesia": 2,
+    "natura": 6,
+    "universita": 5,
+    "tech": 14,
+    "cultura": 6,
+    "notizie": 15,
+    "design": 8,
+    "filosofia": 2,
+    "psicologia": 2,
+    "curiosita": 3,
+    "produttivita": 1,
+    "storia": 2
+   }
+  },
   {
    "id": "2026-10-28-pomeriggio",
    "slot": "pomeriggio",
