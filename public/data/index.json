@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-28-mattina",
- "updatedAt": "2026-10-28T10:04:06.689Z",
+ "latest": "2026-10-28-pomeriggio",
+ "updatedAt": "2026-10-28T17:33:59.771Z",
  "editions": [
+  {
+   "id": "2026-10-28-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-28",
+   "generatedAt": "2026-10-28T15:57:20.431Z",
+   "count": 89,
+   "highlights": [
+    "El Niño e l'aumento dei livelli di anidride carbonica",
+    "Personalizzazione e psichedelici: come stanno rivitalizzando la psichiatria",
+    "Come Beta Technologies Sta Abbattendo le Barriere per il Volo Elettrico"
+   ],
+   "categories": {
+    "arte": 9,
+    "natura": 6,
+    "divertimento": 3,
+    "poesia": 2,
+    "psicologia": 3,
+    "universita": 5,
+    "scienza": 15,
+    "cultura": 4,
+    "tech": 12,
+    "curiosita": 3,
+    "filosofia": 1,
+    "notizie": 14,
+    "design": 7,
+    "storia": 4,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-10-28-mattina",
    "slot": "mattina",
