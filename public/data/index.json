@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-27-sera",
- "updatedAt": "2026-10-27T21:42:27.935Z",
+ "latest": "2026-10-28-mattina",
+ "updatedAt": "2026-10-28T10:04:06.689Z",
  "editions": [
+  {
+   "id": "2026-10-28-mattina",
+   "slot": "mattina",
+   "date": "2026-10-28",
+   "generatedAt": "2026-10-28T08:55:33.330Z",
+   "count": 83,
+   "highlights": [
+    "Reionizzazione: non supernove ma giovani stelle",
+    "Dipinto Kandinsky: Restituizione e Vendita da Record",
+    "1962: Crisi dei missili di Cuba: il leader sovietico Nikita Chruščёv annuncia lo smantellamento delle basi missilistiche a Cuba."
+   ],
+   "categories": {
+    "natura": 4,
+    "arte": 11,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 2,
+    "divertimento": 2,
+    "universita": 5,
+    "cultura": 6,
+    "scienza": 7,
+    "notizie": 14,
+    "tech": 13,
+    "storia": 3,
+    "filosofia": 1,
+    "design": 8,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-27-sera",
    "slot": "sera",
