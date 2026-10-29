@@ -1,7 +1,35 @@
 {
- "latest": "2026-10-29-mattina",
- "updatedAt": "2026-10-29T10:32:55.466Z",
+ "latest": "2026-10-29-pomeriggio",
+ "updatedAt": "2026-10-29T17:43:58.639Z",
  "editions": [
+  {
+   "id": "2026-10-29-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-29",
+   "generatedAt": "2026-10-29T16:03:10.673Z",
+   "count": 86,
+   "highlights": [
+    "Come si fotografa un buco nero?",
+    "Magnetic sensors track muscle movement, for better prosthetic limb control",
+    "Una nuova alba per il progresso matematico"
+   ],
+   "categories": {
+    "scienza": 11,
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 1,
+    "natura": 7,
+    "cultura": 6,
+    "universita": 4,
+    "curiosita": 2,
+    "storia": 5,
+    "tech": 13,
+    "notizie": 14,
+    "psicologia": 2,
+    "produttivita": 3,
+    "design": 8
+   }
+  },
   {
    "id": "2026-10-29-mattina",
    "slot": "mattina",
