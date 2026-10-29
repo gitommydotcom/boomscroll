@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-28-sera",
- "updatedAt": "2026-10-28T21:27:17.900Z",
+ "latest": "2026-10-29-mattina",
+ "updatedAt": "2026-10-29T10:32:55.466Z",
  "editions": [
+  {
+   "id": "2026-10-29-mattina",
+   "slot": "mattina",
+   "date": "2026-10-29",
+   "generatedAt": "2026-10-29T08:50:26.477Z",
+   "count": 86,
+   "highlights": [
+    "Una Stella Morta Offre uno Sguardo al Nostro Futuro Solare",
+    "Analisi: Le esportazioni di tecnologie pulite dalla Cina nel 2026 evitano emissioni di CO2 pari a quelle del Brasile in un anno",
+    "Rubin scopre un nuovo pianeta nano"
+   ],
+   "categories": {
+    "natura": 5,
+    "arte": 9,
+    "lingue": 2,
+    "curiosita": 6,
+    "poesia": 1,
+    "divertimento": 3,
+    "universita": 5,
+    "cultura": 8,
+    "scienza": 12,
+    "storia": 2,
+    "notizie": 14,
+    "tech": 9,
+    "design": 7,
+    "psicologia": 2,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-10-28-sera",
    "slot": "sera",
