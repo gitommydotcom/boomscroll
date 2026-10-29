@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-29-pomeriggio",
- "updatedAt": "2026-10-29T17:43:58.639Z",
+ "latest": "2026-10-29-sera",
+ "updatedAt": "2026-10-29T21:41:06.405Z",
  "editions": [
+  {
+   "id": "2026-10-29-sera",
+   "slot": "sera",
+   "date": "2026-10-29",
+   "generatedAt": "2026-10-29T20:16:16.064Z",
+   "count": 86,
+   "highlights": [
+    "Un robot morbido potrebbe aiutare i medici a diagnosticare e curare i disturbi dell'intestino tenue",
+    "'Gulliver's Travels': 300 Anni di Satira Umana",
+    "Nuovo Telescopio Berkeley per Studiare le Stelle Esplose nello Spazio"
+   ],
+   "categories": {
+    "arte": 9,
+    "poesia": 1,
+    "divertimento": 2,
+    "scienza": 14,
+    "curiosita": 5,
+    "cultura": 7,
+    "universita": 7,
+    "tech": 10,
+    "notizie": 14,
+    "design": 8,
+    "filosofia": 1,
+    "psicologia": 2,
+    "natura": 3,
+    "produttivita": 2,
+    "storia": 1
+   }
+  },
   {
    "id": "2026-10-29-pomeriggio",
    "slot": "pomeriggio",
