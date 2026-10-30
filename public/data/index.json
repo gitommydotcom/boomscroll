@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-30-pomeriggio",
- "updatedAt": "2026-10-30T17:34:28.682Z",
+ "latest": "2026-10-30-sera",
+ "updatedAt": "2026-10-30T21:40:04.568Z",
  "editions": [
+  {
+   "id": "2026-10-30-sera",
+   "slot": "sera",
+   "date": "2026-10-30",
+   "generatedAt": "2026-10-30T19:56:38.705Z",
+   "count": 91,
+   "highlights": [
+    "Un Meteorite Marziano di 4,1 Miliardi di Anni Scoperto nel Sahara",
+    "Quanti calcoli servono per far funzionare l’intelligenza artificiale",
+    "Hera: le prime immagini di Didymos e Dimorphos"
+   ],
+   "categories": {
+    "scienza": 15,
+    "arte": 10,
+    "natura": 4,
+    "divertimento": 3,
+    "poesia": 2,
+    "tech": 10,
+    "universita": 6,
+    "cultura": 5,
+    "curiosita": 4,
+    "notizie": 15,
+    "produttivita": 4,
+    "storia": 2,
+    "design": 7,
+    "filosofia": 1,
+    "psicologia": 3
+   }
+  },
   {
    "id": "2026-10-30-pomeriggio",
    "slot": "pomeriggio",
