@@ -1,7 +1,35 @@
 {
- "latest": "2026-10-30-mattina",
- "updatedAt": "2026-10-30T09:46:50.935Z",
+ "latest": "2026-10-30-pomeriggio",
+ "updatedAt": "2026-10-30T17:34:28.682Z",
  "editions": [
+  {
+   "id": "2026-10-30-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-30",
+   "generatedAt": "2026-10-30T15:51:42.533Z",
+   "count": 99,
+   "highlights": [
+    "Una nuova mappa dello 'spazio vuoto' sfida l'immagine tranquilla della galassia",
+    "Il riscaldamento umano potrebbe aver interrotto l'inizio di una nuova era glaciale",
+    "Tre su Quattro Ex-Giocatori NFL Morti tra il 2008 e il 2023 Potrebbero Avere la CTE"
+   ],
+   "categories": {
+    "arte": 10,
+    "natura": 8,
+    "divertimento": 2,
+    "poesia": 1,
+    "design": 9,
+    "psicologia": 5,
+    "universita": 2,
+    "cultura": 9,
+    "notizie": 15,
+    "scienza": 14,
+    "curiosita": 4,
+    "tech": 13,
+    "storia": 5,
+    "produttivita": 2
+   }
+  },
   {
    "id": "2026-10-30-mattina",
    "slot": "mattina",
