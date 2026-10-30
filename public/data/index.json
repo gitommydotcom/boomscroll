@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-29-sera",
- "updatedAt": "2026-10-29T21:41:06.405Z",
+ "latest": "2026-10-30-mattina",
+ "updatedAt": "2026-10-30T09:46:50.935Z",
  "editions": [
+  {
+   "id": "2026-10-30-mattina",
+   "slot": "mattina",
+   "date": "2026-10-30",
+   "generatedAt": "2026-10-30T08:54:27.185Z",
+   "count": 81,
+   "highlights": [
+    "Gli ingegneri del MIT creano nanoparticelle per la somministrazione di vaccini personalizzati contro il cancro",
+    "Il cervello liquida miliardi di neuroni mutanti intorno alla nascita",
+    "1941: Le armate tedesche, nel settore meridionale del fronte orientale, danno il via al lungo assedio di Sebastopoli."
+   ],
+   "categories": {
+    "natura": 5,
+    "arte": 8,
+    "lingue": 2,
+    "curiosita": 6,
+    "poesia": 3,
+    "divertimento": 2,
+    "universita": 4,
+    "cultura": 6,
+    "scienza": 6,
+    "notizie": 14,
+    "filosofia": 1,
+    "storia": 5,
+    "psicologia": 3,
+    "design": 7,
+    "tech": 9
+   }
+  },
   {
    "id": "2026-10-29-sera",
    "slot": "sera",
