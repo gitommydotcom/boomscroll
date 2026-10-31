@@ -1,7 +1,34 @@
 {
- "latest": "2026-10-31-pomeriggio",
- "updatedAt": "2026-10-31T16:32:54.651Z",
+ "latest": "2026-10-31-sera",
+ "updatedAt": "2026-10-31T19:49:29.765Z",
  "editions": [
+  {
+   "id": "2026-10-31-sera",
+   "slot": "sera",
+   "date": "2026-10-31",
+   "generatedAt": "2026-10-31T19:15:55.323Z",
+   "count": 63,
+   "highlights": [
+    "Dove si trova la più antica pub dell'Inghilterra?",
+    "Gli USA approvano la vendita di 500 missili Patriot all'Ucraina",
+    "Ars Technica: il personale di Ars ricorda Patrick Stewart"
+   ],
+   "categories": {
+    "arte": 9,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 3,
+    "scienza": 8,
+    "curiosita": 2,
+    "cultura": 4,
+    "storia": 4,
+    "notizie": 14,
+    "tech": 7,
+    "natura": 2,
+    "design": 5,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-31-pomeriggio",
    "slot": "pomeriggio",
