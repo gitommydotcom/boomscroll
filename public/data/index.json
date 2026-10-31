@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-30-sera",
- "updatedAt": "2026-10-30T21:40:04.568Z",
+ "latest": "2026-10-31-mattina",
+ "updatedAt": "2026-10-31T10:13:37.859Z",
  "editions": [
+  {
+   "id": "2026-10-31-mattina",
+   "slot": "mattina",
+   "date": "2026-10-31",
+   "generatedAt": "2026-10-31T08:45:04.483Z",
+   "count": 80,
+   "highlights": [
+    "Crafted From Bone, This 2,800-Year-Old Flute Unearthed in Troy May Have Been Played Around the Time That Homer Composed 'The Iliad' and 'The Odyssey'",
+    "Foster + Partners presenta il nuovo stadio San Siro",
+    "Larve carnivore si diffondono in un terzo stato e attaccano gli animali domestici"
+   ],
+   "categories": {
+    "arte": 9,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 1,
+    "divertimento": 3,
+    "universita": 6,
+    "scienza": 8,
+    "cultura": 6,
+    "design": 8,
+    "natura": 6,
+    "filosofia": 1,
+    "tech": 8,
+    "notizie": 13,
+    "psicologia": 2,
+    "storia": 3
+   }
+  },
   {
    "id": "2026-10-30-sera",
    "slot": "sera",
