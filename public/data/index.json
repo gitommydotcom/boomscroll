@@ -1,7 +1,34 @@
 {
- "latest": "2026-10-31-mattina",
- "updatedAt": "2026-10-31T10:13:37.859Z",
+ "latest": "2026-10-31-pomeriggio",
+ "updatedAt": "2026-10-31T16:32:54.651Z",
  "editions": [
+  {
+   "id": "2026-10-31-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-10-31",
+   "generatedAt": "2026-10-31T15:17:31.234Z",
+   "count": 68,
+   "highlights": [
+    "Massiccia Retrazione di 1.400 Articoli Scientifici",
+    "Dinosauri: i fossili dominano le principali riviste scientifiche? Analisi scatena un dibattito sulle ‘trovate di specie affascinanti’”, 2, “paleontologia”, “fossili” , 4, null, null, null, {“word”: {",
+    "Un gigante vuole lasciare la Svizzera"
+   ],
+   "categories": {
+    "arte": 9,
+    "poesia": 1,
+    "divertimento": 3,
+    "natura": 5,
+    "universita": 3,
+    "cultura": 5,
+    "scienza": 9,
+    "notizie": 15,
+    "curiosita": 2,
+    "design": 6,
+    "psicologia": 1,
+    "tech": 8,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-10-31-mattina",
    "slot": "mattina",
