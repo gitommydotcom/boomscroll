@@ -1,7 +1,36 @@
 {
- "latest": "2026-10-31-sera",
- "updatedAt": "2026-10-31T19:49:29.765Z",
+ "latest": "2026-11-01-mattina",
+ "updatedAt": "2026-11-01T11:01:16.333Z",
  "editions": [
+  {
+   "id": "2026-11-01-mattina",
+   "slot": "mattina",
+   "date": "2026-11-01",
+   "generatedAt": "2026-11-01T09:36:50.690Z",
+   "count": 63,
+   "highlights": [
+    "1755: Lisbona viene distrutta da un terremoto e dal conseguente maremoto, che uccidono fra le sessanta e le novantamila persone.",
+    "Riconcessione fondiaria: una nuova speranza per le comunità indigene del Botswana",
+    "Marc Márquez vince il GP della Malesia e si avvicina all'ottavo titolo in MotoGP”, (o titolo originale), 2-3 frasi in italiano, massimo 55 parole. Marc Márquez ha vinto il Gran Premio della Malesia, c"
+   ],
+   "categories": {
+    "arte": 7,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 1,
+    "divertimento": 2,
+    "cultura": 3,
+    "universita": 3,
+    "natura": 3,
+    "notizie": 14,
+    "tech": 11,
+    "scienza": 5,
+    "design": 4,
+    "produttivita": 1,
+    "storia": 2,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-10-31-sera",
    "slot": "sera",
