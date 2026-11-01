@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-01-mattina",
- "updatedAt": "2026-11-01T11:01:16.333Z",
+ "latest": "2026-11-01-pomeriggio",
+ "updatedAt": "2026-11-01T17:03:53.044Z",
  "editions": [
+  {
+   "id": "2026-11-01-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-01",
+   "generatedAt": "2026-11-01T15:58:31.699Z",
+   "count": 61,
+   "highlights": [
+    "Che cos’è la\nmateria oscura?",
+    "Il preside di Dartmouth avvertiva sui pericoli dell'IA, ma il suo uso ha causato la sua rimozione",
+    "WeVisCut: L'Intera Sala di Montaggio in un Unico Agente"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 2,
+    "natura": 6,
+    "storia": 5,
+    "universita": 3,
+    "scienza": 5,
+    "tech": 8,
+    "cultura": 3,
+    "notizie": 14,
+    "design": 4,
+    "produttivita": 2,
+    "curiosita": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-01-mattina",
    "slot": "mattina",
