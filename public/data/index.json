@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-02-mattina",
- "updatedAt": "2026-11-02T10:49:26.693Z",
+ "latest": "2026-11-02-pomeriggio",
+ "updatedAt": "2026-11-02T21:07:14.444Z",
  "editions": [
+  {
+   "id": "2026-11-02-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-02",
+   "generatedAt": "2026-11-02T19:26:20.188Z",
+   "count": 99,
+   "highlights": [
+    "Un nuovo percorso flessibile per materiali progettati a partire da nanoparticelle",
+    "Regina Barzilay e Jim Collins vincono il Pritzker Prize per l'eccellenza nella ricerca sull'intelligenza artificiale e la scienza nel campo della scoperta di antibiotici",
+    "Nuova iniziativa Stanford mira a costruire una versione digitale del cervello umano"
+   ],
+   "categories": {
+    "scienza": 16,
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 10,
+    "cultura": 10,
+    "curiosita": 6,
+    "psicologia": 4,
+    "notizie": 14,
+    "design": 8,
+    "natura": 6,
+    "storia": 3,
+    "tech": 10,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-02-mattina",
    "slot": "mattina",
