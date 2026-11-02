@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-01-sera",
- "updatedAt": "2026-11-01T20:32:34.338Z",
+ "latest": "2026-11-02-mattina",
+ "updatedAt": "2026-11-02T10:49:26.693Z",
  "editions": [
+  {
+   "id": "2026-11-02-mattina",
+   "slot": "mattina",
+   "date": "2026-11-02",
+   "generatedAt": "2026-11-02T09:52:19.965Z",
+   "count": 72,
+   "highlights": [
+    "L'internet agente: la visione di Tim Berners-Lee del 2001",
+    "Cosa c’era prima del big bang?",
+    "David Bowie critica MTV per la mancanza di video musicali neri (1983)"
+   ],
+   "categories": {
+    "natura": 6,
+    "scienza": 8,
+    "arte": 9,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 1,
+    "divertimento": 2,
+    "universita": 2,
+    "tech": 10,
+    "notizie": 14,
+    "psicologia": 2,
+    "design": 6,
+    "cultura": 4,
+    "storia": 2
+   }
+  },
   {
    "id": "2026-11-01-sera",
    "slot": "sera",
