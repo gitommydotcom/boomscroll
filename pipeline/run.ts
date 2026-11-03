@@ -12,8 +12,8 @@ import { fetchSource, type FetchContext, type RawItem } from './fetchers';
 import { summarize } from './llm';
 import { buildItem, dedupe, finalize, preselect } from './select';
 import { CITIES, LOCAL_SOURCES, SOURCES, YOUTUBE, YOUTUBE_SHORTS, type SourceDef } from './sources';
-import { readIndex, recentIds, writeEdition } from './store';
-import { editionDate, mapLimit, seeded, sleep } from './util';
+import { readEdition, readIndex, recentIds, writeEdition } from './store';
+import { editionDate, mapLimit, seeded, sleep, youtubeTurn } from './util';
 
 const args = process.argv.slice(2);
 const dry = args.includes('--dry');
@@ -39,7 +39,12 @@ async function main() {
   const ctx: FetchContext = { date, now, rng: seeded(id), seen };
   console.log(`📰 Boomscroll · edizione ${SLOT_LABEL[slot]} del ${date} · ${seen.size} contenuti già visti nelle ultime edizioni`);
 
-  const all: SourceDef[] = [...SOURCES, ...YOUTUBE, ...YOUTUBE_SHORTS, ...LOCAL_SOURCES].filter((s) => !only || only.includes(s.id));
+  const every: SourceDef[] = [...SOURCES, ...YOUTUBE, ...YOUTUBE_SHORTS, ...LOCAL_SOURCES].filter((s) => !only || only.includes(s.id));
+  const previous = index.latest ? await readEdition(index.latest) : null;
+  const failedBefore = new Set((previous?.sources ?? []).filter((s) => !s.ok).map((s) => s.id));
+  const all = only ? every : youtubeTurn(every, SLOTS.indexOf(slot), failedBefore);
+  const ytCount = all.filter((s) => s.type === 'youtube').length;
+  console.log(`📺 YouTube: ${ytCount} feed in questa edizione (un terzo dei canali, più ${[...failedBefore].filter((id) => id.startsWith('yt-')).length} da recuperare)`);
   const reports = new Map<string, SourceReport>();
   const fetchOne = async (src: SourceDef, retry = false) => {
     try {

@@ -3,8 +3,8 @@ import { clipTitle, keepShort, puzzlePosition, type RawItem } from './fetchers';
 import { validate } from './llm';
 import { parseFeed } from './rss';
 import { buildItem, dedupe, finalize, poemExcerpt, preselect } from './select';
-import { YOUTUBE_SHORTS, type SourceDef } from './sources';
-import { editionDate, htmlToText, normalizeUrl, truncate } from './util';
+import { YOUTUBE, YOUTUBE_SHORTS, type SourceDef } from './sources';
+import { editionDate, htmlToText, normalizeUrl, truncate, youtubeTurn } from './util';
 
 const src = (over: Partial<SourceDef> = {}): SourceDef => ({
   id: 'test',
@@ -238,5 +238,15 @@ describe('data dell\'edizione', () => {
     expect(editionDate(new Date('2026-11-02T23:06:00Z'), 'sera')).toBe('2026-11-02');
     expect(editionDate(new Date('2026-11-02T23:06:00Z'), 'mattina')).toBe('2026-11-03');
     expect(editionDate(new Date('2026-11-03T16:00:00Z'), 'sera')).toBe('2026-11-03');
+  });
+});
+
+describe('turni di YouTube', () => {
+  it('ogni canale una volta al giorno, più quelli falliti prima', () => {
+    const turns = [0, 1, 2].map((k) => youtubeTurn(YOUTUBE, k, new Set()));
+    expect(turns.reduce((n, t) => n + t.length, 0)).toBe(YOUTUBE.length);
+    for (const t of turns) expect(t.length).toBeLessThan(YOUTUBE.length * 0.5);
+    const missing = YOUTUBE.find((s) => !turns[0].includes(s))!;
+    expect(youtubeTurn(YOUTUBE, 0, new Set([missing.id]))).toContain(missing);
   });
 });

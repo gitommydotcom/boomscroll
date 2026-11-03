@@ -183,3 +183,19 @@ export function editionDate(now: Date, slot: 'mattina' | 'pomeriggio' | 'sera'):
   return slot === 'sera' && hour < 8 ? romeDate(new Date(now.getTime() - 9 * 3_600_000)) : romeDate(now);
 }
 
+
+/** Hash stabile di una stringa (FNV-1a), per distribuire le fonti tra le edizioni. */
+export function strHash(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 0x01000193) >>> 0;
+  return h;
+}
+
+/**
+ * Le fonti YouTube di questa edizione: un terzo dei canali a ogni edizione (ognuno una volta al giorno,
+ * pubblicano al massimo un video al giorno), più quelli falliti nell'edizione precedente.
+ * Meno richieste ravvicinate significa meno rifiuti da parte di YouTube.
+ */
+export function youtubeTurn<T extends { id: string; type: string }>(sources: T[], slotIndex: number, failedBefore: Set<string>): T[] {
+  return sources.filter((s) => s.type !== 'youtube' || strHash(s.id) % 3 === slotIndex || failedBefore.has(s.id));
+}
