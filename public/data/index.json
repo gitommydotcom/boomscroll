@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-02-pomeriggio",
- "updatedAt": "2026-11-02T21:07:14.444Z",
+ "latest": "2026-11-03-sera",
+ "updatedAt": "2026-11-03T00:24:05.766Z",
  "editions": [
+  {
+   "id": "2026-11-03-sera",
+   "slot": "sera",
+   "date": "2026-11-03",
+   "generatedAt": "2026-11-02T23:06:32.402Z",
+   "count": 79,
+   "highlights": [
+    "Ingegneri hanno delicatamente rimosso gli alberi di questa nave da guerra della Seconda Guerra Mondiale caricata di bombe nel fiume Tamigi. Ma 1500 tonnellate di esplosivi sono ancora in posizione.",
+    "Processo, Trionfo e l'Arte del Possibile: La Commovente Storia Dietro ‘Ode to Joy’ di Beethoven, Una Vita di Dolore in Creazione",
+    "Due funzionari brasiliani rimossi dopo minacce di avvelenamento degli indigeni"
+   ],
+   "categories": {
+    "arte": 8,
+    "curiosita": 6,
+    "divertimento": 2,
+    "poesia": 1,
+    "notizie": 15,
+    "universita": 7,
+    "cultura": 8,
+    "storia": 3,
+    "natura": 3,
+    "tech": 7,
+    "scienza": 10,
+    "design": 6,
+    "psicologia": 2,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-02-pomeriggio",
    "slot": "pomeriggio",
