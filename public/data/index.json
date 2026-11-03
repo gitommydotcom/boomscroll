@@ -1,6 +1,6 @@
 {
  "latest": "2026-11-03-sera",
- "updatedAt": "2026-11-03T00:24:05.766Z",
+ "updatedAt": "2026-11-03T03:41:42.765Z",
  "editions": [
   {
    "id": "2026-11-03-sera",
@@ -28,6 +28,34 @@
     "design": 6,
     "psicologia": 2,
     "produttivita": 1
+   }
+  },
+  {
+   "id": "2026-11-03-mattina",
+   "slot": "mattina",
+   "date": "2026-11-03",
+   "generatedAt": "2026-11-03T01:56:33.686Z",
+   "count": 88,
+   "highlights": [
+    "Una Stella in Collasso Produce un Bagliore Superiore alla Sua Galassia",
+    "Amore nel Tempo dei Dinosauri",
+    "Teghaza 001, la roccia marziana più antica mai trovata aggiunge tasselli al passato umido del Pianeta Rosso"
+   ],
+   "categories": {
+    "arte": 7,
+    "lingue": 1,
+    "poesia": 1,
+    "divertimento": 4,
+    "scienza": 18,
+    "tech": 9,
+    "universita": 5,
+    "natura": 5,
+    "storia": 5,
+    "notizie": 15,
+    "psicologia": 2,
+    "cultura": 5,
+    "design": 8,
+    "curiosita": 3
    }
   },
   {
