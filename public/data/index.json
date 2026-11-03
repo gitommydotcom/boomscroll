@@ -1,34 +1,34 @@
 {
  "latest": "2026-11-03-mattina",
- "updatedAt": "2026-11-03T08:56:56.474Z",
+ "updatedAt": "2026-11-03T11:34:59.544Z",
  "editions": [
   {
    "id": "2026-11-03-mattina",
    "slot": "mattina",
    "date": "2026-11-03",
-   "generatedAt": "2026-11-03T07:23:38.680Z",
-   "count": 99,
+   "generatedAt": "2026-11-03T09:56:24.581Z",
+   "count": 91,
    "highlights": [
-    "Una Stella in Collasso Produce un Bagliore Post-Esplosione Più Intenso del Suo Galassia",
-    "Amore nel tempo dei dinosauri",
-    "I ragni sognano? Questi aracnidi fanno movimenti e si muovono gli occhi quando dormono, suggerendo uno stato cerebrale complesso."
+    "Un Collasso Stellare Produce un Bagliore Post-Esplosione Più Intenso della Galassia Ospite",
+    "I Fisici Esplorano il Mondo dei Zeptoverse",
+    "Teghaza 001, la roccia marziana più antica mai trovata aggiunge tasselli al passato umido del Pianeta Rosso"
    ],
    "categories": {
-    "natura": 6,
-    "arte": 7,
-    "lingue": 4,
+    "natura": 5,
+    "arte": 6,
+    "lingue": 2,
     "poesia": 1,
     "divertimento": 3,
-    "universita": 10,
+    "scienza": 14,
+    "universita": 6,
+    "tech": 10,
     "cultura": 7,
-    "scienza": 17,
-    "psicologia": 5,
-    "tech": 8,
-    "design": 8,
-    "storia": 5,
+    "psicologia": 6,
     "notizie": 14,
-    "curiosita": 3,
-    "filosofia": 1
+    "design": 7,
+    "storia": 3,
+    "curiosita": 5,
+    "produttivita": 2
    }
   },
   {
