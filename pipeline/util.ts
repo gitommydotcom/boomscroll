@@ -24,11 +24,11 @@ export async function http(
 }
 
 /**
- * I feed di YouTube rispondono 404 o 500 se ricevono troppe richieste insieme:
- * al massimo due alla volta, una piccola pausa tra l'una e l'altra, e nuovi tentativi.
+ * I feed di YouTube rispondono a caso 404 o 500 alle macchine di GitHub, peggio se le richieste
+ * sono tante e ravvicinate: una alla volta, una pausa tra l'una e l'altra, e nuovi tentativi.
  */
-const YT_PARALLEL = 2;
-const YT_GAP_MS = 350;
+const YT_PARALLEL = 1;
+const YT_GAP_MS = 700;
 let ytActive = 0;
 const ytQueue: (() => void)[] = [];
 async function ytSlot<T>(fn: () => Promise<T>): Promise<T> {
@@ -51,8 +51,8 @@ export async function getText(url: string, headers?: Record<string, string>, tim
     return res.text();
   }
   let status = 0;
-  for (let attempt = 0; attempt < 3; attempt++) {
-    if (attempt) await sleep(1500 * 2 ** (attempt - 1) + Math.random() * 500);
+  for (let attempt = 0; attempt < 4; attempt++) {
+    if (attempt) await sleep([0, 2000, 5000, 12000][attempt] + Math.random() * 800);
     const res = await ytSlot(() => http(url, { headers, timeoutMs }));
     if (res.ok) return res.text();
     status = res.status;
@@ -173,3 +173,13 @@ export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export function romeDate(d = new Date()): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(d);
 }
+
+/**
+ * Giorno dell'edizione. Un'edizione della sera partita in ritardo, dopo mezzanotte,
+ * appartiene ancora al giorno prima (altrimenti passerebbe davanti a quella del mattino).
+ */
+export function editionDate(now: Date, slot: 'mattina' | 'pomeriggio' | 'sera'): string {
+  const hour = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', hour: '2-digit', hour12: false }).format(now));
+  return slot === 'sera' && hour < 8 ? romeDate(new Date(now.getTime() - 9 * 3_600_000)) : romeDate(now);
+}
+

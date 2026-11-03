@@ -13,7 +13,7 @@ import { summarize } from './llm';
 import { buildItem, dedupe, finalize, preselect } from './select';
 import { CITIES, LOCAL_SOURCES, SOURCES, YOUTUBE, YOUTUBE_SHORTS, type SourceDef } from './sources';
 import { readIndex, recentIds, writeEdition } from './store';
-import { mapLimit, romeDate, seeded } from './util';
+import { editionDate, mapLimit, seeded, sleep } from './util';
 
 const args = process.argv.slice(2);
 const dry = args.includes('--dry');
@@ -31,8 +31,8 @@ const label = (src: SourceDef) => (src.shorts ? `${src.name} · clip` : src.name
 
 async function main() {
   const now = new Date();
-  const date = romeDate(now);
   const slot = currentSlot(now);
+  const date = editionDate(now, slot);
   const id = `${date}-${slot}`;
   const index = await readIndex();
   const seen = await recentIds(index, id);
@@ -40,20 +40,28 @@ async function main() {
   console.log(`📰 Boomscroll · edizione ${SLOT_LABEL[slot]} del ${date} · ${seen.size} contenuti già visti nelle ultime edizioni`);
 
   const all: SourceDef[] = [...SOURCES, ...YOUTUBE, ...YOUTUBE_SHORTS, ...LOCAL_SOURCES].filter((s) => !only || only.includes(s.id));
-  const reports: SourceReport[] = [];
-  const fetched = await mapLimit(all, 8, async (src) => {
+  const reports = new Map<string, SourceReport>();
+  const fetchOne = async (src: SourceDef, retry = false) => {
     try {
       const items = await fetchSource(src, ctx);
-      reports.push({ id: src.id, name: label(src), ok: true, count: items.length });
-      console.log(`  ✅ ${src.id.padEnd(20)} ${items.length}`);
+      reports.set(src.id, { id: src.id, name: label(src), ok: true, count: items.length });
+      console.log(`  ✅ ${src.id.padEnd(20)} ${items.length}${retry ? ' (al secondo giro)' : ''}`);
       return items;
     } catch (e) {
       const error = (e as Error).name === 'AbortError' ? 'timeout' : (e as Error).message.slice(0, 160);
-      reports.push({ id: src.id, name: label(src), ok: false, count: 0, error });
+      reports.set(src.id, { id: src.id, name: label(src), ok: false, count: 0, error });
       console.log(`  ❌ ${src.id.padEnd(20)} ${error}`);
       return [] as RawItem[];
     }
-  });
+  };
+  const fetched = await mapLimit(all, 8, (src) => fetchOne(src));
+  // YouTube sbaglia a caso: le fonti video fallite si riprovano una volta, dopo una pausa.
+  const again = all.filter((s) => s.type === 'youtube' && !reports.get(s.id)?.ok);
+  if (again.length) {
+    console.log(`🔁 Riprovo ${again.length} fonti YouTube tra un minuto`);
+    await sleep(60_000);
+    fetched.push(...(await mapLimit(again, 1, (src) => fetchOne(src, true))));
+  }
 
   const raw = fetched.flat();
   const global = preselect(dedupe(raw.filter((r) => !r.source.city)), now);
@@ -79,13 +87,13 @@ async function main() {
     generatedAt: now.toISOString(),
     items,
     local: localByCity,
-    sources: reports.sort((a, b) => a.id.localeCompare(b.id)),
+    sources: [...reports.values()].sort((a, b) => a.id.localeCompare(b.id)),
     ai: { model: ai.model, calls: ai.calls, failures: ai.failures },
   };
 
   const byCat = items.reduce<Record<string, number>>((acc, i) => ({ ...acc, [i.category]: (acc[i.category] ?? 0) + 1 }), {});
   console.log(`📦 ${items.length} contenuti:`, byCat);
-  const failed = reports.filter((r) => !r.ok);
+  const failed = [...reports.values()].filter((r) => !r.ok);
   if (failed.length) console.log(`⚠️  ${failed.length} fonti non raggiungibili: ${failed.map((f) => f.id).join(', ')}`);
 
   if (dry) {

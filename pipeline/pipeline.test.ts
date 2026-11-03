@@ -4,7 +4,7 @@ import { validate } from './llm';
 import { parseFeed } from './rss';
 import { buildItem, dedupe, finalize, poemExcerpt, preselect } from './select';
 import { YOUTUBE_SHORTS, type SourceDef } from './sources';
-import { htmlToText, normalizeUrl, truncate } from './util';
+import { editionDate, htmlToText, normalizeUrl, truncate } from './util';
 
 const src = (over: Partial<SourceDef> = {}): SourceDef => ({
   id: 'test',
@@ -229,5 +229,14 @@ describe('clip brevi', () => {
       expect(s.shorts).toBe(true);
       expect(s.account).toBe(s.id.replace(/:clip$/, ''));
     }
+  });
+});
+
+describe('data dell\'edizione', () => {
+  it('una sera partita dopo mezzanotte resta del giorno prima', () => {
+    // 00:06 a Roma del 3 novembre (23:06 UTC del 2).
+    expect(editionDate(new Date('2026-11-02T23:06:00Z'), 'sera')).toBe('2026-11-02');
+    expect(editionDate(new Date('2026-11-02T23:06:00Z'), 'mattina')).toBe('2026-11-03');
+    expect(editionDate(new Date('2026-11-03T16:00:00Z'), 'sera')).toBe('2026-11-03');
   });
 });

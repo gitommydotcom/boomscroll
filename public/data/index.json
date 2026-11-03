@@ -1,35 +1,7 @@
 {
- "latest": "2026-11-03-sera",
- "updatedAt": "2026-11-03T03:41:42.765Z",
+ "latest": "2026-11-03-mattina",
+ "updatedAt": "2026-11-03T04:49:11.670Z",
  "editions": [
-  {
-   "id": "2026-11-03-sera",
-   "slot": "sera",
-   "date": "2026-11-03",
-   "generatedAt": "2026-11-02T23:06:32.402Z",
-   "count": 79,
-   "highlights": [
-    "Ingegneri hanno delicatamente rimosso gli alberi di questa nave da guerra della Seconda Guerra Mondiale caricata di bombe nel fiume Tamigi. Ma 1500 tonnellate di esplosivi sono ancora in posizione.",
-    "Processo, Trionfo e l'Arte del Possibile: La Commovente Storia Dietro ‘Ode to Joy’ di Beethoven, Una Vita di Dolore in Creazione",
-    "Due funzionari brasiliani rimossi dopo minacce di avvelenamento degli indigeni"
-   ],
-   "categories": {
-    "arte": 8,
-    "curiosita": 6,
-    "divertimento": 2,
-    "poesia": 1,
-    "notizie": 15,
-    "universita": 7,
-    "cultura": 8,
-    "storia": 3,
-    "natura": 3,
-    "tech": 7,
-    "scienza": 10,
-    "design": 6,
-    "psicologia": 2,
-    "produttivita": 1
-   }
-  },
   {
    "id": "2026-11-03-mattina",
    "slot": "mattina",
@@ -56,6 +28,34 @@
     "cultura": 5,
     "design": 8,
     "curiosita": 3
+   }
+  },
+  {
+   "id": "2026-11-02-sera",
+   "slot": "sera",
+   "date": "2026-11-02",
+   "generatedAt": "2026-11-02T23:06:32.402Z",
+   "count": 79,
+   "highlights": [
+    "Ingegneri hanno delicatamente rimosso gli alberi di questa nave da guerra della Seconda Guerra Mondiale caricata di bombe nel fiume Tamigi. Ma 1500 tonnellate di esplosivi sono ancora in posizione.",
+    "Processo, Trionfo e l'Arte del Possibile: La Commovente Storia Dietro ‘Ode to Joy’ di Beethoven, Una Vita di Dolore in Creazione",
+    "Due funzionari brasiliani rimossi dopo minacce di avvelenamento degli indigeni"
+   ],
+   "categories": {
+    "arte": 8,
+    "curiosita": 6,
+    "divertimento": 2,
+    "poesia": 1,
+    "notizie": 15,
+    "universita": 7,
+    "cultura": 8,
+    "storia": 3,
+    "natura": 3,
+    "tech": 7,
+    "scienza": 10,
+    "design": 6,
+    "psicologia": 2,
+    "produttivita": 1
    }
   },
   {
@@ -179,7 +179,7 @@
    "highlights": [
     "1755: Lisbona viene distrutta da un terremoto e dal conseguente maremoto, che uccidono fra le sessanta e le novantamila persone.",
     "Riconcessione fondiaria: una nuova speranza per le comunità indigene del Botswana",
-    "Marc Márquez vince il GP della Malesia e si avvicina all'ottavo titolo in MotoGP”, (o titolo originale), 2-3 frasi in italiano, massimo 55 parole. Marc Márquez ha vinto il Gran Premio della Malesia, c"
+    "Marc Márquez vince il GP della Malesia e si avvicina all'ottavo titolo in MotoGP"
    ],
    "categories": {
     "arte": 7,
@@ -234,7 +234,7 @@
    "count": 68,
    "highlights": [
     "Massiccia Retrazione di 1.400 Articoli Scientifici",
-    "Dinosauri: i fossili dominano le principali riviste scientifiche? Analisi scatena un dibattito sulle ‘trovate di specie affascinanti’”, 2, “paleontologia”, “fossili” , 4, null, null, null, {“word”: {",
+    "Dinosauri: i fossili dominano le principali riviste scientifiche? Analisi scatena un dibattito sulle ‘trovate di specie affascinanti’",
     "Un gigante vuole lasciare la Svizzera"
    ],
    "categories": {
@@ -754,7 +754,7 @@
    "highlights": [
     "Sappiamo Cosa Vedevano i Denisovan",
     "Ricercatori svelano i segreti di un misterioso materiale magnetico.",
-    "Quasi tutti i coralli del mondo a rischio di collasso entro 50 anni, avverte l'IUCN”, 2023-10-26, 4,"
+    "Quasi tutti i coralli del mondo a rischio di collasso entro 50 anni, avverte l'IUCN"
    ],
    "categories": {
     "arte": 7,
@@ -956,7 +956,7 @@
    "generatedAt": "2026-10-23T07:53:11.227Z",
    "count": 133,
    "highlights": [
-    "Q&A: Come l'IA ha modellato la mente umana ‘disordinata’”, 2, 3, “intelligenza artificiale”, “ragionamento umano”, “algoritmi” , 4, null,  null, null, {“word”: {“word”: “hallucinations”, “definition_i",
+    "Q&A: Come l'IA ha modellato la mente umana ‘disordinata’",
     "Veglia di Georges Saunders",
     "Il mondo è sulla strada per 2,8 gradi Celsius di riscaldamento globale"
    ],
@@ -1011,7 +1011,9 @@
    }
   },
   {
+   "id": "2026-10-22",
    "date": "2026-10-22",
+   "generatedAt": "2026-10-22T11:29:23.586Z",
    "count": 88,
    "highlights": [
     "AI Proved the Quasi-Riemann Hypothesis. What Happens Now?",

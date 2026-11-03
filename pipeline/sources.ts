@@ -67,7 +67,8 @@ const yt = (id: string, name: string, channelId: string, category: CategoryId, o
   name,
   type: 'youtube',
   url: `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`,
-  alt: o.user ? [`https://www.youtube.com/feeds/videos.xml?user=${o.user}`] : undefined,
+  // Riserva: la playlist dei soli video lunghi del canale, poi il vecchio nome utente.
+  alt: [`https://www.youtube.com/feeds/videos.xml?playlist_id=UULF${channelId.slice(2)}`, ...(o.user ? [`https://www.youtube.com/feeds/videos.xml?user=${o.user}`] : [])],
   category,
   mixed: o.mixed,
   lang: o.lang ?? 'en',
