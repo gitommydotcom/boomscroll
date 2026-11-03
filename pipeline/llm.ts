@@ -1,4 +1,5 @@
 import { CATEGORY_IDS } from '../shared/categories';
+import { repairTitle } from '../shared/titles';
 import { isHardLang, type CategoryId, type Quiz } from '../shared/types';
 import type { RawItem } from './fetchers';
 import { http, sleep } from './util';
@@ -60,7 +61,7 @@ export function validate(raw: any, item: RawItem): AiResult | null {
       exampleIt: pickString(raw.word.example_it, 300),
     };
   }
-  const titleIt = item.lang !== 'it' ? pickString(raw.title_it, 200) : undefined;
+  const titleIt = item.lang !== 'it' ? repairTitle(pickString(raw.title_it, 200)) : undefined;
   return {
     summary,
     titleIt: titleIt && titleIt !== item.title ? titleIt : undefined,

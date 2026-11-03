@@ -41,6 +41,9 @@ jobs:
       OLLAMA_MODEL: gemma3:4b
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Sempre l'ultima versione di main: un'edizione partita prima potrebbe averla aggiornata.
+          ref: main
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -77,8 +80,19 @@ jobs:
           git add public/data
           if git diff --cached --quiet; then echo "Nessuna novità"; exit 0; fi
           git commit -m "Edizione del $(TZ=Europe/Rome date '+%F %H:%M')"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3; do
+            if ! git pull --rebase origin main; then
+              # Un'altra edizione è stata salvata nel frattempo: l'indice si ricostruisce da tutte le edizioni,
+              # e per i file della stessa edizione vale quello appena creato.
+              git diff --name-only --diff-filter=U | grep '^public/data/editions/' | xargs -r git checkout --theirs --
+              npm run reindex
+              git add public/data
+              GIT_EDITOR=true git rebase --continue
+            fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 5))
+          done
+          exit 1
 
   deploy:
     needs: edition

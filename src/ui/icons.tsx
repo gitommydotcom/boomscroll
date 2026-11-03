@@ -446,6 +446,12 @@ const GLYPHS: Record<string, ComponentChildren> = {
     </>
   ),
   star: <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" />,
+  newspaper: (
+    <>
+      <path d="M4 5h13v13a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5Z" />
+      <path d="M17 9h3v9a2 2 0 0 1-4 0M7 9h7M7 12.5h7M7 16h4" />
+    </>
+  ),
   // Interazioni e clip
   clip: (
     <>

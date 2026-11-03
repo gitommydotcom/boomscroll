@@ -64,3 +64,27 @@ export function loadRecent(editions = 9): Promise<RecentItem[]> {
   });
   return p;
 }
+
+/** Il giornale da stampare di un'edizione (PDF creato alla pubblicazione del sito). */
+export interface PrintEntry {
+  id: string;
+  file: string;
+  pages: number;
+  bytes: number;
+}
+
+let prints: Promise<Map<string, PrintEntry>> | null = null;
+
+/** I giornali disponibili (le edizioni degli ultimi giorni). */
+export function fetchPrints(): Promise<Map<string, PrintEntry>> {
+  prints ??= fetch(`${BASE}stampa/index.json`, { cache: 'no-cache' })
+    .then((r) => (r.ok ? (r.json() as Promise<{ editions: PrintEntry[] }>) : { editions: [] }))
+    .then((d) => new Map(d.editions.map((e) => [e.id, e])))
+    .catch(() => {
+      prints = null;
+      return new Map<string, PrintEntry>();
+    });
+  return prints;
+}
+
+export const printUrl = (e: PrintEntry) => `${BASE}stampa/${e.file}`;

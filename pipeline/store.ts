@@ -1,4 +1,5 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { repairTitle } from '../shared/titles';
 import { join } from 'node:path';
 import { SLOTS, editionId, editionSlot, type Edition, type EditionIndex, type EditionIndexEntry } from '../shared/types';
 import { CITIES } from './sources';
@@ -35,20 +36,17 @@ export async function recentIds(index: EditionIndex, current: string, editions =
   return ids;
 }
 
-export async function writeEdition(edition: Edition, index: EditionIndex): Promise<void> {
-  await mkdir(EDITIONS, { recursive: true });
-  const id = editionId(edition);
-  await writeFile(join(EDITIONS, `${id}.json`), JSON.stringify(edition));
-
+/** La riga dell'indice di un'edizione: numeri, categorie e i tre titoli migliori. */
+function indexEntry(edition: Edition): EditionIndexEntry {
   const counts: EditionIndexEntry['categories'] = {};
   for (const i of edition.items) counts[i.category] = (counts[i.category] ?? 0) + 1;
   const highlights = [...edition.items]
     .filter((i) => i.kind === 'article' || i.kind === 'paper')
     .sort((a, b) => b.quality + (b.interest ?? 3) / 5 - (a.quality + (a.interest ?? 3) / 5))
     .slice(0, 3)
-    .map((i) => i.titleIt ?? i.title);
-  const entry: EditionIndexEntry = {
-    id,
+    .map((i) => repairTitle(i.titleIt) ?? i.title);
+  return {
+    id: editionId(edition),
     slot: edition.slot,
     date: edition.date,
     generatedAt: edition.generatedAt,
@@ -56,15 +54,40 @@ export async function writeEdition(edition: Edition, index: EditionIndex): Promi
     highlights,
     categories: counts,
   };
+}
 
-  // Più recenti prima: per data, poi per fascia (sera, pomeriggio, mattina).
-  const order = (e: EditionIndexEntry) => `${e.date}-${SLOTS.indexOf(editionSlot(e))}`;
-  const editions = [entry, ...index.editions.filter((e) => editionId(e) !== id)].sort((a, b) => order(b).localeCompare(order(a)));
+// Più recenti prima: per data, poi per fascia (sera, pomeriggio, mattina).
+const order = (e: EditionIndexEntry) => `${e.date}-${SLOTS.indexOf(editionSlot(e))}`;
+
+async function saveIndex(editions: EditionIndexEntry[]) {
+  editions.sort((a, b) => order(b).localeCompare(order(a)));
   const next: EditionIndex = {
-    latest: editionId(editions[0]),
+    latest: editions[0] ? editionId(editions[0]) : null,
     updatedAt: new Date().toISOString(),
     editions,
     cities: CITIES,
   };
   await writeFile(INDEX, JSON.stringify(next, null, 1));
+}
+
+export async function writeEdition(edition: Edition, index: EditionIndex): Promise<void> {
+  await mkdir(EDITIONS, { recursive: true });
+  const id = editionId(edition);
+  await writeFile(join(EDITIONS, `${id}.json`), JSON.stringify(edition));
+  await saveIndex([indexEntry(edition), ...index.editions.filter((e) => editionId(e) !== id)]);
+}
+
+/**
+ * Ricostruisce l'indice da tutti i file delle edizioni. Serve quando due edizioni
+ * vengono salvate nello stesso momento e i loro indici entrano in conflitto.
+ */
+export async function reindex(): Promise<number> {
+  const files = (await readdir(EDITIONS)).filter((f) => f.endsWith('.json'));
+  const entries: EditionIndexEntry[] = [];
+  for (const f of files) {
+    const ed = await readEdition(f.slice(0, -5));
+    if (ed) entries.push(indexEntry(ed));
+  }
+  await saveIndex(entries);
+  return entries.length;
 }

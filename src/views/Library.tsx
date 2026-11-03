@@ -1,3 +1,4 @@
+import { PrintLink } from '../cards/PrintLink';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { CATEGORIES, categoryMeta } from '../../shared/categories';
 import { SLOT_LABEL, editionId, editionSlot, type CategoryId, type Edition, type EditionIndex } from '../../shared/types';
@@ -125,6 +126,9 @@ function EditionView({ date }: { date: string }) {
       {edition && (
         <>
           <p class="page-sub">{edition.items.length} contenuti da {new Set(edition.items.map((i) => i.sourceId)).size} fonti</p>
+          <div style={{ marginBottom: '12px' }}>
+            <PrintLink id={date} />
+          </div>
           <div class="chips scroll">
             <button class="chip" aria-pressed={!cat} onClick={() => setCat(null)}>
               Tutto

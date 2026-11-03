@@ -21,6 +21,7 @@
 - Impara solo da *mi piace*, *non mi piace*, *salva*, *segui* e “meno di…”, mai dal tempo passato su un contenuto
 - Contenuti in qualsiasi lingua, con riassunto in italiano e traduzione per le lingue più difficili
 - Installabile come app (PWA), funziona offline, nessun account, nessun tracciamento
+- Ogni edizione è anche **un giornale da stampare**: PDF A4 impaginato come un quotidiano di una volta
 
 ## Come funziona
 
@@ -46,6 +47,27 @@ La pipeline usa il primo servizio disponibile:
 3. **Un modello open source sul runner di Actions** (Gemma 3 4B via Ollama): nessuna chiave, nessuna registrazione. Più lento (circa 100 minuti per un centinaio di contenuti), qualità discreta. Riassume prima le lingue difficili, poi le altre lingue straniere, per ultimi i contenuti in italiano (che restano leggibili anche senza).
 
 Se nessuno risponde, l'edizione esce lo stesso con gli estratti delle fonti.
+
+## Il giornale da stampare
+
+Ogni edizione diventa un PDF A4 impaginato come un quotidiano (`print/`, `npm run giornale`). Si scarica dalla scheda *Fine dell'edizione* e dall'archivio.
+
+- **Gabbia:** quattro colonne con filetti e griglia di base a 11 punti. Titoli, foto, didascalie e codici QR occupano sempre un numero intero di righe, così le righe delle colonne vicine stanno alla stessa altezza.
+- **Caratteri:** Source Serif 4 di Adobe nel taglio ottico per il corpo piccolo, con maiuscoletto vero e cifre old style. Didascalie nel taglio *Caption*, titoli in Playfair Display, testata in gotico (UnifrakturMaguntia). Tutti liberi (OFL) e incorporati nel PDF come TrueType.
+- **Composizione:**
+  - testo giustificato con sillabazione italiana e inglese (pattern di Liang, almeno 2 lettere prima e 3 dopo il taglio);
+  - caporali «», apostrofi e lineette tipografici, spazi indivisibili dopo le parole di una lettera e tra numero e unità;
+  - capolettera nelle aperture, titoli bilanciati, niente righe orfane o vedove;
+  - i titoli tradotti "all'inglese" (Ogni Parola Maiuscola) tornano in italiano corrente, con la maiuscola solo ai nomi propri.
+- **Struttura:**
+  - prima pagina con testata, orecchie (il tempo a L'Aquila), apertura, rimandi alle pagine interne, sommario e brevi;
+  - sezioni con testatine, testatine di pagina pari/dispari e brevi a chiudere le colonne;
+  - *Da guardare*: i video con codice QR;
+  - *Tempo libero*: problema di scacchi su diagramma, quiz con rimando alla pagina, poesia, domanda del giorno con le righe per scrivere, vignetta, soluzioni capovolte e gerenza.
+- **Impaginazione:** la fa Chromium misurando il testo vero (`print/layout.js`). Se le pagine non bastano, toglie i pezzi meno importanti delle sezioni più lunghe, li trasforma in brevi e ricompone. Non lascia pagine quasi vuote.
+- **Foto:** in scala di grigi con il contrasto per la stampa, circa 300 dpi su una colonna. I codici QR hanno moduli di almeno 0,4 mm.
+
+I PDF delle ultime 9 edizioni si creano durante la pubblicazione del sito, con una cache (non finiscono nel repository). Per provarli in locale: `npm run build && npm run giornale -- --editions=1` (il PDF è in `dist/stampa/`).
 
 ## Edizioni
 

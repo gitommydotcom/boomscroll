@@ -10,6 +10,7 @@ import { Avatar } from '../ui/Avatar';
 import { openDetail } from '../lib/ui';
 import { Icon, IconCheck } from '../ui/icons';
 import { BoxBreath, DoneNote } from './Interactions';
+import { PrintLink } from './PrintLink';
 
 /* ── Respiro ────────────────────────────────────────────────────────────── */
 
@@ -343,7 +344,13 @@ export function EndCard({ date, name, next, onMore, isToday }: { date: string; n
         </div>
       </div>
       <p>Questo è un buon momento per chiudere l’app e fare altro. {next}</p>
-      <button class="btn ghost block" onClick={onMore}>
+      <p class="muted small" style={{ marginBottom: '8px' }}>
+        Preferisci la carta? L’edizione è anche un giornale da stampare, impaginato come un quotidiano.
+      </p>
+      <div class="stack" style={{ gap: '8px' }}>
+        <PrintLink id={date} block />
+      </div>
+      <button class="btn ghost block" style={{ marginTop: '8px' }} onClick={onMore}>
         Continua con gli approfondimenti
       </button>
     </section>

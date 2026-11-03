@@ -1,3 +1,4 @@
+import { repairTitle } from '../../shared/titles';
 import { categoryMeta } from '../../shared/categories';
 import { isHardLang, type Item } from '../../shared/types';
 import { ago } from '../lib/dates';
@@ -20,9 +21,11 @@ export const langName = (l: string) => LANG_NAMES[l.slice(0, 2)] ?? l;
 /** Titolo principale e (se serve) quello secondario, secondo la modalità di lettura. */
 export function titles(item: Item, mode: Settings['summaryMode']): { main: string; sub?: string } {
   if (item.kind === 'word' && item.word) return { main: item.word.word, sub: item.word.definitionIt };
-  if (item.lang.startsWith('it') || !item.titleIt) return { main: item.title };
-  if (mode === 'original' && !isHardLang(item.lang)) return { main: item.title, sub: item.titleIt };
-  return { main: item.titleIt, sub: item.title };
+  // Le traduzioni delle edizioni passate possono avere avanzi della risposta dell'IA.
+  const it = repairTitle(item.titleIt);
+  if (item.lang.startsWith('it') || !it) return { main: item.title };
+  if (mode === 'original' && !isHardLang(item.lang)) return { main: item.title, sub: it };
+  return { main: it, sub: item.title };
 }
 
 /** Testo principale: riassunto in italiano, o l'originale in modalità "Allenami". */

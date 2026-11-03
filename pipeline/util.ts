@@ -23,10 +23,42 @@ export async function http(
   }
 }
 
+/**
+ * I feed di YouTube rispondono 404 o 500 se ricevono troppe richieste insieme:
+ * al massimo due alla volta, una piccola pausa tra l'una e l'altra, e nuovi tentativi.
+ */
+const YT_PARALLEL = 2;
+const YT_GAP_MS = 350;
+let ytActive = 0;
+const ytQueue: (() => void)[] = [];
+async function ytSlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (ytActive >= YT_PARALLEL) await new Promise<void>((r) => ytQueue.push(r));
+  ytActive++;
+  try {
+    return await fn();
+  } finally {
+    await sleep(YT_GAP_MS);
+    ytActive--;
+    ytQueue.shift()?.();
+  }
+}
+export const isYouTube = (url: string) => /^https:\/\/(www\.)?youtube\.com\//.test(url);
+
 export async function getText(url: string, headers?: Record<string, string>, timeoutMs?: number): Promise<string> {
-  const res = await http(url, { headers, timeoutMs });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.text();
+  if (!isYouTube(url)) {
+    const res = await http(url, { headers, timeoutMs });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.text();
+  }
+  let status = 0;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt) await sleep(1500 * 2 ** (attempt - 1) + Math.random() * 500);
+    const res = await ytSlot(() => http(url, { headers, timeoutMs }));
+    if (res.ok) return res.text();
+    status = res.status;
+    if (![404, 429, 500, 502, 503].includes(status)) break;
+  }
+  throw new Error(`HTTP ${status}`);
 }
 
 export async function getJson<T = any>(url: string, headers?: Record<string, string>): Promise<T> {

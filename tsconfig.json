@@ -16,5 +16,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["node", "vite/client", "vite-plugin-pwa/client"]
   },
-  "include": ["src", "shared", "pipeline", "vite.config.ts"]
+  "include": ["src", "shared", "pipeline", "print", "vite.config.ts"]
 }

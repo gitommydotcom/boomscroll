@@ -19,7 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
         with:
@@ -32,6 +32,22 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      # Il giornale da stampare: un PDF per ciascuna delle ultime edizioni, pubblicato con il sito.
+      # Grazie alla cache si compone solo l'edizione nuova; se qualcosa va storto il sito esce lo stesso.
+      - name: Cache del giornale e di Chromium
+        uses: actions/cache@v4
+        with:
+          path: |
+            .stampa
+            ~/.cache/ms-playwright
+          key: stampa-${{ hashFiles('package-lock.json') }}-${{ github.run_id }}
+          restore-keys: stampa-${{ hashFiles('package-lock.json') }}-
+      - name: Prepara Chromium
+        continue-on-error: true
+        run: npx playwright install --with-deps chromium
+      - name: Componi il giornale (PDF)
+        continue-on-error: true
+        run: npm run giornale
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

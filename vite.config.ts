@@ -34,6 +34,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         globIgnores: ['data/**'],
         navigateFallback: `${base}index.html`,
+        // I PDF del giornale e i dati si aprono così come sono, mai sostituiti dall'app.
+        navigateFallbackDenylist: [/\/stampa\//, /\/data\//],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.endsWith('/data/index.json'),

@@ -3286,3 +3286,21 @@ a.link {
     transition: none;
   }
 }
+
+/* Il giornale da stampare */
+.print-link {
+  justify-content: flex-start;
+  text-align: left;
+  min-height: 54px;
+  padding: 8px 18px;
+}
+.print-link > span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.print-meta {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-3);
+}
