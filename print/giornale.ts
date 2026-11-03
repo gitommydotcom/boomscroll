@@ -275,6 +275,16 @@ async function render(browser: Browser, edition: Edition, allIds: string[], css:
   }
 }
 
+/** Il Chromium di Playwright; se non c'è (sistema non supportato), il Google Chrome installato. */
+async function launch(): Promise<Browser> {
+  try {
+    return await chromium.launch();
+  } catch (e) {
+    console.log(`  ℹ️  Chromium di Playwright non disponibile, provo Google Chrome (${(e as Error).message.split('\n')[0]})`);
+    return chromium.launch({ channel: 'chrome' });
+  }
+}
+
 async function main() {
   const index = JSON.parse(await readFile(join(DATA, 'index.json'), 'utf8')) as EditionIndex;
   const allIds = (await readdir(join(DATA, 'editions'))).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort();
@@ -302,7 +312,7 @@ async function main() {
       console.log(`  ♻️  ${id}: dalla cache`);
     } else {
       const edition = JSON.parse(await readFile(join(DATA, 'editions', `${id}.json`), 'utf8')) as Edition;
-      browser ??= await chromium.launch();
+      browser ??= await launch();
       try {
         const r = await render(browser, edition, allIds, css, OUT);
         await writeFile(cached, r.pdf);
