@@ -100,6 +100,8 @@ export interface Item {
   chess?: ChessData;
   art?: ArtData;
   youtubeId?: string;
+  /** Clip breve e verticale (YouTube Shorts): va nella sezione Clip, non nel feed. */
+  short?: boolean;
   /** Numeri reali dalla fonte (punti su Hacker News, visualizzazioni su YouTube…). */
   stats?: ItemStats;
 }

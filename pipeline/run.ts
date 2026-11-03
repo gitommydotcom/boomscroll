@@ -11,7 +11,7 @@ import { illustrate } from './images';
 import { fetchSource, type FetchContext, type RawItem } from './fetchers';
 import { summarize } from './llm';
 import { buildItem, dedupe, finalize, preselect } from './select';
-import { CITIES, LOCAL_SOURCES, SOURCES, YOUTUBE, type SourceDef } from './sources';
+import { CITIES, LOCAL_SOURCES, SOURCES, YOUTUBE, YOUTUBE_SHORTS, type SourceDef } from './sources';
 import { readIndex, recentIds, writeEdition } from './store';
 import { mapLimit, romeDate, seeded } from './util';
 
@@ -27,6 +27,8 @@ function currentSlot(now: Date): Slot {
   return hour < 10 ? 'mattina' : hour < 16 ? 'pomeriggio' : 'sera';
 }
 
+const label = (src: SourceDef) => (src.shorts ? `${src.name} · clip` : src.name);
+
 async function main() {
   const now = new Date();
   const date = romeDate(now);
@@ -37,17 +39,17 @@ async function main() {
   const ctx: FetchContext = { date, now, rng: seeded(id), seen };
   console.log(`📰 Boomscroll · edizione ${SLOT_LABEL[slot]} del ${date} · ${seen.size} contenuti già visti nelle ultime edizioni`);
 
-  const all: SourceDef[] = [...SOURCES, ...YOUTUBE, ...LOCAL_SOURCES].filter((s) => !only || only.includes(s.id));
+  const all: SourceDef[] = [...SOURCES, ...YOUTUBE, ...YOUTUBE_SHORTS, ...LOCAL_SOURCES].filter((s) => !only || only.includes(s.id));
   const reports: SourceReport[] = [];
   const fetched = await mapLimit(all, 8, async (src) => {
     try {
       const items = await fetchSource(src, ctx);
-      reports.push({ id: src.id, name: src.name, ok: true, count: items.length });
+      reports.push({ id: src.id, name: label(src), ok: true, count: items.length });
       console.log(`  ✅ ${src.id.padEnd(20)} ${items.length}`);
       return items;
     } catch (e) {
       const error = (e as Error).name === 'AbortError' ? 'timeout' : (e as Error).message.slice(0, 160);
-      reports.push({ id: src.id, name: src.name, ok: false, count: 0, error });
+      reports.push({ id: src.id, name: label(src), ok: false, count: 0, error });
       console.log(`  ❌ ${src.id.padEnd(20)} ${error}`);
       return [] as RawItem[];
     }
@@ -68,7 +70,7 @@ async function main() {
     localByCity[city.id] = local.filter((r) => r.source.city === city.id).map((r) => buildItem(r, ai.results.get(r), now));
   }
   const illustrated = await illustrate([...items, ...Object.values(localByCity).flat()]);
-  console.log(`🖼️  ${items.filter((i) => i.image).length}/${items.length} con immagine (${illustrated} illustrative da Wikipedia), ${items.filter((i) => i.kind === 'video').length} video`);
+  console.log(`🖼️  ${items.filter((i) => i.image).length}/${items.length} con immagine (${illustrated} illustrative da Wikipedia), ${items.filter((i) => i.kind === 'video' && !i.short).length} video, ${items.filter((i) => i.short).length} clip`);
 
   const edition: Edition = {
     id,

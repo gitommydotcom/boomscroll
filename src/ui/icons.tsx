@@ -446,6 +446,39 @@ const GLYPHS: Record<string, ComponentChildren> = {
     </>
   ),
   star: <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" />,
+  // Interazioni e clip
+  clip: (
+    <>
+      <rect x="6" y="2.5" width="12" height="19" rx="3" />
+      <path d="M10.5 9.3v5.4l4.3-2.7-4.3-2.7Z" fill="currentColor" stroke="none" />
+    </>
+  ),
+  eye: (
+    <>
+      <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  arms: (
+    <>
+      <circle cx="12" cy="4.5" r="1.8" />
+      <path d="M6 3.5 9.5 9h5L18 3.5M12 9v6M12 15l-3 6M12 15l3 6" />
+    </>
+  ),
+  smile: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8.5 14.5c1.8 2 5.2 2 7 0" />
+      <path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.6" />
+    </>
+  ),
+  split: <path d="M7 4v6a5 5 0 0 0 5 5 5 5 0 0 0 5-5V4M12 15v5M4 7l3-3 3 3M14 7l3-3 3 3" />,
+  hands: (
+    <>
+      <path d="M7 20v-6.5L4.5 9a1.5 1.5 0 0 1 2.6-1.5L9 10V4.5a1.5 1.5 0 0 1 3 0V10" />
+      <path d="M17 20v-6.5L19.5 9a1.5 1.5 0 0 0-2.6-1.5L15 10V4.5a1.5 1.5 0 0 0-3 0" />
+    </>
+  ),
 };
 
 export const ICON_NAMES = Object.keys(GLYPHS);
@@ -508,6 +541,13 @@ export const IconUserPlus = (p: P) => (
   <Svg {...p}>
     <circle cx="9.5" cy="8" r="4" />
     <path d="M2.5 21c1-4 4-6 7-6s6 2 7 6M19 8v6M16 11h6" />
+  </Svg>
+);
+export const IconClip = (p: P) => <Svg {...p}>{GLYPHS.clip}</Svg>;
+export const IconSoundOn = (p: P) => (
+  <Svg {...p}>
+    <path d="M4 9h3.5L12 5v14l-4.5-4H4V9Z" />
+    <path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" />
   </Svg>
 );
 export const IconSoundOff = (p: P) => (

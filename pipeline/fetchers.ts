@@ -41,11 +41,25 @@ export function cleanVideoText(text: string): string {
     .join('\n');
 }
 
+/** Le clip promozionali non sono contenuti: annunci, trailer, inviti a iscriversi. */
+const PROMO = /new video|full video|out now|link in (bio|description)|trailer|teaser|giveaway|merch|sponsor|live now|premiere|subscribe|announcement|coming soon|pre-?order|use code|discount/i;
+
+/** Titolo di una clip senza gli hashtag (#shorts, #science…). */
+export const clipTitle = (t: string) => t.replace(/\s*#[\p{L}\p{N}_]+/gu, '').replace(/\s{2,}/g, ' ').trim();
+
+/** Tiene solo le Shorts (fonti di clip) oppure le scarta (canali normali). */
+export function keepShort(src: SourceDef, entry: Pick<FeedEntry, 'url' | 'title'>, fromShortsFeed: boolean): boolean {
+  const isShort = fromShortsFeed || entry.url.includes('/shorts/');
+  if (!src.shorts) return !isShort;
+  return isShort && !PROMO.test(entry.title) && clipTitle(entry.title).length >= 6;
+}
+
 const matches = (src: SourceDef, title: string) => (src.match ?? []).every((re) => re.test(title)) && !src.exclude?.test(title);
 
 async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
   let entries: FeedEntry[] = [];
   let lastError: unknown;
+  let used = '';
   for (const url of [src.url!, ...(src.alt ?? [])]) {
     try {
       const xml = await getText(url, { Accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, */*;q=0.8' }).catch((e: Error) => {
@@ -54,6 +68,7 @@ async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
         throw e;
       });
       entries = parseFeed(xml);
+      used = url;
       if (entries.length) {
         if (url !== src.url) console.log(`  ℹ️  ${src.id}: funziona l'indirizzo alternativo ${url}`);
         break;
@@ -63,19 +78,23 @@ async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
       lastError = e;
     }
   }
+  // Un feed di clip vuoto non è un errore: il canale non ne ha pubblicate di recente.
+  if (!entries.length && src.shorts && used) return [];
   if (!entries.length) throw lastError;
+  const shortsFeed = used.includes('playlist_id=UUSH');
   return entries
     .filter((e) => e.title && fresh(src, ctx, e.publishedAt))
-    .filter((e) => !e.url.includes('/shorts/'))
+    .filter((e) => keepShort(src, e, shortsFeed))
     .filter((e) => matches(src, e.title))
     .sort((a, b) => (b.publishedAt?.getTime() ?? 0) - (a.publishedAt?.getTime() ?? 0))
     .map((e): RawItem => {
       const words = e.text.split(/\s+/).length;
       const kind = src.kind ?? (src.type === 'youtube' ? 'video' : 'article');
+      const short = !!src.shorts && !!e.youtubeId;
       return {
         source: src,
-        url: e.url,
-        title: e.title,
+        url: short ? `https://www.youtube.com/shorts/${e.youtubeId}` : e.url,
+        title: short ? clipTitle(e.title) : e.title,
         text: src.type === 'youtube' ? cleanVideoText(e.text) : e.text,
         image: e.youtubeId ? `https://i.ytimg.com/vi/${e.youtubeId}/hqdefault.jpg` : e.image,
         publishedAt: e.publishedAt,
@@ -84,6 +103,7 @@ async function fetchRss(src: SourceDef, ctx: FetchContext): Promise<RawItem[]> {
         lang: src.lang,
         extra: {
           ...(e.youtubeId ? { youtubeId: e.youtubeId } : {}),
+          ...(short ? { short: true } : {}),
           ...(e.views ? { stats: { views: e.views } } : {}),
           ...(kind === 'article' && words > 400 ? { readingMinutes: readingMinutes(words) } : {}),
         },

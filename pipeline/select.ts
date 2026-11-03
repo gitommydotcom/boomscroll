@@ -39,21 +39,38 @@ export function dedupe(items: RawItem[]): RawItem[] {
 
 const ALWAYS_KEEP = new Set(['chess', 'word', 'artwork', 'comic', 'image', 'poem']);
 
-/** Prima dell'IA: limita il numero di candidati per categoria, privilegiando qualità e freschezza. */
+export const MAX_VIDEOS = 30;
+export const MAX_CLIPS = 36;
+
+const isClip = (i: { extra?: { short?: boolean } }) => !!i.extra?.short;
+
+/**
+ * Prima dell'IA: limita il numero di candidati per categoria, privilegiando qualità e freschezza.
+ * Le clip brevi sono a parte (fino a MAX_CLIPS, due per canale) e non tolgono posto agli altri contenuti.
+ */
 export function preselect(items: RawItem[], now: Date, perCategory = 14, total = 150): RawItem[] {
   const score = (i: RawItem) => {
     const ageH = i.publishedAt ? (now.getTime() - i.publishedAt.getTime()) / 3_600_000 : 24;
     return i.source.quality + Math.max(0, 1 - ageH / 72) * 0.3 + (i.image ? 0.08 : 0) + (i.kind === 'video' ? 0.1 : 0);
   };
   const byCat = new Map<string, RawItem[]>();
+  const clips: RawItem[] = [];
+  const perChannel = new Map<string, number>();
   for (const i of [...items].sort((a, b) => score(b) - score(a))) {
+    if (isClip(i)) {
+      const ch = i.source.account ?? i.source.id;
+      if (clips.length >= MAX_CLIPS || (perChannel.get(ch) ?? 0) >= 2) continue;
+      perChannel.set(ch, (perChannel.get(ch) ?? 0) + 1);
+      clips.push(i);
+      continue;
+    }
     // I video hanno un loro gruppo, così non tolgono spazio agli articoli della stessa categoria.
     const key = i.kind === 'video' ? 'video' : i.source.category;
     const list = byCat.get(key) ?? [];
-    if (list.length < (key === 'video' ? 24 : perCategory)) list.push(i);
+    if (list.length < (key === 'video' ? MAX_VIDEOS : perCategory)) list.push(i);
     byCat.set(key, list);
   }
-  return [...byCat.values()].flat().sort((a, b) => score(b) - score(a)).slice(0, total);
+  return [...[...byCat.values()].flat().sort((a, b) => score(b) - score(a)).slice(0, total), ...clips];
 }
 
 export function poemExcerpt(text: string, lines = 10): string {
@@ -78,7 +95,7 @@ export function buildItem(raw: RawItem, ai: AiResult | undefined, now: Date): It
     id: itemId(raw.url),
     kind: raw.kind,
     category,
-    sourceId: raw.source.id,
+    sourceId: raw.source.account ?? raw.source.id,
     sourceName: raw.source.name,
     url: raw.url,
     title: plain(raw.title),
@@ -106,12 +123,14 @@ export function buildItem(raw: RawItem, ai: AiResult | undefined, now: Date): It
 export function finalize(items: Item[], perCategory = 14, total = 170): Item[] {
   const good = items.filter((i) => ALWAYS_KEEP.has(i.kind) || i.interest === undefined || i.interest >= 3);
   // Se l'IA è stata troppo severa, recuperiamo i migliori tra gli scartati.
-  const pool = good.length >= 70 ? good : [...good, ...items.filter((i) => !good.includes(i)).sort((a, b) => (b.interest ?? 0) - (a.interest ?? 0)).slice(0, 70 - good.length)];
+  const pool = good.length >= 70 ? good : [...good, ...items.filter((i) => !good.includes(i) && !i.short).sort((a, b) => (b.interest ?? 0) - (a.interest ?? 0)).slice(0, 70 - good.length)];
   const rank = (i: Item) => i.quality + (i.interest ?? 3) / 5;
   const counts = new Map<string, number>();
   // Opere, poesie, parole e giochi sono pochi e scelti apposta: entrano sempre.
-  // I video, fino a 24, non contano nel limite per categoria.
-  const videos = pool.filter((i) => i.kind === 'video').sort((a, b) => rank(b) - rank(a)).slice(0, 24);
+  // I video (fino a MAX_VIDEOS) e le clip (fino a MAX_CLIPS) non contano nel limite per categoria.
+  const videos = pool.filter((i) => i.kind === 'video' && !i.short).sort((a, b) => rank(b) - rank(a)).slice(0, MAX_VIDEOS);
+  const clips = pool.filter((i) => i.short).sort((a, b) => rank(b) - rank(a)).slice(0, MAX_CLIPS);
+  videos.push(...clips);
   const out: Item[] = [...pool.filter((i) => ALWAYS_KEEP.has(i.kind)), ...videos];
   for (const i of out) if (i.kind !== 'video') counts.set(i.category, (counts.get(i.category) ?? 0) + 1);
   for (const i of pool.filter((i) => !ALWAYS_KEEP.has(i.kind) && !videos.includes(i)).sort((a, b) => rank(b) - rank(a))) {
@@ -119,7 +138,7 @@ export function finalize(items: Item[], perCategory = 14, total = 170): Item[] {
     if (c >= perCategory) continue;
     counts.set(i.category, c + 1);
     out.push(i);
-    if (out.length >= total) break;
+    if (out.length - clips.length >= total) break;
   }
   return out;
 }

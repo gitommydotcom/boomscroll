@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { SLOT_LABEL, editionId, editionSlot, type Edition, type EditionIndex, type Item } from '../../shared/types';
 import { CaughtUpCard, EndCard, ExerciseCard, FinishedCard, NoFollowsCard, PauseCard, QuizCard, RecallCard, WeekCard } from '../cards/Specials';
+import { artYear, ClipsRail, FlashcardFlip, FlashQuiz, GuessYear, MoodCheck, ThisOrThat, TimedCard } from '../cards/Interactions';
+import { clipsDone, orderClips } from '../lib/clips';
+import { scoreItem } from '../lib/ranking';
 import { Post, Slide } from '../cards/ItemCards';
 import { BellButton, StoriesBar, setCurrentEdition } from '../cards/Social';
 import { markSeen, toast } from '../lib/actions';
@@ -8,7 +11,7 @@ import { fetchEdition, fetchIndex, loadRecent } from '../lib/data';
 import { addDays, isoWeek, longDate, today } from '../lib/dates';
 import { exercisesFor, type FeedExercise } from '../lib/exercises';
 import { composeEdition } from '../lib/ranking';
-import { getState, setState, updateSettings, useAppState, type FeedOrder, type SavedEntry } from '../lib/store';
+import { getState, setState, updateSettings, useAppState, type FeedOrder, type Flashcard, type SavedEntry } from '../lib/store';
 import { Icon, IconList, IconRefresh, IconStack } from '../ui/icons';
 
 type Entry =
@@ -21,7 +24,112 @@ type Entry =
   | { k: 'pause'; n: number; count: number }
   | { k: 'finished' }
   | { k: 'caughtup'; count: number }
-  | { k: 'nofollow' };
+  | { k: 'nofollow' }
+  | { k: 'clips'; items: Item[] }
+  | { k: 'flash'; item: Item }
+  | { k: 'tot'; a: Item; b: Item }
+  | { k: 'guess'; item: Item; year: number }
+  | { k: 'mood' }
+  | { k: 'timed'; kind: 'sguardo' | 'stretching' }
+  | { k: 'card'; card: Flashcard };
+
+/** Cosa serve per decidere le interazioni dell'edizione (calcolato all'apertura e poi fermo). */
+interface PlanCtx {
+  main: Item[];
+  /** Contenuti dell'edizione rimasti fuori dal feed principale: per "Questo o quello" e "Indovina l'anno". */
+  spare: Item[];
+  clips: Item[];
+  recall?: SavedEntry;
+  ex: FeedExercise[];
+  moodToday: boolean;
+  card?: Flashcard;
+  timedDone: string[];
+}
+
+/**
+ * Le interazioni tra i contenuti del feed principale, circa una ogni 3-4 card:
+ * esercizi, clip, quiz lampo, ripasso, "Questo o quello", "Indovina l'anno", check-in, pause attive.
+ * Ognuna compare solo se ha senso (contenuti adatti, non già fatta oggi).
+ */
+function planMain(c: PlanCtx): { plan: Map<number, Entry>; skip: Set<string> } {
+  const plan = new Map<number, Entry>();
+  /** Contenuti del feed che diventano un gioco (non compaiono due volte). */
+  const skip = new Set<string>();
+  const usedFlash = new Set<string>();
+  const usedSpare = new Set<string>();
+  let timedLeft = (['sguardo', 'stretching'] as const).filter((k) => !c.timedDone.includes(k));
+  let mood = !c.moodToday;
+  let card = c.card;
+  let clips = c.clips.length >= 3;
+
+  const flash = (at: number): Entry | null => {
+    // Una domanda su un contenuto passato da poco (ma non l'ultimo, per dare tempo di dimenticare un po').
+    const item = c.main
+      .slice(Math.max(0, at - 9), Math.max(0, at - 2))
+      .reverse()
+      .find((i) => i.quiz && !usedFlash.has(i.id));
+    if (!item) return null;
+    usedFlash.add(item.id);
+    return { k: 'flash', item };
+  };
+  const tot = (): Entry | null => {
+    const pool = c.spare.filter((i) => i.image && !usedSpare.has(i.id) && i.kind !== 'artwork');
+    const a = pool[0];
+    const b = pool.find((i) => a && i.category !== a.category);
+    if (!a || !b) return null;
+    usedSpare.add(a.id).add(b.id);
+    return { k: 'tot', a, b };
+  };
+  const artOk = (i: Item) => i.kind === 'artwork' && !!i.image && !usedSpare.has(i.id) && !!artYear(i);
+  const guess = (): Entry | null => {
+    const item = c.spare.find(artOk);
+    if (!item) return null;
+    usedSpare.add(item.id);
+    return { k: 'guess', item, year: artYear(item)! };
+  };
+  const timed = (): Entry | null => {
+    const kind = timedLeft[0];
+    if (!kind) return null;
+    timedLeft = timedLeft.slice(1);
+    return { k: 'timed', kind };
+  };
+  const moodE = (): Entry | null => (mood ? ((mood = false), { k: 'mood' }) : null);
+  const cardE = (): Entry | null => (card ? ((card = undefined), { k: 'card', card: c.card! }) : null);
+  const clipsE = (): Entry | null => (clips ? ((clips = false), { k: 'clips', items: c.clips }) : null);
+
+  const slots: [number, () => Entry | null][] = [
+    [4, () => (c.ex[0] ? { k: 'ex', ex: c.ex[0] } : null)],
+    [7, clipsE],
+    [10, () => flash(10)],
+    [13, () => (c.recall ? { k: 'recall', entry: c.recall } : cardE())],
+    [16, () => tot() ?? moodE()],
+    [19, () => (c.ex[1] ? { k: 'ex', ex: c.ex[1] } : null)],
+    [22, () => guess() ?? timed()],
+    [25, () => moodE() ?? cardE() ?? flash(25)],
+    [28, () => timed() ?? tot()],
+  ];
+  // Edizioni più lunghe: si continua a rotazione.
+  const more = [(at: number) => flash(at), () => tot(), () => guess(), () => timed() ?? cardE()];
+  for (let at = 32, k = 0; at < c.main.length; at += 4, k++) slots.push([at, () => more[k % more.length](at)]);
+  for (const [at, make] of slots) {
+    if (at >= c.main.length) continue;
+    const e = make();
+    if (e) plan.set(at, e);
+  }
+  // Nessuna opera rimasta fuori: la prima opera del feed diventa il gioco, al suo posto.
+  if (![...plan.values()].some((e) => e.k === 'guess')) {
+    const at = c.main.findIndex((i, k) => k >= 3 && artOk(i));
+    if (at >= 0) {
+      const item = c.main[at];
+      skip.add(item.id);
+      // Non attaccata a un'altra interazione.
+      let pos = at;
+      while ((plan.has(pos - 1) || plan.has(pos) || plan.has(pos + 1)) && pos < c.main.length - 1) pos++;
+      plan.set(pos, { k: 'guess', item, year: artYear(item)! });
+    }
+  }
+  return { plan, skip };
+}
 
 const entryKey = (e: Entry, i: number) => (e.k === 'item' ? e.item.id : `${e.k}-${i}`);
 
@@ -33,8 +141,10 @@ function ensureOrder(edition: Edition): FeedOrder {
   if (existing && existing.generatedAt === edition.generatedAt) return existing;
   // Non riproporre ciò che hai già visto (nelle edizioni precedenti o in una versione precedente di questa).
   const seen = new Set(Object.keys(s.seen));
-  const fresh = edition.items.filter((i) => !seen.has(i.id));
-  const order = { ...composeEdition(fresh.length >= 10 ? fresh : edition.items, s.weights, s.settings.editionSize, key), generatedAt: edition.generatedAt };
+  // Le clip brevi hanno la loro sezione: nel feed compaiono solo come riga di anteprima.
+  const all = edition.items.filter((i) => !i.short);
+  const fresh = all.filter((i) => !seen.has(i.id));
+  const order = { ...composeEdition(fresh.length >= 10 ? fresh : all, s.weights, s.settings.editionSize, key), generatedAt: edition.generatedAt };
   setState((st) => ({ orders: { ...st.orders, [key]: order } }));
   return order;
 }
@@ -110,7 +220,7 @@ export function Today() {
       setFollowed(
         list
           .map((r) => r.item)
-          .filter((i) => f[`s:${i.sourceId}`] || i.tags.some((t) => f[`t:${t}`]))
+          .filter((i) => !i.short && (f[`s:${i.sourceId}`] || i.tags.some((t) => f[`t:${t}`])))
           .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
           .slice(0, 80),
       );
@@ -156,6 +266,30 @@ export function Today() {
     return order.ids.map((id) => byId.get(id)).filter(Boolean) as Item[];
   }, [edition, order]);
 
+  // Le interazioni si decidono all'apertura dell'edizione e restano ferme durante la lettura.
+  const { plan, skip } = useMemo(() => {
+    if (!edition || !order) return { plan: new Map<number, Entry>(), skip: new Set<string>() };
+    const st = getState();
+    const t = today();
+    const inMain = new Set(order.ids);
+    const spare = edition.items
+      .filter((i) => !inMain.has(i.id) && !i.short && !st.seen[i.id] && !['chess', 'word', 'poem'].includes(i.kind))
+      .sort((a, b) => scoreItem(b, st.weights).total - scoreItem(a, st.weights).total);
+    return planMain({
+      main: mainItems,
+      spare,
+      clips: clipsDone() ? [] : orderClips(edition.items),
+      recall,
+      ex: exercisesFor(key),
+      moodToday: st.moods.some((m) => m.at.slice(0, 10) === t),
+      card: Object.values(st.cards)
+        .filter((c) => c.due <= t)
+        .sort((a, b) => a.due.localeCompare(b.due))[0],
+      timedDone: st.exercisesDone[t] ?? [],
+    });
+  }, [edition, order, mainItems, recall]);
+  const flashId = [...plan.values()].find((e) => e.k === 'flash')?.item.id;
+
   const entries = useMemo<Entry[]>(() => {
     if (!edition || !order) return [];
     const out: Entry[] = [];
@@ -166,24 +300,27 @@ export function Today() {
       return out;
     }
     if (showWeek && s.recapSeen !== isoWeek(today())) out.push({ k: 'week' });
-    const [ex1, ex2] = exercisesFor(key);
     mainItems.forEach((item, i) => {
-      if (i === 6) out.push({ k: 'ex', ex: ex1 });
-      if (i === 12 && recall) out.push({ k: 'recall', entry: recall });
-      if (i === 18) out.push({ k: 'ex', ex: ex2 });
-      out.push({ k: 'item', item, explored: order.explore.includes(item.id), main: true });
+      const extra = plan.get(i);
+      if (extra) out.push(extra);
+      if (!skip.has(item.id)) out.push({ k: 'item', item, explored: order.explore.includes(item.id), main: true });
     });
     if (mainItems.some((i) => i.quiz)) out.push({ k: 'quiz' });
     out.push({ k: 'end' });
     if (deep) {
       deepList.forEach((d, i) => {
         if (i > 0 && i % 12 === 0) out.push({ k: 'pause', n: i / 12, count: i });
+        // A metà di ogni blocco, un quiz lampo su qualcosa appena visto.
+        if (i % 12 === 6) {
+          const q = deepList.slice(Math.max(0, i - 8), i - 1).reverse().find((x) => x.item.quiz);
+          if (q) out.push({ k: 'flash', item: q.item });
+        }
         out.push({ k: 'item', item: d.item, explored: d.explored, main: false });
       });
       if (deepDone) out.push({ k: 'finished' });
     }
     return out;
-  }, [edition, order, mainItems, deep, deepList, deepDone, recall, showWeek, s.recapSeen, tab, followed, followKeys]);
+  }, [edition, order, mainItems, plan, skip, deep, deepList, deepDone, showWeek, s.recapSeen, tab, followed, followKeys]);
 
   /** Approfondimenti: il resto di questa edizione, poi quelle precedenti (circa tre giorni). */
   const loadMoreDeep = async () => {
@@ -206,7 +343,8 @@ export function Today() {
       if (!ed) continue;
       const st = getState();
       const exclude = new Set([...Object.keys(st.seen), ...(order?.ids ?? []), ...deepList.map((d) => d.item.id)]);
-      const pick = composeEdition(ed.items, st.weights, ed.items.length, `${editionId(ed)}-deep`, exclude);
+      const items = ed.items.filter((i) => !i.short);
+      const pick = composeEdition(items, st.weights, items.length, `${editionId(ed)}-deep`, exclude);
       const byId = new Map(ed.items.map((i) => [i.id, i]));
       const chunk = pick.ids.map((id) => ({ item: byId.get(id)!, explored: pick.explore.includes(id) }));
       if (chunk.length) {
@@ -277,7 +415,7 @@ export function Today() {
     const e = entries.slice(0, current + 1).filter((x) => x.k === 'item' && x.main).length;
     return e;
   }, [current, entries]);
-  const total = mainItems.length;
+  const total = mainItems.length - skip.size;
   const inDeep = entries[current] && entries.findIndex((e) => e.k === 'end') < current;
 
   const limit = s.settings.dailyLimitMin;
@@ -375,7 +513,7 @@ export function Today() {
       case 'week':
         return <WeekCard />;
       case 'quiz':
-        return <QuizCard items={mainItems} date={key} />;
+        return <QuizCard items={mainItems} date={key} exclude={flashId} />;
       case 'end':
         return <EndCard date={key} name={editionName} next={NEXT_EDITION[slot]} isToday={!stale} onMore={startDeep} />;
       case 'pause':
@@ -386,6 +524,20 @@ export function Today() {
         return <CaughtUpCard count={e.count} />;
       case 'nofollow':
         return <NoFollowsCard items={edition.items} />;
+      case 'clips':
+        return <ClipsRail items={e.items} />;
+      case 'flash':
+        return <FlashQuiz item={e.item} />;
+      case 'tot':
+        return <ThisOrThat a={e.a} b={e.b} />;
+      case 'guess':
+        return <GuessYear item={e.item} year={e.year} />;
+      case 'mood':
+        return <MoodCheck />;
+      case 'timed':
+        return <TimedCard kind={e.kind} />;
+      case 'card':
+        return <FlashcardFlip card={e.card} />;
     }
   };
 

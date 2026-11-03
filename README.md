@@ -13,6 +13,8 @@
 | Notifiche con il pallino rosso | Avvisi calcolati sul telefono (edizione nuova, parole da ripassare, sfida del giorno), mai push |
 | Esplora con griglia, ricerca e #hashtag | Le edizioni degli ultimi tre giorni, per categoria e argomento |
 | Doppio tocco per mettere mi piace, video che partono da soli | Segnali per i gusti; i video partono senza audio e si possono disattivare |
+| Clip brevi in verticale, una dopo l'altra (come Reels e Shorts) | Solo da canali di divulgazione scelti; 8 di fila al massimo, poi una pausa attiva; 3 giri al giorno, poi finiscono |
+| Post interattivi tra un contenuto e l'altro | Respiro guidato, quiz lampo su ciò che hai appena letto, “Questo o quello?”, “Indovina l'anno” di un'opera, check-in dell'umore, pause per occhi e collo, ripasso delle parole |
 
 - Feed a schermo intero (stile TikTok) o a lista (stile Instagram)
 - L'edizione ha una fine; dopo ci sono solo approfondimenti, con pause
@@ -25,7 +27,7 @@
 ```
 GitHub Actions, 3 volte al giorno               GitHub Pages
 ┌─────────────────────────────────┐            ┌──────────────────────────────┐
-│ pipeline/ 124 fonti, 72 YouTube │  commit →  │ PWA statica (Preact)          │
+│ pipeline/ 113 fonti, 88 YouTube │  commit →  │ PWA statica (Preact)          │
 │ → doppioni → riassunti con IA   │            │ ordina l'edizione sul telefono│
 │ → public/data/editions/*.json   │            │ gusti e salvati in IndexedDB  │
 └─────────────────────────────────┘            └──────────────────────────────┘
@@ -95,12 +97,16 @@ rss('nome', 'Nome leggibile', 'https://…/feed', 'scienza', 'en', 0.85, 2, 3, '
 
 Gli argomenti sono: id, nome, feed, categoria, lingua, qualità (da 0,85 in su ha il badge di verifica), massimo per edizione, età massima in giorni, bio. La fonte diventa subito un account con il suo profilo. Al push la pipeline rigenera l'edizione e in *Profilo → Impostazioni → Fonti dell'ultima edizione* vedi se la fonte funziona.
 
+### Video e clip
+
+Un canale YouTube è una riga in `YOUTUBE` (`pipeline/sources.ts`): `yt('id', 'Nome', 'UC…', 'scienza', { about: '…' })`. Con `shorts: true` la pipeline raccoglie anche le sue clip brevi (dalla playlist delle Shorts del canale, due al massimo per canale e per edizione, senza clip promozionali). Le clip non entrano nel feed: hanno la sezione **Clip**, con il limite che scegli in *Profilo → Impostazioni → Clip* (clip per giro e giri al giorno). Ogni edizione ha fino a 30 video e 36 clip.
+
 ### Aggiungere una città con eventi locali
 
-In `pipeline/sources.ts` aggiungi la città a `CITIES` e le sue fonti a `LOCAL_SOURCES` con `city: '<id>'`. Per qualunque altra città, "Vicino a te" mostra comunque meteo, luoghi da OpenStreetMap e curiosità da Wikipedia.
+In `pipeline/sources.ts` aggiungi la città a `CITIES` e le sue fonti a `LOCAL_SOURCES` con `city: '<id>'`. Per qualunque altra città, "Vicino a te" (in cima a Esplora) mostra comunque meteo, luoghi da OpenStreetMap e curiosità da Wikipedia.
 
 ## Privacy
 
-Le reazioni, i gusti, gli account seguiti, le note, i salvati, il diario e le abitudini restano nel browser (IndexedDB). Le foto profilo degli account sono le icone dei siti, chieste al servizio di favicon di Google. Da *Profilo → Impostazioni → I tuoi dati* puoi esportarli, importarli o cancellarli. La posizione, se la usi, serve solo sul telefono per cercare luoghi vicini.
+Le reazioni, i gusti, gli account seguiti, le note, i salvati, il diario, le abitudini e le risposte al check-in dell’umore restano nel browser (IndexedDB). Le foto profilo degli account sono le icone dei siti, chieste al servizio di favicon di Google. Video e clip si guardano con il player senza cookie di YouTube (youtube-nocookie.com). Da *Profilo → Impostazioni → I tuoi dati* puoi esportarli, importarli o cancellarli. La posizione, se la usi, serve solo sul telefono per cercare luoghi vicini.
 
 Ogni contenuto mostra un riassunto e un breve estratto, con il link alla fonte originale.

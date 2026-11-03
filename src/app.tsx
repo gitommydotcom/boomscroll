@@ -4,7 +4,8 @@ import { dailyDecay, onToast } from './lib/actions';
 import { isAfter } from './lib/dates';
 import { bumpStats, flush, useAppState } from './lib/store';
 import { SocialLayers } from './cards/Social';
-import { IconHome, IconLeaf, IconPin, IconSearch, IconUser } from './ui/icons';
+import { IconClip, IconHome, IconLeaf, IconSearch, IconUser } from './ui/icons';
+import { Clips } from './views/Clips';
 import { Explore, SourceProfile, TagPage } from './views/Explore';
 import { Library } from './views/Library';
 import { Nearby } from './views/Nearby';
@@ -16,13 +17,13 @@ import { Today } from './views/Today';
 const ROUTES = [
   { path: 'oggi', label: 'Home', Icon: IconHome },
   { path: 'esplora', label: 'Esplora', Icon: IconSearch },
+  { path: 'clip', label: 'Clip', Icon: IconClip },
   { path: 'pratica', label: 'Pratica', Icon: IconLeaf },
-  { path: 'vicino', label: 'Vicino', Icon: IconPin },
   { path: 'tu', label: 'Profilo', Icon: IconUser },
 ] as const;
 
 /** Pagine senza voce propria nella barra: quale voce resta evidenziata. */
-const NAV_OF: Record<string, string> = { fonte: 'esplora', tag: 'esplora', libreria: 'tu' };
+const NAV_OF: Record<string, string> = { fonte: 'esplora', tag: 'esplora', vicino: 'esplora', libreria: 'tu' };
 
 function useRoute(): string[] {
   const parse = () => (location.hash.replace(/^#\/?/, '') || 'oggi').split('/');
@@ -89,11 +90,14 @@ export function App() {
 
   const page = route[0];
   const navPage = NAV_OF[page] ?? page;
-  const immersive = page === 'oggi' && s.settings.view === 'immersive';
+  const immersive = (page === 'oggi' && s.settings.view === 'immersive') || page === 'clip';
   let content;
   switch (page) {
     case 'vicino':
       content = <Nearby />;
+      break;
+    case 'clip':
+      content = <Clips start={route[1]} key={route[1]} />;
       break;
     case 'pratica':
       content = <Practice tool={route[1]} />;

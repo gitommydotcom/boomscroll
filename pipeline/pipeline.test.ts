@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { puzzlePosition, type RawItem } from './fetchers';
+import { clipTitle, keepShort, puzzlePosition, type RawItem } from './fetchers';
 import { validate } from './llm';
 import { parseFeed } from './rss';
-import { buildItem, dedupe, finalize, poemExcerpt } from './select';
-import type { SourceDef } from './sources';
+import { buildItem, dedupe, finalize, poemExcerpt, preselect } from './select';
+import { YOUTUBE_SHORTS, type SourceDef } from './sources';
 import { htmlToText, normalizeUrl, truncate } from './util';
 
 const src = (over: Partial<SourceDef> = {}): SourceDef => ({
@@ -183,5 +183,51 @@ describe('eventi locali', () => {
     expect(ok('Al Ridotto del Teatro Comunale la rassegna di musica da camera')).toBe(true);
     expect(ok('Pendolare denuncia principio di incendio su un mezzo, le precisazioni di Tua')).toBe(false);
     expect(ok('Assemblea Upi ad Imperia, Caruso: «Evitare tagli alle Province nella legge di bilancio»')).toBe(false);
+  });
+});
+
+describe('clip brevi', () => {
+  const ch = src({ id: 'yt-x', type: 'youtube', kind: 'video' });
+  const clips = src({ id: 'yt-x:clip', account: 'yt-x', type: 'youtube', kind: 'video', shorts: true });
+
+  it('i canali normali scartano le Shorts, le fonti di clip tengono solo quelle', () => {
+    const short = { url: 'https://www.youtube.com/shorts/abc', title: 'Why ice floats' };
+    const long = { url: 'https://www.youtube.com/watch?v=abc', title: 'Why ice floats' };
+    expect(keepShort(ch, short, false)).toBe(false);
+    expect(keepShort(ch, long, false)).toBe(true);
+    expect(keepShort(clips, short, false)).toBe(true);
+    expect(keepShort(clips, long, false)).toBe(false);
+    // Dalla playlist delle Shorts ogni voce è una clip, anche con il link "watch".
+    expect(keepShort(clips, long, true)).toBe(true);
+  });
+
+  it('scarta le clip promozionali e toglie gli hashtag', () => {
+    expect(keepShort(clips, { url: 'https://www.youtube.com/shorts/a', title: 'New video out now! #shorts' }, true)).toBe(false);
+    expect(clipTitle('Why is the sky blue? #shorts #science')).toBe('Why is the sky blue?');
+  });
+
+  it('le clip hanno lo stesso account del canale e non tolgono posto agli altri contenuti', () => {
+    const now = new Date();
+    const articles = Array.from({ length: 5 }, (_, i) => raw({ url: `https://example.org/${i}`, publishedAt: now }));
+    const shorts = Array.from({ length: 5 }, (_, i) =>
+      raw({ source: clips, url: `https://www.youtube.com/shorts/s${i}`, kind: 'video', publishedAt: now, extra: { short: true, youtubeId: `s${i}` } }),
+    );
+    const picked = preselect([...articles, ...shorts], now, 14, 5);
+    expect(picked.filter((r) => !r.extra?.short)).toHaveLength(5);
+    // Al massimo due clip per canale.
+    expect(picked.filter((r) => r.extra?.short)).toHaveLength(2);
+    const item = buildItem(shorts[0], undefined, now);
+    expect(item.sourceId).toBe('yt-x');
+    expect(item.short).toBe(true);
+  });
+
+  it('le fonti di clip usano la playlist delle Shorts, con il feed del canale come riserva', () => {
+    expect(YOUTUBE_SHORTS.length).toBeGreaterThan(20);
+    for (const s of YOUTUBE_SHORTS) {
+      expect(s.url).toMatch(/playlist_id=UUSH[\w-]{22}$/);
+      expect(s.alt?.[0]).toMatch(/channel_id=UC/);
+      expect(s.shorts).toBe(true);
+      expect(s.account).toBe(s.id.replace(/:clip$/, ''));
+    }
   });
 });

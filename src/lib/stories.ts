@@ -4,7 +4,7 @@ import { keyC, scoreItem } from './ranking';
 import type { State } from './store';
 import type { StoryGroup } from './ui';
 
-const VISUAL = (i: Item) => (!!i.image && i.kind !== 'chess') || i.kind === 'word' || i.kind === 'poem';
+const VISUAL = (i: Item) => !i.short && ((!!i.image && i.kind !== 'chess') || i.kind === 'word' || i.kind === 'poem');
 
 /**
  * Le storie dell'edizione: prima gli account che segui, poi "In breve" (le notizie)
@@ -18,7 +18,7 @@ export function buildStories(items: Item[], s: Pick<State, 'weights' | 'follows'
   const followed = Object.keys(s.follows).filter((k) => k.startsWith('s:'));
   for (const k of followed) {
     const id = k.slice(2);
-    const list = items.filter((i) => i.sourceId === id && i.kind !== 'chess').slice(0, 6);
+    const list = items.filter((i) => i.sourceId === id && i.kind !== 'chess' && !i.short).slice(0, 6);
     if (list.length) groups.push({ key: k, label: list[0].sourceName, icon: '', items: list });
   }
 

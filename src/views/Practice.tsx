@@ -3,7 +3,7 @@ import { editionId, type Item } from '../../shared/types';
 import { ChessPuzzle } from '../cards/Chess';
 import { Breath } from '../cards/Specials';
 import { langName } from '../cards/common';
-import { exerciseDone, toast } from '../lib/actions';
+import { answerCard, exerciseDone, toast } from '../lib/actions';
 import { fetchEdition, fetchIndex } from '../lib/data';
 import { addDays, shortDate, today } from '../lib/dates';
 import { DISTORTIONS, GRATITUDE_PROMPT, challengeFor, journalPromptFor } from '../lib/exercises';
@@ -21,7 +21,6 @@ const TOOLS = [
   { id: 'scacchi', icon: 'chess', title: 'Scacchi', desc: 'Un puzzle da risolvere' },
 ];
 
-const BOX_DAYS = [1, 3, 7, 14, 30, 90];
 
 function Back({ title }: { title: string }) {
   return (
@@ -263,8 +262,7 @@ function Flashcards() {
   const [reveal, setReveal] = useState(false);
   const card = due[0];
   const answer = (c: Flashcard, knew: boolean) => {
-    const box = knew ? Math.min(c.box + 1, BOX_DAYS.length - 1) : 0;
-    setState((st) => ({ cards: { ...st.cards, [c.id]: { ...c, box, due: addDays(t, BOX_DAYS[box]) } } }));
+    answerCard(c, knew);
     setReveal(false);
     if (due.length === 1) exerciseDone('flashcard');
   };

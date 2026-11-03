@@ -269,7 +269,7 @@ export function Slide({ item, explored }: { item: Item; explored?: boolean }) {
   );
 }
 
-function Rail({ item, explored }: { item: Item; explored?: boolean }) {
+export function Rail({ item, explored }: { item: Item; explored?: boolean }) {
   const s = useAppState();
   const r = s.reactions[item.id];
   const saved = !!s.saved[item.id];
@@ -464,8 +464,10 @@ export function MiniRow({ item, note }: { item: Item; note?: string }) {
 export function GridTile({ item, big }: { item: Item; big?: boolean }) {
   const img = useImage(item.image);
   const t = titles(item, getState().settings.summaryMode);
+  // Le clip si aprono nella sezione Clip, a schermo intero.
+  const open = () => (item.short ? (location.hash = `#/clip/${item.id}`) : openDetail(item));
   return (
-    <button class={`tile-g${big ? ' big' : ''}`} onClick={() => openDetail(item)} aria-label={t.main}>
+    <button class={`tile-g${big ? ' big' : ''}`} onClick={open} aria-label={t.main}>
       {img.ok ? (
         <img src={item.image} alt="" loading="lazy" referrerpolicy="no-referrer" onError={img.onError} />
       ) : (
@@ -473,7 +475,7 @@ export function GridTile({ item, big }: { item: Item; big?: boolean }) {
       )}
       {KIND_ICON[item.kind] && item.kind !== 'artwork' && (
         <span class="tile-kind">
-          <Icon name={KIND_ICON[item.kind]!} size={16} />
+          <Icon name={item.short ? 'clip' : KIND_ICON[item.kind]!} size={16} />
         </span>
       )}
     </button>

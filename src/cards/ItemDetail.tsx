@@ -46,7 +46,7 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
       {item.kind === 'video' && item.youtubeId ? (
         play ? (
           <iframe
-            class="video-frame"
+            class={`video-frame${item.short ? ' short' : ''}`}
             src={embedUrl(item.youtubeId)}
             title={item.title}
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
@@ -61,7 +61,7 @@ function Detail({ item, explored }: { item: Item; explored?: boolean }) {
             style={{ position: 'relative', display: 'block', width: '100%' }}
             aria-label="Guarda il video"
           >
-            <img class="detail-img" src={thumb.src} onError={thumb.onError} onLoad={thumb.onLoad} alt="" referrerpolicy="no-referrer" />
+            <img class={`detail-img${item.short ? ' short' : ''}`} src={thumb.src} onError={thumb.onError} onLoad={thumb.onLoad} alt="" referrerpolicy="no-referrer" />
             <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#fff' }}>
               <span style={{ background: 'rgb(0 0 0 / 55%)', borderRadius: '999px', padding: '18px' }}>
                 <IconPlay size={32} />

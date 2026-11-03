@@ -42,6 +42,12 @@ export interface SourceDef {
   about?: string;
   /** Sito della fonte (se diverso da quello del feed). */
   home?: string;
+  /** Clip brevi (YouTube Shorts): la fonte raccoglie solo quelle. */
+  shorts?: boolean;
+  /** Canale che pubblica anche clip brevi di qualità (vedi YOUTUBE_SHORTS). */
+  hasShorts?: boolean;
+  /** Account a cui appartengono i contenuti, se diverso dall'id (le clip di un canale). */
+  account?: string;
 }
 
 interface YtOptions {
@@ -52,6 +58,8 @@ interface YtOptions {
   mixed?: boolean;
   maxAgeDays?: number;
   about?: string;
+  /** Il canale pubblica anche clip brevi di qualità: le raccogliamo a parte. */
+  shorts?: boolean;
 }
 
 const yt = (id: string, name: string, channelId: string, category: CategoryId, o: YtOptions = {}): SourceDef => ({
@@ -69,92 +77,124 @@ const yt = (id: string, name: string, channelId: string, category: CategoryId, o
   maxAgeDays: o.maxAgeDays ?? 7,
   about: o.about,
   home: `https://www.youtube.com/channel/${channelId}`,
+  hasShorts: o.shorts,
 });
 
 /** Canali YouTube: lezioni, divulgazione e saggi video. Un video al giorno al massimo per canale. */
 export const YOUTUBE: SourceDef[] = [
   // Scienza
-  yt('3b1b', '3Blue1Brown', 'UCYO_jab_esuFRV4b17AJtAw', 'scienza', { quality: 0.95, maxAgeDays: 14, about: 'La matematica spiegata con animazioni bellissime' }),
-  yt('veritasium', 'Veritasium', 'UCHnyfMqiRRG1u-2MsSQLbXA', 'scienza', { quality: 0.85, about: 'Scienza e ingegneria, con esperimenti veri' }),
-  yt('kurzgesagt', 'Kurzgesagt', 'UCsXVk37bltHxD1rDPwtNM8Q', 'scienza', { quality: 0.85, maxAgeDays: 14, about: 'Grandi domande della scienza in animazione' }),
-  yt('numberphile', 'Numberphile', 'UCoxcjq-8xIDTYp3uz647V5A', 'scienza', { user: 'numberphile', about: 'Numeri e matematici, con carta marrone' }),
-  yt('minutephysics', 'MinutePhysics', 'UCUHW94eEFW7hkUMVaZz4eDg', 'scienza', { user: 'minutephysics', maxAgeDays: 14, about: 'La fisica in pochi minuti, disegnata a mano' }),
+  yt('3b1b', '3Blue1Brown', 'UCYO_jab_esuFRV4b17AJtAw', 'scienza', { shorts: true, quality: 0.95, maxAgeDays: 14, about: 'La matematica spiegata con animazioni bellissime' }),
+  yt('veritasium', 'Veritasium', 'UCHnyfMqiRRG1u-2MsSQLbXA', 'scienza', { shorts: true, quality: 0.85, about: 'Scienza e ingegneria, con esperimenti veri' }),
+  yt('kurzgesagt', 'Kurzgesagt', 'UCsXVk37bltHxD1rDPwtNM8Q', 'scienza', { shorts: true, quality: 0.85, maxAgeDays: 14, about: 'Grandi domande della scienza in animazione' }),
+  yt('numberphile', 'Numberphile', 'UCoxcjq-8xIDTYp3uz647V5A', 'scienza', { shorts: true, user: 'numberphile', about: 'Numeri e matematici, con carta marrone' }),
+  yt('minutephysics', 'MinutePhysics', 'UCUHW94eEFW7hkUMVaZz4eDg', 'scienza', { shorts: true, user: 'minutephysics', maxAgeDays: 14, about: 'La fisica in pochi minuti, disegnata a mano' }),
   yt('pbsspacetime', 'PBS Space Time', 'UC7_gcs09iThXybpVgjHZ_7g', 'scienza', { quality: 0.85, about: 'Astrofisica e fisica teorica, senza semplificare troppo' }),
-  yt('scishow', 'SciShow', 'UCZYTClx2T1of7BRZ86-8fow', 'scienza', { user: 'scishow', quality: 0.75, maxAgeDays: 3, about: 'Notizie e curiosità scientifiche' }),
-  yt('smartereveryday', 'Smarter Every Day', 'UC6107grRI4m0o2-emgoDnAA', 'scienza', { user: 'destinws2', maxAgeDays: 14, about: 'Un ingegnere curioso esplora come funzionano le cose' }),
-  yt('stevemould', 'Steve Mould', 'UCEIwxahdLz7bap-VDs9h35A', 'scienza', { maxAgeDays: 14, about: 'Fenomeni fisici sorprendenti spiegati bene' }),
+  yt('scishow', 'SciShow', 'UCZYTClx2T1of7BRZ86-8fow', 'scienza', { shorts: true, user: 'scishow', quality: 0.75, maxAgeDays: 3, about: 'Notizie e curiosità scientifiche' }),
+  yt('smartereveryday', 'Smarter Every Day', 'UC6107grRI4m0o2-emgoDnAA', 'scienza', { shorts: true, user: 'destinws2', maxAgeDays: 14, about: 'Un ingegnere curioso esplora come funzionano le cose' }),
+  yt('stevemould', 'Steve Mould', 'UCEIwxahdLz7bap-VDs9h35A', 'scienza', { shorts: true, maxAgeDays: 14, about: 'Fenomeni fisici sorprendenti spiegati bene' }),
   yt('sixtysymbols', 'Sixty Symbols', 'UCvBqzzvUBLCs8Y7Axb-jZew', 'scienza', { user: 'sixtysymbols', maxAgeDays: 14, about: 'Fisici dell’Università di Nottingham' }),
   yt('primer', 'Primer', 'UCKzJFdi57J53Vr_BkTfN3uQ', 'scienza', { quality: 0.9, maxAgeDays: 30, about: 'Simulazioni di evoluzione ed economia' }),
   yt('mathologer', 'Mathologer', 'UC1_uAIS3r8Vu6JjXWvastJg', 'scienza', { quality: 0.85, maxAgeDays: 30, about: 'Dimostrazioni matematiche eleganti' }),
-  yt('standupmaths', 'Stand-up Maths', 'UCSju5G2aFaWMqn-_0YBtq5A', 'scienza', { maxAgeDays: 21, about: 'Matt Parker e la matematica divertente' }),
+  yt('standupmaths', 'Stand-up Maths', 'UCSju5G2aFaWMqn-_0YBtq5A', 'scienza', { shorts: true, maxAgeDays: 21, about: 'Matt Parker e la matematica divertente' }),
   yt('physicsgirl', 'Physics Girl', 'UC7DdEm33SyaTDtWYGO2CwdA', 'scienza', { maxAgeDays: 30, about: 'Fisica sperimentale e meraviglia' }),
-  yt('pbseons', 'PBS Eons', 'UCzR-rom72PHN9Zg7RML9EbA', 'natura', { quality: 0.85, maxAgeDays: 14, about: 'La storia della vita sulla Terra' }),
-  yt('sabine', 'Sabine Hossenfelder', 'UC1yNl2E66ZzKApQdRuTQ4tw', 'scienza', { quality: 0.75, maxAgeDays: 4, about: 'Notizie di fisica, con spirito critico' }),
-  yt('nilered', 'NileRed', 'UCFhXFikryT4aFcLkLw2LBLA', 'scienza', { maxAgeDays: 30, about: 'Chimica sperimentale, passo dopo passo' }),
+  yt('pbseons', 'PBS Eons', 'UCzR-rom72PHN9Zg7RML9EbA', 'natura', { shorts: true, quality: 0.85, maxAgeDays: 14, about: 'La storia della vita sulla Terra' }),
+  yt('sabine', 'Sabine Hossenfelder', 'UC1yNl2E66ZzKApQdRuTQ4tw', 'scienza', { shorts: true, quality: 0.75, maxAgeDays: 4, about: 'Notizie di fisica, con spirito critico' }),
+  yt('nilered', 'NileRed', 'UCFhXFikryT4aFcLkLw2LBLA', 'scienza', { shorts: true, maxAgeDays: 30, about: 'Chimica sperimentale, passo dopo passo' }),
   yt('scottmanley', 'Scott Manley', 'UCxzC4EngIsMrPmbm6Nxvb-A', 'scienza', { maxAgeDays: 7, about: 'Razzi, missioni spaziali e astronomia' }),
+  yt('actionlab', 'The Action Lab', 'UC1VLQPn9cYSqx8plbk9RxxQ', 'scienza', { shorts: true, quality: 0.75, maxAgeDays: 7, about: 'Esperimenti di fisica e chimica sorprendenti' }),
+  yt('appliedscience', 'Applied Science', 'UCivA7_KLKWo43tFcCkFvydw', 'scienza', { quality: 0.85, maxAgeDays: 60, about: 'Scienza fatta in laboratorio, con rigore' }),
+  yt('upandatom', 'Up and Atom', 'UCSIvk78tK2TiviLQn4fSHaw', 'scienza', { quality: 0.8, maxAgeDays: 30, about: 'Fisica, matematica e informatica con chiarezza' }),
+  yt('coolworlds', 'Cool Worlds', 'UCGHZpIpAWJQ-Jy_CeCdXhMA', 'scienza', { quality: 0.85, maxAgeDays: 30, about: 'Esopianeti e astronomia, dalla Columbia University' }),
+  yt('drbecky', 'Dr. Becky', 'UCYNbYGl89UUowy8oXkipC-Q', 'scienza', { shorts: true, quality: 0.8, maxAgeDays: 14, about: 'Astrofisica: le ultime scoperte, spiegate da un’astrofisica' }),
+  yt('besmart', 'Be Smart', 'UCH4BNI0-FOK2dMXoFtViWHw', 'scienza', { shorts: true, quality: 0.8, maxAgeDays: 21, about: 'La scienza delle cose di tutti i giorni' }),
   yt('domainofscience', 'Domain of Science', 'UCxqAWLTk1CmBvZFPzeZMd9A', 'scienza', { maxAgeDays: 60, about: 'Mappe di intere discipline scientifiche' }),
   // Natura
-  yt('bbcearth', 'BBC Earth', 'UCwmZiChSryoWQCZMIQezgTg', 'natura', { quality: 0.8, maxAgeDays: 4, about: 'Il pianeta e i suoi animali, dai documentari BBC' }),
-  yt('natgeo', 'National Geographic', 'UCpVm7bg6pXKo1Pr6k5kxG9A', 'natura', { quality: 0.75, maxAgeDays: 4, about: 'Natura, esplorazione e fotografia' }),
+  yt('bbcearth', 'BBC Earth', 'UCwmZiChSryoWQCZMIQezgTg', 'natura', { shorts: true, quality: 0.8, maxAgeDays: 4, about: 'Il pianeta e i suoi animali, dai documentari BBC' }),
+  yt('natgeo', 'National Geographic', 'UCpVm7bg6pXKo1Pr6k5kxG9A', 'natura', { shorts: true, quality: 0.75, maxAgeDays: 4, about: 'Natura, esplorazione e fotografia' }),
   yt('primitivetech', 'Primitive Technology', 'UCAL3JXZSzSm8AlZyD3nQdBA', 'natura', { maxAgeDays: 60, about: 'Costruire dal nulla, solo con la natura' }),
+  yt('minuteearth', 'MinuteEarth', 'UCeiYXex_fwgYDonaTcSIk6w', 'natura', { shorts: true, quality: 0.8, maxAgeDays: 21, about: 'Il pianeta e la vita, in pochi minuti' }),
   // Tech
   yt('computerphile', 'Computerphile', 'UC9-y-6csu5WGm29I7JiwpnA', 'tech', { user: 'Computerphile', about: 'Informatica spiegata da chi la fa' }),
   yt('twominutepapers', 'Two Minute Papers', 'UCbfYPyITQ-7l4upoX8nvctg', 'tech', { quality: 0.75, about: 'Le ricerche di IA e grafica più belle' }),
   yt('realengineering', 'Real Engineering', 'UCR1IuLEqb6UEA_zQ81kwXfg', 'tech', { maxAgeDays: 14, about: 'Ingegneria dietro aerei, energia e città' }),
-  yt('practicaleng', 'Practical Engineering', 'UCMOqf8ab-42UUQIdVoKwjlQ', 'tech', { quality: 0.85, maxAgeDays: 21, about: 'Le infrastrutture che non vediamo' }),
+  yt('practicaleng', 'Practical Engineering', 'UCMOqf8ab-42UUQIdVoKwjlQ', 'tech', { shorts: true, quality: 0.85, maxAgeDays: 21, about: 'Le infrastrutture che non vediamo' }),
   yt('branch', 'Branch Education', 'UCdp4_l1vPmpN-gDbUwhaRUQ', 'tech', { quality: 0.85, maxAgeDays: 60, about: 'Come funziona la tecnologia, in 3D' }),
   yt('fireship', 'Fireship', 'UCsBjURrPoezykLs9EqgamOA', 'tech', { quality: 0.7, maxAgeDays: 4, about: 'Programmazione e tecnologia, velocissimo' }),
+  yt('sebastianlague', 'Sebastian Lague', 'UCmtyQOKKmrMVaKuRXz02jbQ', 'tech', { quality: 0.9, maxAgeDays: 60, about: 'Programmazione creativa e simulazioni' }),
+  yt('techconnections', 'Technology Connections', 'UCy0tKL1T7wFoYcxCe0xjN6Q', 'tech', { quality: 0.85, maxAgeDays: 30, about: 'Come funzionano davvero gli oggetti di casa' }),
+  yt('welchlabs', 'Welch Labs', 'UConVfxXodg78Tzh5nNu85Ew', 'tech', { quality: 0.9, maxAgeDays: 60, about: 'Intelligenza artificiale e matematica, a fondo' }),
+  yt('beneater', 'Ben Eater', 'UCS0N5baNlQWJCUrhCEo8WlA', 'tech', { quality: 0.9, maxAgeDays: 90, about: 'Computer costruiti da zero, un filo alla volta' }),
+  yt('karpathy', 'Andrej Karpathy', 'UCXUPKJO5MZQN11PqgIvyuvQ', 'tech', { quality: 0.95, maxAgeDays: 90, about: 'Le reti neurali spiegate da chi le costruisce' }),
+  yt('cleoabram', 'Cleo Abram', 'UC415bOPUcGSamy543abLmRA', 'tech', { shorts: true, quality: 0.75, maxAgeDays: 14, about: 'Tecnologia e futuro, con ottimismo critico' }),
   yt('b1m', 'The B1M', 'UC6n8I1UDTKP1IWjQMg6_TwA', 'design', { maxAgeDays: 14, about: 'Le grandi costruzioni del mondo' }),
   // Arte, design, cultura
   yt('artassignment', 'The Art Assignment', 'UCmQThz1OLYt8mb2PU540LOA', 'arte', { user: 'theartassignment', quality: 0.85, maxAgeDays: 21, about: 'Storia dell’arte e arte contemporanea' }),
   yt('nerdwriter', 'Nerdwriter1', 'UCJkMlOu7faDgqh4PfzbpLdg', 'arte', { quality: 0.85, maxAgeDays: 30, about: 'Saggi video su arte, film e idee' }),
-  yt('thefutur', 'The Futur', 'UC-b3c7kxa5vU-bnmaROgvog', 'design', { quality: 0.7, maxAgeDays: 7, about: 'Design, branding e mestiere creativo' }),
-  yt('ad', 'Architectural Digest', 'UC0k238zFx-Z8xFH0sxCrPJg', 'design', { quality: 0.65, maxAgeDays: 4, about: 'Case e interni, raccontati da chi li abita' }),
+  yt('thefutur', 'The Futur', 'UC-b3c7kxa5vU-bnmaROgvog', 'design', { shorts: true, quality: 0.7, maxAgeDays: 7, about: 'Design, branding e mestiere creativo' }),
+  yt('ad', 'Architectural Digest', 'UC0k238zFx-Z8xFH0sxCrPJg', 'design', { shorts: true, quality: 0.65, maxAgeDays: 4, about: 'Case e interni, raccontati da chi li abita' }),
   yt('polyphonic', 'Polyphonic', 'UCXkNod_JcH7PleOjwK_8rYQ', 'cultura', { quality: 0.85, maxAgeDays: 60, about: 'Saggi video sulla musica' }),
   yt('adamneely', 'Adam Neely', 'UCnkp4xDOwqqJD7sSM3xdUiQ', 'cultura', { maxAgeDays: 30, about: 'Teoria musicale per curiosi' }),
   yt('12tone', '12tone', 'UCTUtqcDkzw7bisadh6AOx5w', 'cultura', { maxAgeDays: 30, about: 'Analisi musicale illustrata' }),
+  yt('jacobgeller', 'Jacob Geller', 'UCeTfBygNb1TahcNpZyELO8g', 'cultura', { quality: 0.8, maxAgeDays: 60, about: 'Saggi video su arte, videogiochi e idee' }),
   yt('screenplay', 'Lessons from the Screenplay', 'UCErSSa3CaP_GJxmFpdjG9Jw', 'cultura', { quality: 0.85, maxAgeDays: 60, about: 'Come funzionano le grandi sceneggiature' }),
-  yt('nprmusic', 'NPR Music', 'UC4eYXhJI4-7wSWc8UNRwD4A', 'cultura', { quality: 0.75, maxAgeDays: 3, about: 'Tiny Desk e musica dal vivo' }),
-  yt('colors', 'COLORS', 'UC2Qw1dzXDBAZPwS7zm37g8g', 'cultura', { quality: 0.7, maxAgeDays: 4, about: 'Voci nuove da tutto il mondo, su un colore' }),
-  yt('kexp', 'KEXP', 'UC3I2GFN_F8WudD_2jUZbojA', 'cultura', { quality: 0.7, maxAgeDays: 3, about: 'Concerti in studio da Seattle' }),
+  yt('nprmusic', 'NPR Music', 'UC4eYXhJI4-7wSWc8UNRwD4A', 'cultura', { shorts: true, quality: 0.75, maxAgeDays: 3, about: 'Tiny Desk e musica dal vivo' }),
+  yt('colors', 'COLORS', 'UC2Qw1dzXDBAZPwS7zm37g8g', 'cultura', { shorts: true, quality: 0.7, maxAgeDays: 4, about: 'Voci nuove da tutto il mondo, su un colore' }),
+  yt('kexp', 'KEXP', 'UC3I2GFN_F8WudD_2jUZbojA', 'cultura', { shorts: true, quality: 0.7, maxAgeDays: 3, about: 'Concerti in studio da Seattle' }),
   // Lingue
   yt('langfocus', 'Langfocus', 'UCNhX3WQEkraW3VHPyup8jkQ', 'lingue', { quality: 0.85, maxAgeDays: 21, about: 'Le lingue del mondo, una alla volta' }),
-  yt('easygerman', 'Easy German', 'UCbxb2fqe9oNgglAoYqsYOtQ', 'lingue', { lang: 'de', maxAgeDays: 5, about: 'Tedesco vero, per strada' }),
+  yt('easygerman', 'Easy German', 'UCbxb2fqe9oNgglAoYqsYOtQ', 'lingue', { shorts: true, lang: 'de', maxAgeDays: 5, about: 'Tedesco vero, per strada' }),
   // Storia
   yt('historiacivilis', 'Historia Civilis', 'UCv_vLHiWVBh_FR9vbeuiY-A', 'storia', { quality: 0.85, maxAgeDays: 60, about: 'La Roma antica, raccontata con precisione' }),
   yt('kingsgenerals', 'Kings and Generals', 'UCMmaBzfCCwZ2KqaBJjkj0fw', 'storia', { quality: 0.75, maxAgeDays: 7, about: 'Storia militare e degli imperi' }),
   yt('oversimplified', 'OverSimplified', 'UCNIuvl7V8zACPpTmmNIqP2A', 'storia', { quality: 0.8, maxAgeDays: 90, about: 'Grandi eventi storici, con umorismo' }),
   yt('extrahistory', 'Extra History', 'UCCODtTcd5M1JavPCOr_Uydg', 'storia', { maxAgeDays: 14, about: 'Storie dalla storia, illustrate' }),
   yt('fallofciv', 'Fall of Civilizations', 'UCT6Y5JJPKe_JDMivpKgVXew', 'storia', { quality: 0.9, maxAgeDays: 90, about: 'Come finiscono le civiltà' }),
-  yt('tastinghistory', 'Tasting History', 'UCsaGKqPZnGp_7N80hcHySGQ', 'storia', { maxAgeDays: 14, about: 'Ricette del passato e la loro storia' }),
+  yt('historymatters', 'History Matters', 'UC22BdTgxefuvUivrjesETjg', 'storia', { quality: 0.75, maxAgeDays: 14, about: 'Domande di storia, risposte in pochi minuti' }),
+  yt('geographics', 'Geographics', 'UCHKRfxkMTqiiv4pF99qGKIw', 'storia', { quality: 0.75, maxAgeDays: 21, about: 'Storie di luoghi, popoli e imperi' }),
+  yt('tastinghistory', 'Tasting History', 'UCsaGKqPZnGp_7N80hcHySGQ', 'storia', { shorts: true, maxAgeDays: 14, about: 'Ricette del passato e la loro storia' }),
   yt('townsends', 'Townsends', 'UCxr2d4As312LulcajAkKJYw', 'storia', { quality: 0.75, maxAgeDays: 14, about: 'La vita quotidiana nel Settecento' }),
   // Persone, mente, abitudini
-  yt('schooloflife', 'The School of Life', 'UC7IcJI8PUf5Z3zKxnZvTBog', 'psicologia', { user: 'schooloflifechannel', maxAgeDays: 7, about: 'Intelligenza emotiva e vita interiore' }),
-  yt('bigthink', 'Big Think', 'UCvQECJukTDE2i6aCoMnS-Vg', 'filosofia', { mixed: true, quality: 0.75, maxAgeDays: 3, about: 'Grandi idee da grandi pensatori' }),
+  yt('schooloflife', 'The School of Life', 'UC7IcJI8PUf5Z3zKxnZvTBog', 'psicologia', { shorts: true, user: 'schooloflifechannel', maxAgeDays: 7, about: 'Intelligenza emotiva e vita interiore' }),
+  yt('bigthink', 'Big Think', 'UCvQECJukTDE2i6aCoMnS-Vg', 'filosofia', { shorts: true, mixed: true, quality: 0.75, maxAgeDays: 3, about: 'Grandi idee da grandi pensatori' }),
   yt('aliabdaal', 'Ali Abdaal', 'UCoOae5nYA7VqaXzerajD0lg', 'produttivita', { quality: 0.65, maxAgeDays: 7, about: 'Produttività senza ansia' }),
-  yt('thomasfrank', 'Thomas Frank', 'UCG-KntY7aVnIGXYEBQvmBAQ', 'abitudini', { quality: 0.7, maxAgeDays: 14, about: 'Studio, abitudini e organizzazione' }),
+  yt('thomasfrank', 'Thomas Frank', 'UCG-KntY7aVnIGXYEBQvmBAQ', 'abitudini', { shorts: true, quality: 0.7, maxAgeDays: 14, about: 'Studio, abitudini e organizzazione' }),
   // Università e lezioni
-  yt('mitocw', 'MIT OpenCourseWare', 'UCEBb1b_L6zDS3xTUrIALZOw', 'universita', { quality: 0.95, user: 'MIT', about: 'Le lezioni del MIT, gratis per tutti' }),
+  yt('mitocw', 'MIT OpenCourseWare', 'UCEBb1b_L6zDS3xTUrIALZOw', 'universita', { shorts: true, quality: 0.95, user: 'MIT', about: 'Le lezioni del MIT, gratis per tutti' }),
   yt('stanford', 'Stanford', 'UCBa5G_ESCn8Yd4vw5U-gIcg', 'universita', { quality: 0.85, user: 'stanforduniversity', about: 'Lezioni e incontri dall’Università di Stanford' }),
-  yt('harvard', 'Harvard University', 'UCWwgaK7x0_FR1goeSRazfsQ', 'universita', { quality: 0.85, user: 'Harvard', about: 'Ricerca e lezioni da Harvard' }),
+  yt('harvard', 'Harvard University', 'UCWwgaK7x0_FR1goeSRazfsQ', 'universita', { shorts: true, quality: 0.85, user: 'Harvard', about: 'Ricerca e lezioni da Harvard' }),
   yt('yalecourses', 'Yale Courses', 'UC4EY_qnSeAP1xGsh61eOoJA', 'universita', { quality: 0.9, user: 'YaleCourses', maxAgeDays: 14, about: 'Corsi completi di Yale' }),
-  yt('royalinstitution', 'The Royal Institution', 'UCYeF244yNGuFefuFKqxIAXw', 'universita', { quality: 0.9, user: 'TheRoyalInstitution', about: 'Conferenze di scienza dal 1799' }),
+  yt('royalinstitution', 'The Royal Institution', 'UCYeF244yNGuFefuFKqxIAXw', 'universita', { shorts: true, quality: 0.9, user: 'TheRoyalInstitution', about: 'Conferenze di scienza dal 1799' }),
   yt('oxfordmaths', 'Oxford Mathematics', 'UCLnGGRG__uGSPLBLzyhg8dQ', 'universita', { quality: 0.9, maxAgeDays: 30, about: 'Lezioni di matematica da Oxford' }),
   yt('khan', 'Khan Academy', 'UC4a-Gbdw7vOaccHmFo40b9g', 'universita', { quality: 0.8, maxAgeDays: 14, about: 'Lezioni gratuite su tutto' }),
-  yt('crashcourse', 'Crash Course', 'UCX6b17PVsYBQ0ip5gyeme-Q', 'universita', { user: 'crashcourse', mixed: true, about: 'Corsi brevi su ogni materia' }),
-  yt('ted', 'TED', 'UCAuUUnT6oDeKwE6v1NGQxug', 'universita', { user: 'TEDtalksDirector', mixed: true, quality: 0.75, maxAgeDays: 3, about: 'Idee che vale la pena diffondere' }),
+  yt('crashcourse', 'Crash Course', 'UCX6b17PVsYBQ0ip5gyeme-Q', 'universita', { shorts: true, user: 'crashcourse', mixed: true, about: 'Corsi brevi su ogni materia' }),
+  yt('ted', 'TED', 'UCAuUUnT6oDeKwE6v1NGQxug', 'universita', { shorts: true, user: 'TEDtalksDirector', mixed: true, quality: 0.75, maxAgeDays: 3, about: 'Idee che vale la pena diffondere' }),
   // Curiosità e divertimento
-  yt('teded', 'TED-Ed', 'UCsooa4yRKGN_zEE8iknghZA', 'curiosita', { user: 'TEDEducation', about: 'Lezioni animate da insegnanti di tutto il mondo' }),
+  yt('teded', 'TED-Ed', 'UCsooa4yRKGN_zEE8iknghZA', 'curiosita', { shorts: true, user: 'TEDEducation', about: 'Lezioni animate da insegnanti di tutto il mondo' }),
   yt('vsauce', 'Vsauce', 'UC6nSFpj9HTCZ5t-N3Rm3-HA', 'curiosita', { user: 'vsauce', maxAgeDays: 60, about: 'Domande strane, risposte serie' }),
   yt('cgpgrey', 'CGP Grey', 'UC2C_jShtL725hvbm1arSV9w', 'curiosita', { user: 'CGPGrey', quality: 0.85, maxAgeDays: 60, about: 'Spiegazioni chiare di cose complicate' }),
   yt('wendover', 'Wendover Productions', 'UC9RM-iSvTu1uPJb8X5yp3EQ', 'curiosita', { maxAgeDays: 14, about: 'Logistica, viaggi e come gira il mondo' }),
   yt('halfasinteresting', 'Half as Interesting', 'UCuCkxoKLYO_EQ2GeFtbM_bw', 'curiosita', { quality: 0.7, maxAgeDays: 7, about: 'Curiosità brevi e intelligenti' }),
   yt('reallifelore', 'RealLifeLore', 'UCP5tjEmvPItGyLhmjdwP7Ww', 'curiosita', { quality: 0.7, maxAgeDays: 14, about: 'Geografia e geopolitica in mappe' }),
   yt('tomscott', 'Tom Scott', 'UCBa659QWEk1AI4Tg--mrJ2A', 'curiosita', { quality: 0.85, maxAgeDays: 60, about: 'Luoghi e storie sorprendenti' }),
-  yt('johnnyharris', 'Johnny Harris', 'UCmGSJVG3mCRXVOP4yZrU1Dw', 'notizie', { mixed: true, quality: 0.75, maxAgeDays: 7, about: 'Giornalismo video, mappe e reportage' }),
-  yt('vox', 'Vox', 'UCLXo7UDZvByw2ixzpQCufnA', 'notizie', { user: 'voxdotcom', mixed: true, quality: 0.7, maxAgeDays: 3, about: 'Spiegare le notizie' }),
-  yt('markrober', 'Mark Rober', 'UCY1kMZp36IQSyNx_9h4mpCg', 'divertimento', { maxAgeDays: 30, about: 'Ex ingegnere NASA, invenzioni folli' }),
+  yt('johnnyharris', 'Johnny Harris', 'UCmGSJVG3mCRXVOP4yZrU1Dw', 'notizie', { shorts: true, mixed: true, quality: 0.75, maxAgeDays: 7, about: 'Giornalismo video, mappe e reportage' }),
+  yt('vox', 'Vox', 'UCLXo7UDZvByw2ixzpQCufnA', 'notizie', { shorts: true, user: 'voxdotcom', mixed: true, quality: 0.7, maxAgeDays: 3, about: 'Spiegare le notizie' }),
+  yt('markrober', 'Mark Rober', 'UCY1kMZp36IQSyNx_9h4mpCg', 'divertimento', { shorts: true, maxAgeDays: 30, about: 'Ex ingegnere NASA, invenzioni folli' }),
 ];
+
+/**
+ * Clip brevi (YouTube Shorts) dei canali che le curano bene: stesso account del canale,
+ * feed a parte (la playlist "UUSH…" contiene solo le Shorts; se non risponde, il feed del canale).
+ */
+export const YOUTUBE_SHORTS: SourceDef[] = YOUTUBE.filter((s) => s.hasShorts && s.quality >= 0.7).map((s) => ({
+  ...s,
+  shorts: true,
+  id: `${s.id}:clip`,
+  account: s.id,
+  url: s.url!.replace('channel_id=UC', 'playlist_id=UUSH'),
+  alt: [s.url!],
+  max: 2,
+  maxAgeDays: 10,
+}));
 
 /** Abbreviazioni per le righe sotto. */
 const rss = (

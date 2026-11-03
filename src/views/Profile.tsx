@@ -295,6 +295,36 @@ export function Settings() {
           <Switch on={st.summaryMode === 'original'} onChange={(v) => updateSettings({ summaryMode: v ? 'original' : 'it' })} label="Modalità Allenami" />
         </div>
 
+        <h2 class="section-title">Clip</h2>
+        <div class="setting">
+          <span>
+            Clip per giro
+            <br />
+            <span class="muted small">Poi una pausa attiva prima di continuare</span>
+          </span>
+          <select value={st.clipRound} onChange={(e) => updateSettings({ clipRound: Number(e.currentTarget.value) })}>
+            {[5, 8, 10, 12].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div class="setting">
+          <span>
+            Giri al giorno
+            <br />
+            <span class="muted small">Dopo l’ultimo, le clip finiscono fino a domani</span>
+          </span>
+          <select value={st.clipRounds} onChange={(e) => updateSettings({ clipRounds: Number(e.currentTarget.value) })}>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <option key={n} value={n}>
+                {n} ({n * st.clipRound} clip)
+              </option>
+            ))}
+          </select>
+        </div>
+
         <h2 class="section-title">Benessere</h2>
         <div class="setting">
           <span>

@@ -75,6 +75,23 @@ function Suggestions({ recent, category }: { recent: RecentItem[]; category?: Ca
   );
 }
 
+/** Vicino a te (meteo, luoghi, eventi della tua città) sta in cima a Esplora. */
+function NearbyLink() {
+  const s = useAppState();
+  return (
+    <a class="nearby-link" href="#/vicino">
+      <span class="nearby-ic">
+        <Icon name="pin" size={22} />
+      </span>
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <b>Vicino a te</b>
+        <span class="muted small">{s.settings.city.name} · meteo, luoghi ed eventi</span>
+      </span>
+      <Icon name="compass" size={18} />
+    </a>
+  );
+}
+
 function matches(i: Item, q: string) {
   return [i.title, i.titleIt, i.summary, i.sourceName, i.author, ...i.tags].some((x) => x?.toLowerCase().includes(q));
 }
@@ -159,6 +176,7 @@ export function Explore({ cat }: { cat?: string }) {
           </>
         ) : (
           <>
+            {!category && <NearbyLink />}
             {recent && <Suggestions recent={recent} category={category} />}
             <h2 class="section-title">{category ? categoryMeta(category).label : 'Da scoprire'}</h2>
             {recent === null ? <p class="muted">Carico…</p> : <Grid items={items.slice(0, 120)} />}

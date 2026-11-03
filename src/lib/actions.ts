@@ -118,6 +118,18 @@ export function addFlashcard(item: Item) {
   toast('Aggiunta alle flashcard');
 }
 
+/** Intervalli delle flashcard (giorni) per ogni livello. */
+export const BOX_DAYS = [1, 3, 7, 14, 30, 90];
+
+export function answerCard(c: Flashcard, knew: boolean) {
+  const box = knew ? Math.min(c.box + 1, BOX_DAYS.length - 1) : 0;
+  setState((st) => ({ cards: { ...st.cards, [c.id]: { ...c, box, due: addDays(today(), BOX_DAYS[box]) } } }));
+}
+
+export function addMood(v: number) {
+  setState((s) => ({ moods: [...s.moods, { at: new Date().toISOString(), v }] }));
+}
+
 export function exerciseDone(key: string) {
   const t = today();
   setState((s) => ({ exercisesDone: { ...s.exercisesDone, [t]: [...(s.exercisesDone[t] ?? []), key] } }));

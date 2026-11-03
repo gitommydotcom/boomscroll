@@ -9,50 +9,12 @@ import { bumpStats, emptyDay, setState, updateSettings, useAppState, type DaySta
 import { Avatar } from '../ui/Avatar';
 import { openDetail } from '../lib/ui';
 import { Icon, IconCheck } from '../ui/icons';
+import { BoxBreath, DoneNote } from './Interactions';
 
 /* ── Respiro ────────────────────────────────────────────────────────────── */
 
-const PHASES = ['Inspira', 'Trattieni', 'Espira', 'Trattieni'];
-
 /** Respirazione quadrata 4-4-4-4, quattro cicli (circa un minuto). */
-export function Breath({ onDone }: { onDone?: () => void }) {
-  const [running, setRunning] = useState(false);
-  const [tick, setTick] = useState(0);
-  const total = 16;
-  useEffect(() => {
-    if (!running) return;
-    if (tick >= total) {
-      setRunning(false);
-      onDone?.();
-      return;
-    }
-    const t = setTimeout(() => setTick((x) => x + 1), 4000);
-    return () => clearTimeout(t);
-  }, [running, tick]);
-  const phase = tick % 4;
-  const expanded = running && (phase === 0 || phase === 1);
-  return (
-    <div>
-      <div class="breath" aria-hidden="true">
-        <div class={`breath-circle${expanded ? ' in' : ''}`} />
-      </div>
-      <p class="breath-label" role="status">
-        {running ? `${PHASES[phase]}… (${Math.floor(tick / 4) + 1}/4)` : tick >= total ? 'Fatto. Come va?' : 'Un minuto, quattro respiri lenti.'}
-      </p>
-      {!running && (
-        <button
-          class="btn block"
-          onClick={() => {
-            setTick(0);
-            setRunning(true);
-          }}
-        >
-          {tick >= total ? 'Ancora una volta' : 'Inizia'}
-        </button>
-      )}
-    </div>
-  );
-}
+export const Breath = BoxBreath;
 
 /* ── Esercizi nel feed ──────────────────────────────────────────────────── */
 
@@ -76,14 +38,11 @@ export function ExerciseCard({ ex }: { ex: FeedExercise }) {
         <Icon name={ex.type === 'respiro' ? 'wind' : ex.type === 'diario' ? 'notebook' : ex.type === 'gratitudine' ? 'sun' : 'bolt'} size={15} /> {kicker}
       </div>
       {done ? (
-        <>
-          <h2>Fatto.</h2>
-          <p>Bel lavoro. Lo trovi anche nella sezione Pratica.</p>
-        </>
+        <DoneNote title="Fatto.">Bel lavoro. Lo trovi anche nella sezione Pratica.</DoneNote>
       ) : ex.type === 'respiro' ? (
         <>
           <h2>Respira con me</h2>
-          <Breath onDone={complete} />
+          <BoxBreath onDone={complete} />
         </>
       ) : ex.type === 'diario' ? (
         <>
@@ -164,17 +123,17 @@ export function PauseCard({ n, count }: { n: number; count: number }) {
 
 /* ── Quiz del giorno ────────────────────────────────────────────────────── */
 
-export function QuizCard({ items, date }: { items: Item[]; date: string }) {
+export function QuizCard({ items, date, exclude }: { items: Item[]; date: string; exclude?: string }) {
   const s = useAppState();
   const done = s.quizDone[date];
   const [answers, setAnswers] = useState<Record<string, number>>({});
   // Domande sui contenuti che hai letto (prima quelli che ti sono piaciuti); ferme dalla prima risposta.
   const live = useMemo(() => {
-    const withQ = items.filter((i) => i.quiz);
+    const withQ = items.filter((i) => i.quiz && i.id !== exclude);
     const read = withQ.filter((i) => s.seen[i.id]);
     const liked = read.filter((i) => s.reactions[i.id] === 'like');
     return [...new Set([...liked, ...read, ...withQ])].slice(0, 3);
-  }, [items, s.seen, s.reactions]);
+  }, [items, s.seen, s.reactions, exclude]);
   const [frozen, setFrozen] = useState<Item[] | null>(null);
   const qs = frozen ?? live;
   if (!qs.length) return null;

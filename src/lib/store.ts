@@ -31,6 +31,23 @@ export interface Settings {
   autoplay: boolean;
   /** Scheda del feed: tutto ("Per te") o solo gli account che segui. */
   feedTab: 'perte' | 'seguiti';
+  /** Clip: quante per giro prima della pausa attiva, quanti giri al giorno, audio. */
+  clipRound: number;
+  clipRounds: number;
+  clipSound: boolean;
+}
+
+/** Il limite delle clip di oggi: clip viste nel giro in corso e giri completati. */
+export interface ClipDay {
+  date: string;
+  inRound: number;
+  rounds: number;
+}
+
+export interface Mood {
+  at: string;
+  /** 1 = giù … 5 = benissimo. */
+  v: number;
 }
 
 export interface Note {
@@ -123,6 +140,9 @@ export interface State {
   activitySeen: string[];
   /** Primo giorno di uso dell'app. */
   since: string;
+  clips: ClipDay;
+  /** Come ti senti: le risposte al check-in del feed (solo sul telefono). */
+  moods: Mood[];
 }
 
 export const DEFAULT_CITY: City = { name: "L'Aquila", lat: 42.3498, lon: 13.3995, id: 'laquila' };
@@ -141,6 +161,9 @@ export const DEFAULT_STATE: State = {
     name: '',
     autoplay: true,
     feedTab: 'perte',
+    clipRound: 8,
+    clipRounds: 3,
+    clipSound: false,
   },
   weights: {},
   weightsDay: '',
@@ -161,6 +184,8 @@ export const DEFAULT_STATE: State = {
   storiesSeen: {},
   activitySeen: [],
   since: '',
+  clips: { date: '', inRound: 0, rounds: 0 },
+  moods: [],
 };
 
 const idb = createStore('boomscroll', 'kv');
@@ -219,7 +244,7 @@ function prune(s: State): State {
       .slice(0, 10),
   );
   const storiesSeen = Object.fromEntries(Object.entries(s.storiesSeen).filter(([, d]) => d >= cutoff));
-  return { ...s, seen, orders, storiesSeen, activitySeen: s.activitySeen.slice(-300), since: s.since || today() };
+  return { ...s, seen, orders, storiesSeen, activitySeen: s.activitySeen.slice(-300), moods: s.moods.slice(-200), since: s.since || today() };
 }
 
 export async function loadState(): Promise<void> {
