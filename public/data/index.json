@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-03-pomeriggio",
- "updatedAt": "2026-11-03T18:44:06.137Z",
+ "latest": "2026-11-03-sera",
+ "updatedAt": "2026-11-03T22:39:24.324Z",
  "editions": [
+  {
+   "id": "2026-11-03-sera",
+   "slot": "sera",
+   "date": "2026-11-03",
+   "generatedAt": "2026-11-03T20:58:38.375Z",
+   "count": 98,
+   "highlights": [
+    "Simulazione dello Spettro Cosmico Primordiale: Una Nuova Prospettiva sull'Universo",
+    "Nativi hawaiani discendono da un gruppo di 'Ultravoyagers' che hanno navigato a circa 4.400 miglia da Easter Island, suggerisce uno studio genetico",
+    "Due satelliti che ci mancavano"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 2,
+    "natura": 7,
+    "tech": 11,
+    "design": 10,
+    "scienza": 16,
+    "universita": 10,
+    "notizie": 15,
+    "storia": 4,
+    "filosofia": 3,
+    "cultura": 6,
+    "psicologia": 3,
+    "curiosita": 3,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-03-pomeriggio",
    "slot": "pomeriggio",
