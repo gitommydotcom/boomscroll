@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-03-mattina",
- "updatedAt": "2026-11-03T11:34:59.544Z",
+ "latest": "2026-11-03-pomeriggio",
+ "updatedAt": "2026-11-03T18:44:06.137Z",
  "editions": [
+  {
+   "id": "2026-11-03-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-03",
+   "generatedAt": "2026-11-03T17:01:08.730Z",
+   "count": 111,
+   "highlights": [
+    "La Ministra Britannica del Clima: COP31 Deve Rispondere alla Scienza ‘Spaventosa’",
+    "Appiattire la Via Lattea in due mosse",
+    "The Download: controllando gli agenti AI e i test di lealtà per la Super Intelligenza"
+   ],
+   "categories": {
+    "arte": 10,
+    "scienza": 20,
+    "divertimento": 3,
+    "poesia": 1,
+    "natura": 9,
+    "curiosita": 5,
+    "tech": 14,
+    "cultura": 9,
+    "produttivita": 3,
+    "lingue": 2,
+    "universita": 3,
+    "notizie": 16,
+    "storia": 3,
+    "psicologia": 3,
+    "filosofia": 2,
+    "design": 8
+   }
+  },
   {
    "id": "2026-11-03-mattina",
    "slot": "mattina",
