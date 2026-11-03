@@ -1,34 +1,34 @@
 {
  "latest": "2026-11-03-mattina",
- "updatedAt": "2026-11-03T06:59:35.015Z",
+ "updatedAt": "2026-11-03T08:56:56.474Z",
  "editions": [
   {
    "id": "2026-11-03-mattina",
    "slot": "mattina",
    "date": "2026-11-03",
-   "generatedAt": "2026-11-03T04:50:45.174Z",
-   "count": 89,
+   "generatedAt": "2026-11-03T07:23:38.680Z",
+   "count": 99,
    "highlights": [
-    "Una Stella in Collasso Produce un Bagliore Più Intenso della Sua Galassia",
+    "Una Stella in Collasso Produce un Bagliore Post-Esplosione Più Intenso del Suo Galassia",
     "Amore nel tempo dei dinosauri",
-    "I ragni sognano? Studi rivelano attività cerebrale durante il sonno"
+    "I ragni sognano? Questi aracnidi fanno movimenti e si muovono gli occhi quando dormono, suggerendo uno stato cerebrale complesso."
    ],
    "categories": {
-    "arte": 6,
-    "lingue": 1,
+    "natura": 6,
+    "arte": 7,
+    "lingue": 4,
     "poesia": 1,
-    "divertimento": 4,
-    "universita": 5,
-    "tech": 10,
-    "scienza": 17,
+    "divertimento": 3,
+    "universita": 10,
     "cultura": 7,
-    "notizie": 16,
-    "natura": 5,
-    "storia": 4,
-    "psicologia": 2,
-    "design": 7,
-    "filosofia": 1,
-    "curiosita": 3
+    "scienza": 17,
+    "psicologia": 5,
+    "tech": 8,
+    "design": 8,
+    "storia": 5,
+    "notizie": 14,
+    "curiosita": 3,
+    "filosofia": 1
    }
   },
   {
