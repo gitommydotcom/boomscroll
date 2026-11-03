@@ -1,32 +1,33 @@
 {
  "latest": "2026-11-03-mattina",
- "updatedAt": "2026-11-03T04:49:11.670Z",
+ "updatedAt": "2026-11-03T06:59:35.015Z",
  "editions": [
   {
    "id": "2026-11-03-mattina",
    "slot": "mattina",
    "date": "2026-11-03",
-   "generatedAt": "2026-11-03T01:56:33.686Z",
-   "count": 88,
+   "generatedAt": "2026-11-03T04:50:45.174Z",
+   "count": 89,
    "highlights": [
-    "Una Stella in Collasso Produce un Bagliore Superiore alla Sua Galassia",
-    "Amore nel Tempo dei Dinosauri",
-    "Teghaza 001, la roccia marziana più antica mai trovata aggiunge tasselli al passato umido del Pianeta Rosso"
+    "Una Stella in Collasso Produce un Bagliore Più Intenso della Sua Galassia",
+    "Amore nel tempo dei dinosauri",
+    "I ragni sognano? Studi rivelano attività cerebrale durante il sonno"
    ],
    "categories": {
-    "arte": 7,
+    "arte": 6,
     "lingue": 1,
     "poesia": 1,
     "divertimento": 4,
-    "scienza": 18,
-    "tech": 9,
     "universita": 5,
+    "tech": 10,
+    "scienza": 17,
+    "cultura": 7,
+    "notizie": 16,
     "natura": 5,
-    "storia": 5,
-    "notizie": 15,
+    "storia": 4,
     "psicologia": 2,
-    "cultura": 5,
-    "design": 8,
+    "design": 7,
+    "filosofia": 1,
     "curiosita": 3
    }
   },
