@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-03-sera",
- "updatedAt": "2026-11-03T22:39:24.324Z",
+ "latest": "2026-11-04-mattina",
+ "updatedAt": "2026-11-04T11:29:36.378Z",
  "editions": [
+  {
+   "id": "2026-11-04-mattina",
+   "slot": "mattina",
+   "date": "2026-11-04",
+   "generatedAt": "2026-11-04T09:45:12.797Z",
+   "count": 102,
+   "highlights": [
+    "La Migrazione che Ha Rimodellato l'Africa",
+    "Il verme a tre strisce ri-scritta la storia dell'evoluzione del cervello",
+    "Come le falene hanno trasformato i loro genitali in armi contro i pipistrelli"
+   ],
+   "categories": {
+    "natura": 4,
+    "arte": 9,
+    "scienza": 16,
+    "lingue": 2,
+    "curiosita": 6,
+    "poesia": 2,
+    "divertimento": 3,
+    "cultura": 9,
+    "psicologia": 4,
+    "universita": 7,
+    "produttivita": 1,
+    "tech": 12,
+    "storia": 5,
+    "notizie": 14,
+    "design": 7,
+    "abitudini": 1
+   }
+  },
   {
    "id": "2026-11-03-sera",
    "slot": "sera",
