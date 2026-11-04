@@ -1,7 +1,34 @@
 {
- "latest": "2026-11-04-pomeriggio",
- "updatedAt": "2026-11-04T18:32:57.547Z",
+ "latest": "2026-11-04-sera",
+ "updatedAt": "2026-11-04T22:06:18.652Z",
  "editions": [
+  {
+   "id": "2026-11-04-sera",
+   "slot": "sera",
+   "date": "2026-11-04",
+   "generatedAt": "2026-11-04T21:17:10.445Z",
+   "count": 86,
+   "highlights": [
+    "Colleghi, allievi e amici condividono i ricordi di Susumu Tonegawa",
+    "Le pareti in arenaria scolpite con cura di questo antico tempio egizio torneranno a colori una volta per tutte",
+    "Tumore del colon-retto nei giovani adulti: scoperto un legame inatteso con alcuni meccanismi attivi nella placenta"
+   ],
+   "categories": {
+    "arte": 9,
+    "poesia": 1,
+    "divertimento": 3,
+    "scienza": 13,
+    "natura": 5,
+    "universita": 9,
+    "design": 10,
+    "psicologia": 2,
+    "curiosita": 4,
+    "notizie": 14,
+    "cultura": 4,
+    "tech": 10,
+    "storia": 2
+   }
+  },
   {
    "id": "2026-11-04-pomeriggio",
    "slot": "pomeriggio",
