@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-04-mattina",
- "updatedAt": "2026-11-04T11:29:36.378Z",
+ "latest": "2026-11-04-pomeriggio",
+ "updatedAt": "2026-11-04T18:32:57.547Z",
  "editions": [
+  {
+   "id": "2026-11-04-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-04",
+   "generatedAt": "2026-11-04T17:08:57.289Z",
+   "count": 106,
+   "highlights": [
+    "Nuovi studi testano se i modelli AI conoscono i propri pensieri",
+    "Come alieni",
+    "Featured video: Changing the conversation about endometriosis"
+   ],
+   "categories": {
+    "scienza": 16,
+    "arte": 10,
+    "divertimento": 2,
+    "poesia": 1,
+    "universita": 7,
+    "tech": 15,
+    "design": 9,
+    "notizie": 17,
+    "psicologia": 4,
+    "natura": 6,
+    "lingue": 2,
+    "cultura": 5,
+    "filosofia": 2,
+    "storia": 5,
+    "curiosita": 3,
+    "produttivita": 2
+   }
+  },
   {
    "id": "2026-11-04-mattina",
    "slot": "mattina",
