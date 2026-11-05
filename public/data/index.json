@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-04-sera",
- "updatedAt": "2026-11-04T22:06:18.652Z",
+ "latest": "2026-11-05-mattina",
+ "updatedAt": "2026-11-05T10:41:10.877Z",
  "editions": [
+  {
+   "id": "2026-11-05-mattina",
+   "slot": "mattina",
+   "date": "2026-11-05",
+   "generatedAt": "2026-11-05T09:47:14.061Z",
+   "count": 97,
+   "highlights": [
+    "Come l'El Niño Superiore di Quest'Anno Aggraverà la Fame Globale",
+    "Detriti planetari senza precedenti: indizi sul destino del nostro Sistema Solare",
+    "Analisi del DNA antico: l'espansione delle lingue celtiche e germaniche"
+   ],
+   "categories": {
+    "natura": 7,
+    "arte": 5,
+    "lingue": 2,
+    "curiosita": 7,
+    "poesia": 1,
+    "divertimento": 3,
+    "universita": 5,
+    "psicologia": 6,
+    "cultura": 10,
+    "tech": 16,
+    "scienza": 9,
+    "storia": 4,
+    "filosofia": 1,
+    "antropologia": 1,
+    "notizie": 13,
+    "design": 7
+   }
+  },
   {
    "id": "2026-11-04-sera",
    "slot": "sera",
