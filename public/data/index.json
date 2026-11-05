@@ -1,7 +1,38 @@
 {
- "latest": "2026-11-05-mattina",
- "updatedAt": "2026-11-05T10:41:10.877Z",
+ "latest": "2026-11-05-pomeriggio",
+ "updatedAt": "2026-11-05T18:21:12.350Z",
  "editions": [
+  {
+   "id": "2026-11-05-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-05",
+   "generatedAt": "2026-11-05T17:20:43.543Z",
+   "count": 99,
+   "highlights": [
+    "Stabilire la struttura del plasma di quark-gluoni, il primo fluido dell'universo",
+    "Il nuovo sito UNESCO patrimonio mondiale: una palude – e questo è esattamente il motivo per cui dovresti visitarlo",
+    "Aurore, quando il rosso incontra il verde"
+   ],
+   "categories": {
+    "scienza": 13,
+    "arte": 7,
+    "divertimento": 2,
+    "poesia": 1,
+    "universita": 4,
+    "curiosita": 3,
+    "tech": 14,
+    "lingue": 2,
+    "natura": 8,
+    "notizie": 17,
+    "cultura": 8,
+    "storia": 3,
+    "design": 8,
+    "psicologia": 5,
+    "produttivita": 2,
+    "filosofia": 1,
+    "antropologia": 1
+   }
+  },
   {
    "id": "2026-11-05-mattina",
    "slot": "mattina",
