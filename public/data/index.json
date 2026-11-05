@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-05-pomeriggio",
- "updatedAt": "2026-11-05T18:21:12.350Z",
+ "latest": "2026-11-05-sera",
+ "updatedAt": "2026-11-05T22:39:01.678Z",
  "editions": [
+  {
+   "id": "2026-11-05-sera",
+   "slot": "sera",
+   "date": "2026-11-05",
+   "generatedAt": "2026-11-05T21:28:41.802Z",
+   "count": 88,
+   "highlights": [
+    "Derivati dell’Idrogeno Consentono una Neutralità Carbonica Economicamente Fattibile in Cina",
+    "Fine corsa per Swift",
+    "La Cina annuncia un piano per inviare astronauti sulla Luna entro il 2030, rivelando dettagli su quattro missioni imminenti"
+   ],
+   "categories": {
+    "arte": 5,
+    "poesia": 1,
+    "divertimento": 2,
+    "scienza": 18,
+    "cultura": 5,
+    "natura": 6,
+    "psicologia": 4,
+    "universita": 6,
+    "design": 8,
+    "notizie": 14,
+    "curiosita": 2,
+    "filosofia": 1,
+    "tech": 13,
+    "produttivita": 1,
+    "storia": 2
+   }
+  },
   {
    "id": "2026-11-05-pomeriggio",
    "slot": "pomeriggio",
