@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-06-mattina",
- "updatedAt": "2026-11-06T10:37:28.785Z",
+ "latest": "2026-11-06-pomeriggio",
+ "updatedAt": "2026-11-06T18:26:43.807Z",
  "editions": [
+  {
+   "id": "2026-11-06-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-06",
+   "generatedAt": "2026-11-06T16:43:37.925Z",
+   "count": 105,
+   "highlights": [
+    "Un teorema quantistico strano uccide la realtà di Einstein",
+    "Un Disturbo Celeste",
+    "Potrebbe essere la migliore evidenza finora che il sangue dei dinosauri può fossilizzarsi"
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 2,
+    "poesia": 1,
+    "natura": 11,
+    "scienza": 13,
+    "notizie": 17,
+    "tech": 16,
+    "universita": 7,
+    "lingue": 2,
+    "cultura": 9,
+    "storia": 1,
+    "psicologia": 5,
+    "curiosita": 4,
+    "design": 8,
+    "produttivita": 2
+   }
+  },
   {
    "id": "2026-11-06-mattina",
    "slot": "mattina",
