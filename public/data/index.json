@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-05-sera",
- "updatedAt": "2026-11-05T22:39:01.678Z",
+ "latest": "2026-11-06-mattina",
+ "updatedAt": "2026-11-06T10:37:28.785Z",
  "editions": [
+  {
+   "id": "2026-11-06-mattina",
+   "slot": "mattina",
+   "date": "2026-11-06",
+   "generatedAt": "2026-11-06T09:44:52.257Z",
+   "count": 85,
+   "highlights": [
+    "'Stupefacente': Il Super El Niño in Marcia verso il Record",
+    "Sottomarino nazista affonda nave mercantile al largo della costa del Maine nel 1944. I subacquei hanno finalmente individuato le relitti a 400 metri di profondità.",
+    "Bill Madden (soldato)"
+   ],
+   "categories": {
+    "natura": 5,
+    "arte": 6,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 2,
+    "divertimento": 2,
+    "scienza": 6,
+    "cultura": 9,
+    "tech": 13,
+    "storia": 6,
+    "notizie": 14,
+    "universita": 5,
+    "psicologia": 2,
+    "design": 8,
+    "filosofia": 1
+   }
+  },
   {
    "id": "2026-11-05-sera",
    "slot": "sera",
