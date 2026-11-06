@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-06-pomeriggio",
- "updatedAt": "2026-11-06T18:26:43.807Z",
+ "latest": "2026-11-06-sera",
+ "updatedAt": "2026-11-06T21:39:17.717Z",
  "editions": [
+  {
+   "id": "2026-11-06-sera",
+   "slot": "sera",
+   "date": "2026-11-06",
+   "generatedAt": "2026-11-06T20:52:01.760Z",
+   "count": 84,
+   "highlights": [
+    "La relazione tra commedia, democrazia e intelligenza artificiale",
+    "Per Secoli, Visitatori di Caverne Camminavano Dritto Sulla Scarsità di 280 Incisioni Paleolitiche. La Nuova Scoperta Riscrive la Preistoria della Catalogna",
+    "Il telescopio spaziale James Webb della NASA è traballante – gli scienziati hanno una soluzione che potrebbe rivelare nuovi mondi alieni"
+   ],
+   "categories": {
+    "scienza": 13,
+    "arte": 11,
+    "poesia": 1,
+    "divertimento": 2,
+    "design": 7,
+    "storia": 5,
+    "universita": 7,
+    "cultura": 5,
+    "natura": 3,
+    "curiosita": 3,
+    "filosofia": 1,
+    "tech": 11,
+    "psicologia": 1,
+    "notizie": 14
+   }
+  },
   {
    "id": "2026-11-06-pomeriggio",
    "slot": "pomeriggio",
