@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-06-sera",
- "updatedAt": "2026-11-06T21:39:17.717Z",
+ "latest": "2026-11-07-mattina",
+ "updatedAt": "2026-11-07T10:34:21.033Z",
  "editions": [
+  {
+   "id": "2026-11-07-mattina",
+   "slot": "mattina",
+   "date": "2026-11-07",
+   "generatedAt": "2026-11-07T09:08:52.004Z",
+   "count": 81,
+   "highlights": [
+    "In Vivo CRISPR Base Editing of ANGPTL3 for Durable Lipid Lowering",
+    "Da dove proveniva veramente l'altare misterioso di sei tonnellate di Stonehenge? I geologi scartano l'ipotesi scozzese mentre la ricerca si approfondisce",
+    "Un armadio di legno a Pompìi è rimasto sigillato per quasi 2.000 anni. Gli archeologi l'hanno aperto per la prima volta."
+   ],
+   "categories": {
+    "arte": 7,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 1,
+    "divertimento": 3,
+    "psicologia": 2,
+    "cultura": 8,
+    "produttivita": 1,
+    "scienza": 10,
+    "tech": 11,
+    "storia": 4,
+    "notizie": 14,
+    "natura": 4,
+    "design": 7,
+    "universita": 3
+   }
+  },
   {
    "id": "2026-11-06-sera",
    "slot": "sera",
