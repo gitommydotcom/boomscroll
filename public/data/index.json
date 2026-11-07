@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-07-mattina",
- "updatedAt": "2026-11-07T10:34:21.033Z",
+ "latest": "2026-11-07-pomeriggio",
+ "updatedAt": "2026-11-07T17:11:29.143Z",
  "editions": [
+  {
+   "id": "2026-11-07-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-07",
+   "generatedAt": "2026-11-07T15:38:39.424Z",
+   "count": 75,
+   "highlights": [
+    "Strane Gas nel'Atmosfera Marziana Suggeriscono che il Pianeta Rosso è Ancora Attivamente Vulcanico – e Indicano Luoghi da Cercare per la Vita Aliena",
+    "Michelangelo usò questi pennelli personalizzati con teste multiple mentre dipingeva 'Il Giudizio Universale'",
+    "A Gaza, piogge diluviose e inondazioni privano di riparo decine di migliaia di sfollati"
+   ],
+   "categories": {
+    "arte": 9,
+    "poesia": 1,
+    "divertimento": 1,
+    "universita": 4,
+    "tech": 10,
+    "natura": 5,
+    "storia": 3,
+    "notizie": 17,
+    "scienza": 7,
+    "lingue": 1,
+    "cultura": 6,
+    "design": 8,
+    "curiosita": 1,
+    "psicologia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-07-mattina",
    "slot": "mattina",
