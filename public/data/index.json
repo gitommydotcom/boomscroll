@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-07-pomeriggio",
- "updatedAt": "2026-11-07T17:11:29.143Z",
+ "latest": "2026-11-07-sera",
+ "updatedAt": "2026-11-07T20:29:35.409Z",
  "editions": [
+  {
+   "id": "2026-11-07-sera",
+   "slot": "sera",
+   "date": "2026-11-07",
+   "generatedAt": "2026-11-07T19:24:10.338Z",
+   "count": 65,
+   "highlights": [
+    "L'arte rupestre in grotta che è rimasta nascosta per 26.000 anni",
+    "Albert Camus: Testardaggine e Creatività",
+    "1917: In Russia esplode la rivoluzione d'ottobre."
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 4,
+    "poesia": 1,
+    "tech": 9,
+    "storia": 3,
+    "curiosita": 2,
+    "natura": 4,
+    "universita": 4,
+    "scienza": 7,
+    "cultura": 2,
+    "notizie": 14,
+    "design": 6,
+    "filosofia": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-07-pomeriggio",
    "slot": "pomeriggio",
