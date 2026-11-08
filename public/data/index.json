@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-07-sera",
- "updatedAt": "2026-11-07T20:29:35.409Z",
+ "latest": "2026-11-08-mattina",
+ "updatedAt": "2026-11-08T09:25:34.820Z",
  "editions": [
+  {
+   "id": "2026-11-08-mattina",
+   "slot": "mattina",
+   "date": "2026-11-08",
+   "generatedAt": "2026-11-08T09:24:53.046Z",
+   "count": 66,
+   "highlights": [
+    "We Attribute Personalities to Chatbots, Even When We Know Better",
+    "Il mare che avanza",
+    "Come Cyndi Lauper e i Goonies inventarono gli anni ottanta"
+   ],
+   "categories": {
+    "arte": 6,
+    "lingue": 2,
+    "curiosita": 5,
+    "poesia": 2,
+    "divertimento": 2,
+    "tech": 14,
+    "scienza": 3,
+    "storia": 3,
+    "cultura": 4,
+    "notizie": 14,
+    "design": 5,
+    "natura": 4,
+    "produttivita": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-07-sera",
    "slot": "sera",
