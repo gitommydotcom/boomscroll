@@ -1,7 +1,34 @@
 {
- "latest": "2026-11-08-mattina",
- "updatedAt": "2026-11-08T09:25:34.820Z",
+ "latest": "2026-11-08-pomeriggio",
+ "updatedAt": "2026-11-08T17:05:54.865Z",
  "editions": [
+  {
+   "id": "2026-11-08-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-08",
+   "generatedAt": "2026-11-08T15:56:23.571Z",
+   "count": 59,
+   "highlights": [
+    "Eliminare coralli pericolosi",
+    "Papa Leone XIV esorta a trattare le mogli con rispetto durante la sua prima visita in America Latina",
+    "I fisici hanno ascoltato il rumore elettrico per risolvere il mistero dei superconduttori"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 1,
+    "scienza": 7,
+    "tech": 11,
+    "notizie": 16,
+    "universita": 1,
+    "natura": 5,
+    "cultura": 2,
+    "design": 5,
+    "storia": 1,
+    "produttivita": 2,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-08-mattina",
    "slot": "mattina",
