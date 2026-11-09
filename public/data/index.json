@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-08-sera",
- "updatedAt": "2026-11-08T20:06:51.493Z",
+ "latest": "2026-11-09-mattina",
+ "updatedAt": "2026-11-09T11:10:56.373Z",
  "editions": [
+  {
+   "id": "2026-11-09-mattina",
+   "slot": "mattina",
+   "date": "2026-11-09",
+   "generatedAt": "2026-11-09T10:11:03.607Z",
+   "count": 67,
+   "highlights": [
+    "Ragionamento pratico nel Medioevo",
+    "COP31 kicks off as planet faces imminent overshoot of 1.5 °C climate target",
+    "L'alchimia dell'amore non corrisposto e la storia dietro il poema più famoso di Emily Dickinson"
+   ],
+   "categories": {
+    "natura": 2,
+    "arte": 5,
+    "lingue": 2,
+    "curiosita": 3,
+    "poesia": 1,
+    "divertimento": 2,
+    "psicologia": 3,
+    "storia": 4,
+    "cultura": 5,
+    "tech": 9,
+    "filosofia": 1,
+    "scienza": 6,
+    "notizie": 14,
+    "design": 6,
+    "universita": 3,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-08-sera",
    "slot": "sera",
