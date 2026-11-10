@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-09-pomeriggio",
- "updatedAt": "2026-11-09T21:12:31.825Z",
+ "latest": "2026-11-09-sera",
+ "updatedAt": "2026-11-10T01:23:01.940Z",
  "editions": [
+  {
+   "id": "2026-11-09-sera",
+   "slot": "sera",
+   "date": "2026-11-09",
+   "generatedAt": "2026-11-09T23:47:14.633Z",
+   "count": 75,
+   "highlights": [
+    "Un Calcolo Migliore dei Suicidi tra i Veterani Potrebbe Migliorare gli Sforzi di Prevenzione, Affermano i Ricercatori",
+    "Una Donna Trova un Dipinto Perduto di Georgia O'Keeffe nel Suo Appartamento a New York",
+    "1799: Colpo di Stato del 18 brumaio: Napoleone Bonaparte va al potere."
+   ],
+   "categories": {
+    "arte": 9,
+    "divertimento": 2,
+    "poesia": 1,
+    "scienza": 10,
+    "universita": 7,
+    "filosofia": 1,
+    "curiosita": 3,
+    "cultura": 5,
+    "notizie": 14,
+    "design": 7,
+    "tech": 9,
+    "storia": 2,
+    "psicologia": 2,
+    "natura": 3
+   }
+  },
   {
    "id": "2026-11-09-pomeriggio",
    "slot": "pomeriggio",
