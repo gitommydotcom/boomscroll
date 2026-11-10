@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-10-mattina",
- "updatedAt": "2026-11-10T11:25:29.686Z",
+ "latest": "2026-11-10-pomeriggio",
+ "updatedAt": "2026-11-10T18:43:15.968Z",
  "editions": [
+  {
+   "id": "2026-11-10-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-10",
+   "generatedAt": "2026-11-10T17:00:10.993Z",
+   "count": 96,
+   "highlights": [
+    "Il caso di una bolla all'inizio della vita",
+    "Professore Emerito Jeffrey Goldstone, influente fisico teorico, muore all’età di 93 anni",
+    "{Qualcuno deve farlo. Perché non io?}"
+   ],
+   "categories": {
+    "scienza": 14,
+    "arte": 8,
+    "divertimento": 2,
+    "poesia": 1,
+    "universita": 5,
+    "curiosita": 3,
+    "tech": 13,
+    "natura": 8,
+    "produttivita": 2,
+    "notizie": 15,
+    "cultura": 9,
+    "filosofia": 1,
+    "design": 7,
+    "storia": 3,
+    "psicologia": 3,
+    "antropologia": 2
+   }
+  },
   {
    "id": "2026-11-10-mattina",
    "slot": "mattina",
