@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-09-sera",
- "updatedAt": "2026-11-10T01:23:01.940Z",
+ "latest": "2026-11-10-mattina",
+ "updatedAt": "2026-11-10T11:25:29.686Z",
  "editions": [
+  {
+   "id": "2026-11-10-mattina",
+   "slot": "mattina",
+   "date": "2026-11-10",
+   "generatedAt": "2026-11-10T10:17:31.462Z",
+   "count": 83,
+   "highlights": [
+    "Team MIT riceve finanziamenti per sviluppare alternative ai pesticidi moderni",
+    "Conferenze ONU sul clima: rapporto avverte che il riscaldamento globale sta accelerando",
+    "Segreti tossici nascosti nella crosta glaciale artica"
+   ],
+   "categories": {
+    "natura": 7,
+    "arte": 7,
+    "lingue": 2,
+    "curiosita": 4,
+    "divertimento": 2,
+    "poesia": 1,
+    "universita": 6,
+    "cultura": 8,
+    "scienza": 8,
+    "produttivita": 2,
+    "filosofia": 1,
+    "tech": 10,
+    "storia": 4,
+    "psicologia": 1,
+    "notizie": 14,
+    "design": 6
+   }
+  },
   {
    "id": "2026-11-09-sera",
    "slot": "sera",
