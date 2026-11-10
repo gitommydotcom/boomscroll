@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-10-pomeriggio",
- "updatedAt": "2026-11-10T18:43:15.968Z",
+ "latest": "2026-11-10-sera",
+ "updatedAt": "2026-11-10T21:27:02.441Z",
  "editions": [
+  {
+   "id": "2026-11-10-sera",
+   "slot": "sera",
+   "date": "2026-11-10",
+   "generatedAt": "2026-11-10T21:17:37.792Z",
+   "count": 92,
+   "highlights": [
+    "Researchers Can Tell How Lonely You Are by Your Instagram Activity",
+    "MIT student leaders: Q&A with men’s football co-captain Dominic Hess",
+    "In postcolonial Ghana, a fresh start but not a blank slate"
+   ],
+   "categories": {
+    "arte": 7,
+    "poesia": 2,
+    "divertimento": 2,
+    "universita": 6,
+    "storia": 3,
+    "natura": 5,
+    "design": 7,
+    "scienza": 10,
+    "filosofia": 2,
+    "notizie": 15,
+    "tech": 14,
+    "curiosita": 8,
+    "psicologia": 5,
+    "cultura": 5,
+    "antropologia": 1
+   }
+  },
   {
    "id": "2026-11-10-pomeriggio",
    "slot": "pomeriggio",
