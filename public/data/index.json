@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-11-mattina",
- "updatedAt": "2026-11-11T10:38:21.889Z",
+ "latest": "2026-11-11-pomeriggio",
+ "updatedAt": "2026-11-11T18:22:32.860Z",
  "editions": [
+  {
+   "id": "2026-11-11-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-11",
+   "generatedAt": "2026-11-11T17:05:14.148Z",
+   "count": 92,
+   "highlights": [
+    "Oltre la Casa della Piantagione",
+    "L'immagine iconica del buco nero resiste al controllo",
+    "‘Fossil record’ in stored blood samples lets scientists trace leukaemia back decades before diagnosis"
+   ],
+   "categories": {
+    "arte": 9,
+    "divertimento": 2,
+    "poesia": 1,
+    "universita": 5,
+    "scienza": 13,
+    "notizie": 16,
+    "tech": 12,
+    "design": 9,
+    "psicologia": 4,
+    "lingue": 2,
+    "natura": 4,
+    "storia": 6,
+    "curiosita": 2,
+    "cultura": 5,
+    "filosofia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-11-mattina",
    "slot": "mattina",
