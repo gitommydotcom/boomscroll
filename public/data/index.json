@@ -1,7 +1,34 @@
 {
- "latest": "2026-11-11-pomeriggio",
- "updatedAt": "2026-11-11T18:22:32.860Z",
+ "latest": "2026-11-11-sera",
+ "updatedAt": "2026-11-11T23:32:00.463Z",
  "editions": [
+  {
+   "id": "2026-11-11-sera",
+   "slot": "sera",
+   "date": "2026-11-11",
+   "generatedAt": "2026-11-11T21:55:12.014Z",
+   "count": 81,
+   "highlights": [
+    "I Rattlosauri Hanno Anche Personalità – E un Effetto Venefico",
+    "Troppo secco per i cactus: siccità estreme potrebbero spingere specie iconiche verso l'estinzione",
+    "Harriet Kluger: Rivoluzionando il Trattamento del Melanoma"
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 2,
+    "poesia": 1,
+    "natura": 4,
+    "universita": 4,
+    "tech": 14,
+    "design": 9,
+    "scienza": 12,
+    "psicologia": 4,
+    "storia": 3,
+    "cultura": 5,
+    "notizie": 14,
+    "curiosita": 2
+   }
+  },
   {
    "id": "2026-11-11-pomeriggio",
    "slot": "pomeriggio",
