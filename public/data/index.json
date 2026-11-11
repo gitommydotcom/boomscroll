@@ -1,7 +1,38 @@
 {
- "latest": "2026-11-10-sera",
- "updatedAt": "2026-11-10T21:27:02.441Z",
+ "latest": "2026-11-11-mattina",
+ "updatedAt": "2026-11-11T10:38:21.889Z",
  "editions": [
+  {
+   "id": "2026-11-11-mattina",
+   "slot": "mattina",
+   "date": "2026-11-11",
+   "generatedAt": "2026-11-11T09:47:11.295Z",
+   "count": 91,
+   "highlights": [
+    "Sua famiglia, i suoi pazienti e lei",
+    "Il nostro sistema immunitario innato ci protegge più di quanto pensassimo",
+    "Aloha, antichissima coppia di quasar"
+   ],
+   "categories": {
+    "natura": 6,
+    "arte": 12,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 2,
+    "divertimento": 2,
+    "scienza": 9,
+    "universita": 6,
+    "storia": 2,
+    "cultura": 8,
+    "tech": 12,
+    "notizie": 14,
+    "design": 7,
+    "antropologia": 1,
+    "psicologia": 1,
+    "filosofia": 1,
+    "produttivita": 2
+   }
+  },
   {
    "id": "2026-11-10-sera",
    "slot": "sera",
