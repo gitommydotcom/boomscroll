@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-11-sera",
- "updatedAt": "2026-11-11T23:32:00.463Z",
+ "latest": "2026-11-12-mattina",
+ "updatedAt": "2026-11-12T11:54:37.943Z",
  "editions": [
+  {
+   "id": "2026-11-12-mattina",
+   "slot": "mattina",
+   "date": "2026-11-12",
+   "generatedAt": "2026-11-12T10:11:11.197Z",
+   "count": 86,
+   "highlights": [
+    "L’alchimista del suono",
+    "Catalizzatore efficiente per l'arilazione C–H di areni",
+    "1927: Lev Trockij viene espulso dal Partito Comunista dell'Unione Sovietica, lasciando a Stalin il controllo incontrastato dell'Unione Sovietica."
+   ],
+   "categories": {
+    "natura": 6,
+    "arte": 11,
+    "lingue": 2,
+    "curiosita": 6,
+    "divertimento": 2,
+    "poesia": 1,
+    "universita": 3,
+    "psicologia": 5,
+    "cultura": 7,
+    "scienza": 12,
+    "notizie": 14,
+    "design": 8,
+    "tech": 7,
+    "storia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-11-sera",
    "slot": "sera",
