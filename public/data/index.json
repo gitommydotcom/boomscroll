@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-12-mattina",
- "updatedAt": "2026-11-12T11:54:37.943Z",
+ "latest": "2026-11-12-pomeriggio",
+ "updatedAt": "2026-11-12T19:16:07.915Z",
  "editions": [
+  {
+   "id": "2026-11-12-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-12",
+   "generatedAt": "2026-11-12T17:34:40.898Z",
+   "count": 103,
+   "highlights": [
+    "Una Nuova Era per l'Alba della Vita",
+    "Rifiutare di guardare oltre: ingiustizia estetica e persone senza fissa dimora",
+    "Power Shift: Stato e Progresso Climatico"
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 2,
+    "natura": 9,
+    "tech": 14,
+    "curiosita": 5,
+    "scienza": 18,
+    "produttivita": 3,
+    "lingue": 1,
+    "notizie": 15,
+    "cultura": 7,
+    "psicologia": 4,
+    "storia": 4,
+    "filosofia": 2,
+    "design": 8
+   }
+  },
   {
    "id": "2026-11-12-mattina",
    "slot": "mattina",
