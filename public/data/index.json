@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-12-pomeriggio",
- "updatedAt": "2026-11-12T19:16:07.915Z",
+ "latest": "2026-11-12-sera",
+ "updatedAt": "2026-11-12T23:33:27.001Z",
  "editions": [
+  {
+   "id": "2026-11-12-sera",
+   "slot": "sera",
+   "date": "2026-11-12",
+   "generatedAt": "2026-11-12T21:51:18.994Z",
+   "count": 84,
+   "highlights": [
+    "Progettata per essere non affondabile, la più veloce nave oceanica del mondo finalmente colpisce il fondo dell’oceano. La S.S. ‘United States’ da 53.330 tonnellate è ora il più grande relitto artifici",
+    "Euclid inizia a creare la più grande mappa del cosmo",
+    "I “supervisori” di OpenAI confermano un risultato rivoluzionario nel campo della fisica"
+   ],
+   "categories": {
+    "scienza": 16,
+    "arte": 7,
+    "poesia": 1,
+    "divertimento": 2,
+    "cultura": 5,
+    "natura": 3,
+    "universita": 5,
+    "design": 8,
+    "storia": 2,
+    "curiosita": 4,
+    "notizie": 14,
+    "tech": 14,
+    "psicologia": 2,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-12-pomeriggio",
    "slot": "pomeriggio",
