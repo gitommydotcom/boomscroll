@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-12-sera",
- "updatedAt": "2026-11-12T23:33:27.001Z",
+ "latest": "2026-11-13-mattina",
+ "updatedAt": "2026-11-13T11:39:51.717Z",
  "editions": [
+  {
+   "id": "2026-11-13-mattina",
+   "slot": "mattina",
+   "date": "2026-11-13",
+   "generatedAt": "2026-11-13T09:55:01.122Z",
+   "count": 91,
+   "highlights": [
+    "Proteina che guida l'invecchiamento senza infiammazione",
+    "Luogo, Persona e Ippocampo: La Scienza Affascinante del Magnetismo, Coscienza Autonoeica e Ciò Che Ci Rende Chi Siamo",
+    "Questo asteroide è nato all'alba del sistema solare"
+   ],
+   "categories": {
+    "natura": 6,
+    "arte": 9,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 2,
+    "divertimento": 3,
+    "storia": 3,
+    "tech": 10,
+    "cultura": 11,
+    "produttivita": 4,
+    "scienza": 11,
+    "notizie": 12,
+    "universita": 3,
+    "design": 7,
+    "psicologia": 4
+   }
+  },
   {
    "id": "2026-11-12-sera",
    "slot": "sera",
