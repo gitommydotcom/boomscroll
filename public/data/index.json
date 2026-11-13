@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-13-mattina",
- "updatedAt": "2026-11-13T11:39:51.717Z",
+ "latest": "2026-11-13-pomeriggio",
+ "updatedAt": "2026-11-13T18:55:22.085Z",
  "editions": [
+  {
+   "id": "2026-11-13-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-13",
+   "generatedAt": "2026-11-13T17:09:03.211Z",
+   "count": 105,
+   "highlights": [
+    "Come essere una donna moderna negli anni '30 a Shanghai",
+    "Spettro, spettro delle mie brame",
+    "Questa iconica prima immagine di un buco nero era accurata? Sette anni dopo uno studio fornisce un risultato indipendente"
+   ],
+   "categories": {
+    "scienza": 17,
+    "arte": 6,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 7,
+    "tech": 16,
+    "natura": 6,
+    "lingue": 1,
+    "cultura": 11,
+    "notizie": 16,
+    "storia": 4,
+    "curiosita": 4,
+    "filosofia": 1,
+    "psicologia": 3,
+    "design": 8,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-13-mattina",
    "slot": "mattina",
