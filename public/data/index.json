@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-13-pomeriggio",
- "updatedAt": "2026-11-13T18:55:22.085Z",
+ "latest": "2026-11-13-sera",
+ "updatedAt": "2026-11-13T22:56:36.899Z",
  "editions": [
+  {
+   "id": "2026-11-13-sera",
+   "slot": "sera",
+   "date": "2026-11-13",
+   "generatedAt": "2026-11-13T21:25:53.446Z",
+   "count": 84,
+   "highlights": [
+    "Sì alla vita, nonostante tutto: le lezioni perdute di Viktor Frankl sull'andare oltre l'ottimismo e il pessimismo per trovare il significato più profondo della vita",
+    "A Sofia Randich il premio “Tartufari” dei Lincei",
+    "Lo Spazio: Il Telescopio Euclid Mappa Quasi Un Miliardo di Oggetti Celesti"
+   ],
+   "categories": {
+    "arte": 7,
+    "poesia": 1,
+    "divertimento": 2,
+    "natura": 6,
+    "scienza": 14,
+    "universita": 7,
+    "storia": 3,
+    "cultura": 5,
+    "tech": 8,
+    "notizie": 13,
+    "design": 5,
+    "curiosita": 4,
+    "psicologia": 5,
+    "produttivita": 3,
+    "abitudini": 1
+   }
+  },
   {
    "id": "2026-11-13-pomeriggio",
    "slot": "pomeriggio",
