@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-13-sera",
- "updatedAt": "2026-11-13T22:56:36.899Z",
+ "latest": "2026-11-14-mattina",
+ "updatedAt": "2026-11-14T10:45:35.187Z",
  "editions": [
+  {
+   "id": "2026-11-14-mattina",
+   "slot": "mattina",
+   "date": "2026-11-14",
+   "generatedAt": "2026-11-14T09:18:42.128Z",
+   "count": 81,
+   "highlights": [
+    "Due Secoli Dopo Che Questa Gamba In Bronzo È Emersa Da Una Palude Scozzese, Gli Archeologi Credono Che Potrebbe Appartenervi a una Statua Imponente di un Imperatore Romano su Cavallo",
+    "Albrecht Altdorfer: Maestro Rinascimentale Tedesco Pionere della Pittura di Paesaggio. È Apparso un'Opera Precedentemente Inconosciuta Dopo 70 Anni in una Collezione Privata",
+    "1940: La città di Coventry viene pesantemente bombardata dalla Luftwaffe."
+   ],
+   "categories": {
+    "arte": 7,
+    "lingue": 2,
+    "curiosita": 5,
+    "poesia": 1,
+    "divertimento": 3,
+    "universita": 4,
+    "notizie": 15,
+    "cultura": 12,
+    "scienza": 8,
+    "tech": 11,
+    "storia": 2,
+    "natura": 4,
+    "design": 6,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-13-sera",
    "slot": "sera",
