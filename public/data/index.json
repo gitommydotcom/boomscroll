@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-14-pomeriggio",
- "updatedAt": "2026-11-14T16:56:52.518Z",
+ "latest": "2026-11-14-sera",
+ "updatedAt": "2026-11-14T20:44:10.682Z",
  "editions": [
+  {
+   "id": "2026-11-14-sera",
+   "slot": "sera",
+   "date": "2026-11-14",
+   "generatedAt": "2026-11-14T19:54:43.956Z",
+   "count": 61,
+   "highlights": [
+    "Una traccia chimica in rocce antiche suggerisce che la tettonica a placchette ha iniziato 2.5 miliardi di anni fa",
+    "Le Filippine vincono il primo Eurovision Song Contest Asia",
+    "Possibile scrivere una raccolta poetica che sia un vero e proprio thriller?"
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 4,
+    "poesia": 1,
+    "natura": 4,
+    "lingue": 1,
+    "universita": 3,
+    "design": 6,
+    "curiosita": 1,
+    "scienza": 4,
+    "notizie": 14,
+    "cultura": 2,
+    "tech": 10,
+    "filosofia": 1,
+    "antropologia": 1,
+    "psicologia": 1,
+    "storia": 1
+   }
+  },
   {
    "id": "2026-11-14-pomeriggio",
    "slot": "pomeriggio",
