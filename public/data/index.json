@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-14-sera",
- "updatedAt": "2026-11-14T20:44:10.682Z",
+ "latest": "2026-11-15-mattina",
+ "updatedAt": "2026-11-15T10:59:43.115Z",
  "editions": [
+  {
+   "id": "2026-11-15-mattina",
+   "slot": "mattina",
+   "date": "2026-11-15",
+   "generatedAt": "2026-11-15T09:48:29.503Z",
+   "count": 60,
+   "highlights": [
+    "Arianna Doss eletta Scholar Rhodes 2027",
+    "1928: Il Gran consiglio del fascismo diventa istituzione a livello costituzionale.",
+    "Prodotti finanziari digitali utilizzati per abusare di quasi il 20% delle giovani donne e ragazze nel Regno Unito, scopre un rapporto del Regno Unito"
+   ],
+   "categories": {
+    "arte": 5,
+    "lingue": 2,
+    "curiosita": 3,
+    "poesia": 1,
+    "divertimento": 2,
+    "universita": 3,
+    "cultura": 3,
+    "scienza": 6,
+    "storia": 2,
+    "tech": 11,
+    "notizie": 14,
+    "natura": 2,
+    "design": 4,
+    "filosofia": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-14-sera",
    "slot": "sera",
