@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-15-mattina",
- "updatedAt": "2026-11-15T10:59:43.115Z",
+ "latest": "2026-11-15-pomeriggio",
+ "updatedAt": "2026-11-15T17:02:41.308Z",
  "editions": [
+  {
+   "id": "2026-11-15-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-15",
+   "generatedAt": "2026-11-15T16:18:34.986Z",
+   "count": 59,
+   "highlights": [
+    "Scienziati potrebbero aver scoperto cosa rende l’IA così efficace a scacchi",
+    "Perché un edificio di Brooklyn è crollato improvvisamente? Esperti forniscono le loro valutazioni",
+    "Come gli incendi nel mondo sono cambiati mentre l’umanità ha fatto una pausa"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 1,
+    "scienza": 6,
+    "universita": 1,
+    "storia": 3,
+    "natura": 1,
+    "notizie": 16,
+    "lingue": 1,
+    "psicologia": 2,
+    "cultura": 2,
+    "tech": 10,
+    "filosofia": 1,
+    "curiosita": 1,
+    "design": 4,
+    "produttivita": 3
+   }
+  },
   {
    "id": "2026-11-15-mattina",
    "slot": "mattina",
