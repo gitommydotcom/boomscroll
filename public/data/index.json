@@ -1,7 +1,33 @@
 {
- "latest": "2026-11-15-pomeriggio",
- "updatedAt": "2026-11-15T17:02:41.308Z",
+ "latest": "2026-11-15-sera",
+ "updatedAt": "2026-11-15T20:48:57.944Z",
  "editions": [
+  {
+   "id": "2026-11-15-sera",
+   "slot": "sera",
+   "date": "2026-11-15",
+   "generatedAt": "2026-11-15T20:22:58.811Z",
+   "count": 46,
+   "highlights": [
+    "IN DIRETTA, guerra in Ucraina: l'Estonia chiude le frontiere con la Russia, Kiev invita i governi europei a mostrare la stessa fermezza",
+    "'Possibile che tu creda?': SpaceX cattura parte del razzo Starship nel suo ritorno sulla Terra",
+    "Argomento e Argomentazione: Un Concetto Fondamentale in Filosofia"
+   ],
+   "categories": {
+    "arte": 6,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 1,
+    "storia": 3,
+    "notizie": 14,
+    "tech": 9,
+    "filosofia": 1,
+    "design": 4,
+    "scienza": 1,
+    "cultura": 2,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-15-pomeriggio",
    "slot": "pomeriggio",
