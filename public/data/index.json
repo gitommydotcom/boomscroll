@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-16-mattina",
- "updatedAt": "2026-11-16T11:32:57.918Z",
+ "latest": "2026-11-16-pomeriggio",
+ "updatedAt": "2026-11-16T21:13:32.570Z",
  "editions": [
+  {
+   "id": "2026-11-16-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-16",
+   "generatedAt": "2026-11-16T19:31:28.683Z",
+   "count": 109,
+   "highlights": [
+    "Q&A: Come la sequestrazione del carbonio oceanico cambia con diverse condizioni glaciali",
+    "Pipilotti Rist riceve il Premio Eugene McDermott per le Arti a MIT",
+    "Il cavallo ha fatto lo stato"
+   ],
+   "categories": {
+    "natura": 5,
+    "scienza": 17,
+    "arte": 9,
+    "divertimento": 3,
+    "poesia": 2,
+    "universita": 10,
+    "lingue": 2,
+    "notizie": 17,
+    "cultura": 12,
+    "storia": 4,
+    "tech": 12,
+    "curiosita": 4,
+    "design": 7,
+    "produttivita": 1,
+    "filosofia": 1,
+    "psicologia": 3
+   }
+  },
   {
    "id": "2026-11-16-mattina",
    "slot": "mattina",
