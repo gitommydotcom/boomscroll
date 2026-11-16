@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-15-sera",
- "updatedAt": "2026-11-15T20:48:57.944Z",
+ "latest": "2026-11-16-mattina",
+ "updatedAt": "2026-11-16T11:32:57.918Z",
  "editions": [
+  {
+   "id": "2026-11-16-mattina",
+   "slot": "mattina",
+   "date": "2026-11-16",
+   "generatedAt": "2026-11-16T10:07:08.551Z",
+   "count": 70,
+   "highlights": [
+    "Come il cervello in via di sviluppo crea così tanti tipi diversi di neuroni?",
+    "Love Anyway",
+    "2004: Un Boeing X-43 della NASA stabilisce il nuovo record di velocità per un aereo: 11.200 km/h."
+   ],
+   "categories": {
+    "natura": 4,
+    "arte": 6,
+    "lingue": 3,
+    "curiosita": 3,
+    "poesia": 1,
+    "divertimento": 2,
+    "psicologia": 4,
+    "storia": 5,
+    "universita": 1,
+    "cultura": 6,
+    "tech": 11,
+    "scienza": 2,
+    "notizie": 14,
+    "design": 6,
+    "filosofia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-15-sera",
    "slot": "sera",
