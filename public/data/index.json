@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-17-pomeriggio",
- "updatedAt": "2026-11-17T20:12:11.304Z",
+ "latest": "2026-11-17-sera",
+ "updatedAt": "2026-11-17T23:53:11.542Z",
  "editions": [
+  {
+   "id": "2026-11-17-sera",
+   "slot": "sera",
+   "date": "2026-11-17",
+   "generatedAt": "2026-11-17T22:52:30.694Z",
+   "count": 77,
+   "highlights": [
+    "Questo Fungo Minuscolo e Inconoscibile è un 'Mushroom della Magia Nera' – Il Primo Trovato a Contenere sia Composti Psilocibinici che Tossine Letali",
+    "Stelle simili al Sole già 12,5 miliardi di anni fa:la scoperta che riscrive il passato della Via Lattea",
+    "Centinaia di siti web distribuiscono un cocktail dannoso di malware agli utenti ignari"
+   ],
+   "categories": {
+    "arte": 7,
+    "poesia": 2,
+    "divertimento": 1,
+    "scienza": 11,
+    "storia": 4,
+    "universita": 6,
+    "design": 9,
+    "tech": 10,
+    "notizie": 14,
+    "filosofia": 1,
+    "psicologia": 1,
+    "natura": 2,
+    "curiosita": 3,
+    "cultura": 5,
+    "antropologia": 1
+   }
+  },
   {
    "id": "2026-11-17-pomeriggio",
    "slot": "pomeriggio",
