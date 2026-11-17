@@ -1,7 +1,38 @@
 {
- "latest": "2026-11-17-mattina",
- "updatedAt": "2026-11-17T12:22:12.815Z",
+ "latest": "2026-11-17-pomeriggio",
+ "updatedAt": "2026-11-17T20:12:11.304Z",
  "editions": [
+  {
+   "id": "2026-11-17-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-17",
+   "generatedAt": "2026-11-17T18:29:11.115Z",
+   "count": 101,
+   "highlights": [
+    "Il linguaggio della diversità di genere in Zulu",
+    "Dinosauro fa una pausa e lascia un'impressione duratura",
+    "Una piroetta radio ogni otto minuti"
+   ],
+   "categories": {
+    "scienza": 14,
+    "arte": 9,
+    "divertimento": 3,
+    "poesia": 1,
+    "curiosita": 6,
+    "tech": 17,
+    "universita": 4,
+    "natura": 7,
+    "notizie": 14,
+    "cultura": 8,
+    "lingue": 1,
+    "storia": 2,
+    "filosofia": 2,
+    "design": 7,
+    "psicologia": 4,
+    "abitudini": 1,
+    "antropologia": 1
+   }
+  },
   {
    "id": "2026-11-17-mattina",
    "slot": "mattina",
