@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-16-sera",
- "updatedAt": "2026-11-17T00:49:12.587Z",
+ "latest": "2026-11-17-mattina",
+ "updatedAt": "2026-11-17T12:22:12.815Z",
  "editions": [
+  {
+   "id": "2026-11-17-mattina",
+   "slot": "mattina",
+   "date": "2026-11-17",
+   "generatedAt": "2026-11-17T11:01:28.614Z",
+   "count": 82,
+   "highlights": [
+    "Q&A: Perché costruire muscoli matematici rimane importante nell'era dell'IA",
+    "Cani, gatti e l’anello di M87*",
+    "Rivelato: Russia, Arabia Saudita e Australia sono i maggiori esportatori di CO2 di tutti i tempi"
+   ],
+   "categories": {
+    "natura": 4,
+    "arte": 8,
+    "lingue": 2,
+    "curiosita": 3,
+    "divertimento": 4,
+    "poesia": 1,
+    "universita": 5,
+    "tech": 8,
+    "cultura": 10,
+    "scienza": 10,
+    "storia": 2,
+    "notizie": 14,
+    "psicologia": 2,
+    "filosofia": 1,
+    "design": 7,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-16-sera",
    "slot": "sera",
