@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-16-pomeriggio",
- "updatedAt": "2026-11-16T21:13:32.570Z",
+ "latest": "2026-11-16-sera",
+ "updatedAt": "2026-11-17T00:49:12.587Z",
  "editions": [
+  {
+   "id": "2026-11-16-sera",
+   "slot": "sera",
+   "date": "2026-11-16",
+   "generatedAt": "2026-11-16T23:45:17.039Z",
+   "count": 85,
+   "highlights": [
+    "As El Niño builds, studies of extreme marine heatwaves must start now",
+    "28 vulnerabilità zero-day identificate in due giorni: il settore della robotica riesce a tenere il passo?",
+    "Il telescopio spaziale Euclid cattura quasi un miliardo di oggetti celesti con un livello di dettaglio straordinario"
+   ],
+   "categories": {
+    "natura": 6,
+    "arte": 9,
+    "divertimento": 4,
+    "poesia": 1,
+    "scienza": 11,
+    "universita": 5,
+    "cultura": 4,
+    "design": 9,
+    "psicologia": 3,
+    "tech": 11,
+    "curiosita": 4,
+    "notizie": 14,
+    "filosofia": 1,
+    "storia": 2,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-16-pomeriggio",
    "slot": "pomeriggio",
