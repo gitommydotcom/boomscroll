@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-17-sera",
- "updatedAt": "2026-11-17T23:53:11.542Z",
+ "latest": "2026-11-18-mattina",
+ "updatedAt": "2026-11-18T11:27:40.405Z",
  "editions": [
+  {
+   "id": "2026-11-18-mattina",
+   "slot": "mattina",
+   "date": "2026-11-18",
+   "generatedAt": "2026-11-18T10:35:22.340Z",
+   "count": 92,
+   "highlights": [
+    "Incontra i ‘corpi celesti di oscurità potente senza fondo’",
+    "Didymos si mostra, Dimorphos si affaccia",
+    "L'inflazione nel Regno Unito sale all’8,6% dopo l’aumento dei prezzi della benzina e del diesel"
+   ],
+   "categories": {
+    "natura": 5,
+    "arte": 9,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 1,
+    "divertimento": 2,
+    "universita": 7,
+    "psicologia": 4,
+    "produttivita": 2,
+    "storia": 4,
+    "cultura": 9,
+    "scienza": 8,
+    "tech": 13,
+    "notizie": 14,
+    "design": 7,
+    "filosofia": 1
+   }
+  },
   {
    "id": "2026-11-17-sera",
    "slot": "sera",
