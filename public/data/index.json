@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-18-mattina",
- "updatedAt": "2026-11-18T11:27:40.405Z",
+ "latest": "2026-11-18-pomeriggio",
+ "updatedAt": "2026-11-18T18:56:24.379Z",
  "editions": [
+  {
+   "id": "2026-11-18-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-18",
+   "generatedAt": "2026-11-18T17:58:58.331Z",
+   "count": 96,
+   "highlights": [
+    "Come l'arte di M.C. Escher crea mondi matematici bizzarri",
+    "Prima osservazione di una stella gigante che inghiotte il suo vicino",
+    "Cosa Rivelano le Morte per Editing Genetico in Cina sul Suo Settore Biotecnologico"
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 2,
+    "notizie": 16,
+    "universita": 7,
+    "curiosita": 5,
+    "psicologia": 3,
+    "natura": 8,
+    "lingue": 1,
+    "scienza": 14,
+    "tech": 11,
+    "design": 6,
+    "antropologia": 1,
+    "filosofia": 1,
+    "storia": 2,
+    "cultura": 9
+   }
+  },
   {
    "id": "2026-11-18-mattina",
    "slot": "mattina",
