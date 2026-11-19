@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-18-sera",
- "updatedAt": "2026-11-19T00:19:59.060Z",
+ "latest": "2026-11-19-mattina",
+ "updatedAt": "2026-11-19T12:23:01.018Z",
  "editions": [
+  {
+   "id": "2026-11-19-mattina",
+   "slot": "mattina",
+   "date": "2026-11-19",
+   "generatedAt": "2026-11-19T10:41:27.023Z",
+   "count": 85,
+   "highlights": [
+    "Voyager 1 raggiunge un traguardo storico: a una luce-giorno dalla Terra",
+    "Anthropic raccoglie 81 miliardi di dollari in un debutto azionario record",
+    "AI gigante Anthropic raccoglie più di 100 miliardi in IPO record-setting"
+   ],
+   "categories": {
+    "natura": 5,
+    "arte": 8,
+    "lingue": 2,
+    "curiosita": 4,
+    "poesia": 1,
+    "divertimento": 2,
+    "universita": 6,
+    "psicologia": 4,
+    "cultura": 9,
+    "tech": 8,
+    "scienza": 11,
+    "notizie": 14,
+    "design": 7,
+    "filosofia": 2,
+    "storia": 2
+   }
+  },
   {
    "id": "2026-11-18-sera",
    "slot": "sera",
