@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-19-pomeriggio",
- "updatedAt": "2026-11-19T19:34:06.531Z",
+ "latest": "2026-11-19-sera",
+ "updatedAt": "2026-11-19T23:47:14.275Z",
  "editions": [
+  {
+   "id": "2026-11-19-sera",
+   "slot": "sera",
+   "date": "2026-11-19",
+   "generatedAt": "2026-11-19T22:39:50.823Z",
+   "count": 87,
+   "highlights": [
+    "Connessioni filamentose microscopiche agiscono come ‘vie aeree’ tra le cellule",
+    "Cicloni tropicali più intensi al momento peggiore",
+    "Harvard restituisce due crani probabilmente appartenenti a individui schiavizzati, più di 150 anni dopo il loro prelievo dal Brasile per studi eugenetici"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 3,
+    "natura": 5,
+    "tech": 13,
+    "universita": 8,
+    "scienza": 13,
+    "storia": 5,
+    "notizie": 14,
+    "cultura": 4,
+    "design": 7,
+    "psicologia": 2,
+    "filosofia": 1,
+    "curiosita": 4,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-19-pomeriggio",
    "slot": "pomeriggio",
