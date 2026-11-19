@@ -1,7 +1,38 @@
 {
- "latest": "2026-11-19-mattina",
- "updatedAt": "2026-11-19T12:23:01.018Z",
+ "latest": "2026-11-19-pomeriggio",
+ "updatedAt": "2026-11-19T19:34:06.531Z",
  "editions": [
+  {
+   "id": "2026-11-19-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-19",
+   "generatedAt": "2026-11-19T18:11:41.686Z",
+   "count": 103,
+   "highlights": [
+    "Scienziati creano la prima mappa cellulare a livello di organismo di un vertebrato adulto",
+    "Come un'Innovazione UC Berkeley ha Portato ai Microprocessori che Alimentano il Mondo",
+    "Plasma Observatory, missione Esa a guida italiana"
+   ],
+   "categories": {
+    "scienza": 18,
+    "arte": 10,
+    "divertimento": 2,
+    "poesia": 1,
+    "tech": 16,
+    "design": 8,
+    "universita": 7,
+    "curiosita": 4,
+    "natura": 7,
+    "lingue": 2,
+    "notizie": 12,
+    "cultura": 7,
+    "storia": 3,
+    "filosofia": 1,
+    "produttivita": 2,
+    "antropologia": 1,
+    "psicologia": 2
+   }
+  },
   {
    "id": "2026-11-19-mattina",
    "slot": "mattina",
