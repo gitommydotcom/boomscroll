@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-18-pomeriggio",
- "updatedAt": "2026-11-18T18:56:24.379Z",
+ "latest": "2026-11-18-sera",
+ "updatedAt": "2026-11-19T00:19:59.060Z",
  "editions": [
+  {
+   "id": "2026-11-18-sera",
+   "slot": "sera",
+   "date": "2026-11-18",
+   "generatedAt": "2026-11-18T22:36:13.728Z",
+   "count": 86,
+   "highlights": [
+    "Perché Molte Persone Hanno DNA di Neanderthal?",
+    "Il traguardo del “giorno luce” della Voyager 1 è stato finalmente raggiunto dopo mezzo secolo di lavoro",
+    "Torre di Binh Lam Champa a Tuy Phước Đông, Vietnam"
+   ],
+   "categories": {
+    "scienza": 15,
+    "arte": 9,
+    "divertimento": 2,
+    "poesia": 1,
+    "cultura": 7,
+    "universita": 8,
+    "design": 8,
+    "filosofia": 2,
+    "notizie": 16,
+    "curiosita": 2,
+    "natura": 2,
+    "storia": 2,
+    "tech": 10,
+    "psicologia": 2
+   }
+  },
   {
    "id": "2026-11-18-pomeriggio",
    "slot": "pomeriggio",
