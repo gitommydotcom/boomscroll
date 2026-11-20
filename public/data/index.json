@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-20-pomeriggio",
- "updatedAt": "2026-11-20T18:38:10.672Z",
+ "latest": "2026-11-20-sera",
+ "updatedAt": "2026-11-20T23:53:55.757Z",
  "editions": [
+  {
+   "id": "2026-11-20-sera",
+   "slot": "sera",
+   "date": "2026-11-20",
+   "generatedAt": "2026-11-20T22:14:54.880Z",
+   "count": 83,
+   "highlights": [
+    "Un Piccolo Sandwich Superconduttore Potrebbe Aiutare i Computer a Usare Meno Energia",
+    "Team guidato da Harvard riceve 12 milioni di dollari in fondi federali per avanzare l'informatica quantistica con l'IA",
+    "Quest'anno l'El Niño è senza precedenti"
+   ],
+   "categories": {
+    "arte": 8,
+    "divertimento": 2,
+    "poesia": 1,
+    "scienza": 15,
+    "natura": 4,
+    "cultura": 4,
+    "universita": 5,
+    "storia": 3,
+    "design": 8,
+    "curiosita": 4,
+    "notizie": 14,
+    "antropologia": 1,
+    "tech": 11,
+    "filosofia": 1,
+    "psicologia": 2
+   }
+  },
   {
    "id": "2026-11-20-pomeriggio",
    "slot": "pomeriggio",
