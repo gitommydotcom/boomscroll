@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-20-mattina",
- "updatedAt": "2026-11-20T11:14:14.377Z",
+ "latest": "2026-11-20-pomeriggio",
+ "updatedAt": "2026-11-20T18:38:10.672Z",
  "editions": [
+  {
+   "id": "2026-11-20-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-20",
+   "generatedAt": "2026-11-20T17:44:56.013Z",
+   "count": 91,
+   "highlights": [
+    "Ricercatori svelano la teoria della 'resilienza perfetta'",
+    "Breve: Voyager 1 è ora a una 'giornata di luce' dalla Terra — stabilendo un record cosmico",
+    "Aquile da Nove Libbre Attaccano Babbuini di Sessanta Libbre in Africa – Potrebbe Aver Influenzato l'Evoluzione Umana?"
+   ],
+   "categories": {
+    "scienza": 16,
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 6,
+    "natura": 5,
+    "storia": 6,
+    "notizie": 15,
+    "cultura": 7,
+    "tech": 13,
+    "design": 7,
+    "curiosita": 2,
+    "antropologia": 1,
+    "psicologia": 2
+   }
+  },
   {
    "id": "2026-11-20-mattina",
    "slot": "mattina",
