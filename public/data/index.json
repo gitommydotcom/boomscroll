@@ -1,7 +1,38 @@
 {
- "latest": "2026-11-20-sera",
- "updatedAt": "2026-11-20T23:53:55.757Z",
+ "latest": "2026-11-21-mattina",
+ "updatedAt": "2026-11-21T11:40:46.683Z",
  "editions": [
+  {
+   "id": "2026-11-21-mattina",
+   "slot": "mattina",
+   "date": "2026-11-21",
+   "generatedAt": "2026-11-21T10:07:10.128Z",
+   "count": 76,
+   "highlights": [
+    "Delusioni: Definizione e caratteristiche cliniche",
+    "Un baccio romano e centinaia di tesori svelano la rete di scambio di un antico impero asiatico",
+    "La solennità del fondo: George Orwell e l'impalcatura segreta del successo"
+   ],
+   "categories": {
+    "natura": 4,
+    "arte": 7,
+    "lingue": 2,
+    "curiosita": 2,
+    "poesia": 1,
+    "divertimento": 1,
+    "tech": 11,
+    "scienza": 11,
+    "psicologia": 4,
+    "cultura": 7,
+    "produttivita": 2,
+    "filosofia": 3,
+    "storia": 1,
+    "notizie": 12,
+    "design": 6,
+    "universita": 1,
+    "antropologia": 1
+   }
+  },
   {
    "id": "2026-11-20-sera",
    "slot": "sera",
