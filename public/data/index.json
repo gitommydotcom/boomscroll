@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-21-mattina",
- "updatedAt": "2026-11-21T11:40:46.683Z",
+ "latest": "2026-11-21-pomeriggio",
+ "updatedAt": "2026-11-21T17:38:44.717Z",
  "editions": [
+  {
+   "id": "2026-11-21-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-21",
+   "generatedAt": "2026-11-21T16:45:11.446Z",
+   "count": 74,
+   "highlights": [
+    "Matematico afferma di aver risolto l'Ipotesi di Riemann con l'IA – La sfida matematica più grande del campo",
+    "Per la prima volta, gli astronomi assistono all'ingestione di una stella gigante del suo compagno stellare più piccolo",
+    "Combinando le loro competenze, ricercatori dimostrano una previsione quantistica"
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 1,
+    "natura": 9,
+    "tech": 10,
+    "scienza": 7,
+    "universita": 3,
+    "notizie": 15,
+    "lingue": 1,
+    "cultura": 6,
+    "design": 5,
+    "psicologia": 2,
+    "storia": 2,
+    "filosofia": 1,
+    "curiosita": 2
+   }
+  },
   {
    "id": "2026-11-21-mattina",
    "slot": "mattina",
