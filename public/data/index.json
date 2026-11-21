@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-21-pomeriggio",
- "updatedAt": "2026-11-21T17:38:44.717Z",
+ "latest": "2026-11-21-sera",
+ "updatedAt": "2026-11-21T21:45:00.448Z",
  "editions": [
+  {
+   "id": "2026-11-21-sera",
+   "slot": "sera",
+   "date": "2026-11-21",
+   "generatedAt": "2026-11-21T20:54:20.872Z",
+   "count": 67,
+   "highlights": [
+    "BepiColombo raggiunge Mercurio dopo un'odissea di otto anni",
+    "Denti Scoperti in Due Cave Cinesi Riscrivono la Storia di Homo Erectus",
+    "Il giorno in cui il Sole potrebbe espellere i pianeti esterni"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 3,
+    "universita": 3,
+    "curiosita": 2,
+    "natura": 3,
+    "scienza": 13,
+    "storia": 4,
+    "filosofia": 1,
+    "notizie": 14,
+    "cultura": 3,
+    "design": 3,
+    "tech": 9,
+    "produttivita": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-21-pomeriggio",
    "slot": "pomeriggio",
