@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-22-pomeriggio",
- "updatedAt": "2026-11-22T17:41:11.282Z",
+ "latest": "2026-11-22-sera",
+ "updatedAt": "2026-11-22T21:56:32.237Z",
  "editions": [
+  {
+   "id": "2026-11-22-sera",
+   "slot": "sera",
+   "date": "2026-11-22",
+   "generatedAt": "2026-11-22T21:02:27.484Z",
+   "count": 50,
+   "highlights": [
+    "La Terra ha appena avuto il giorno più anomalo di calore mai registrato",
+    "Amira Wales Katharine تتحدث بصراحة عن تأثير السرطان في حياتها في وثائقي على بي بي سي",
+    "deTour 2026: Prova ‘Migliore, Non Perfetto’ in 14 Installazioni e un Negozio Pop-Up"
+   ],
+   "categories": {
+    "arte": 7,
+    "poesia": 1,
+    "divertimento": 2,
+    "universita": 3,
+    "storia": 1,
+    "scienza": 5,
+    "notizie": 14,
+    "design": 3,
+    "tech": 6,
+    "psicologia": 1,
+    "natura": 3,
+    "curiosita": 1,
+    "produttivita": 2,
+    "cultura": 1
+   }
+  },
   {
    "id": "2026-11-22-pomeriggio",
    "slot": "pomeriggio",
