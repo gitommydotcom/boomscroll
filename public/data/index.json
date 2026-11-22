@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-22-mattina",
- "updatedAt": "2026-11-22T11:33:35.622Z",
+ "latest": "2026-11-22-pomeriggio",
+ "updatedAt": "2026-11-22T17:41:11.282Z",
  "editions": [
+  {
+   "id": "2026-11-22-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-22",
+   "generatedAt": "2026-11-22T17:04:37.889Z",
+   "count": 69,
+   "highlights": [
+    "La fisica quantistica può ora dimostrare dove si trova veramente",
+    "Le discussioni sul clima si interrompono a causa del rifiuto di un accordo chiave",
+    "I farmaci GLP-1 potrebbero avere un impatto ambientale sorprendente"
+   ],
+   "categories": {
+    "arte": 6,
+    "divertimento": 4,
+    "poesia": 1,
+    "scienza": 15,
+    "universita": 2,
+    "storia": 2,
+    "natura": 4,
+    "cultura": 6,
+    "lingue": 1,
+    "notizie": 14,
+    "design": 4,
+    "psicologia": 1,
+    "tech": 7,
+    "curiosita": 1,
+    "filosofia": 1
+   }
+  },
   {
    "id": "2026-11-22-mattina",
    "slot": "mattina",
