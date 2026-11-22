@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-21-sera",
- "updatedAt": "2026-11-21T21:45:00.448Z",
+ "latest": "2026-11-22-mattina",
+ "updatedAt": "2026-11-22T11:33:35.622Z",
  "editions": [
+  {
+   "id": "2026-11-22-mattina",
+   "slot": "mattina",
+   "date": "2026-11-22",
+   "generatedAt": "2026-11-22T10:10:02.684Z",
+   "count": 70,
+   "highlights": [
+    "Due sonde stanno per arrivare su Mercurio per un'analisi ravvicinata di questo pianeta enigmatico",
+    "La sentenza sul genocidio in Myanmar potrà pesare anche su Gaza",
+    "Recensione: Godzilla Minus Zero si aggiunge alla lista dei sequel stellari"
+   ],
+   "categories": {
+    "arte": 8,
+    "lingue": 2,
+    "curiosita": 2,
+    "poesia": 1,
+    "divertimento": 3,
+    "tech": 8,
+    "cultura": 8,
+    "scienza": 9,
+    "notizie": 14,
+    "natura": 5,
+    "psicologia": 2,
+    "design": 5,
+    "storia": 1,
+    "universita": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-21-sera",
    "slot": "sera",
