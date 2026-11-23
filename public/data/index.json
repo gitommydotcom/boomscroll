@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-23-mattina",
- "updatedAt": "2026-11-23T12:49:55.876Z",
+ "latest": "2026-11-23-pomeriggio",
+ "updatedAt": "2026-11-23T22:56:56.563Z",
  "editions": [
+  {
+   "id": "2026-11-23-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-23",
+   "generatedAt": "2026-11-23T21:14:55.433Z",
+   "count": 105,
+   "highlights": [
+    "Il sistema incredibilmente elegante di riparazione del DNA rende l'editing genetico possibile",
+    "Negli Stati Uniti torna la malattia della febbre maculosa: un caso senza precedenti in decenni",
+    "Math’s holy grail, the Riemann hypothesis, appears solved with AI’s help"
+   ],
+   "categories": {
+    "scienza": 15,
+    "arte": 12,
+    "divertimento": 3,
+    "poesia": 1,
+    "tech": 13,
+    "universita": 6,
+    "psicologia": 2,
+    "curiosita": 6,
+    "cultura": 9,
+    "lingue": 2,
+    "natura": 7,
+    "notizie": 16,
+    "design": 7,
+    "filosofia": 2,
+    "storia": 3,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-23-mattina",
    "slot": "mattina",
