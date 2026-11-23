@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-22-sera",
- "updatedAt": "2026-11-22T21:56:32.237Z",
+ "latest": "2026-11-23-mattina",
+ "updatedAt": "2026-11-23T12:49:55.876Z",
  "editions": [
+  {
+   "id": "2026-11-23-mattina",
+   "slot": "mattina",
+   "date": "2026-11-23",
+   "generatedAt": "2026-11-23T11:07:42.641Z",
+   "count": 84,
+   "highlights": [
+    "Cambridge guida il più grande studio mondiale per l'uso dell'IA nella diagnosi precoce del cancro al seno",
+    "Movimento sotto l'oceano spiega la profondità del punto più profondo dell’oceano",
+    "1980: Un terremoto di magnitudo 6,9 (X grado della scala Mercalli) colpisce l'Irpinia causando 2 914 morti e decine di migliaia fra feriti e sfollati."
+   ],
+   "categories": {
+    "natura": 4,
+    "arte": 8,
+    "lingue": 2,
+    "curiosita": 2,
+    "poesia": 2,
+    "divertimento": 2,
+    "storia": 6,
+    "scienza": 7,
+    "cultura": 7,
+    "psicologia": 4,
+    "tech": 11,
+    "universita": 3,
+    "notizie": 14,
+    "design": 7,
+    "produttivita": 3,
+    "filosofia": 2
+   }
+  },
   {
    "id": "2026-11-22-sera",
    "slot": "sera",
