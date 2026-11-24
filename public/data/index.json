@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-23-pomeriggio",
- "updatedAt": "2026-11-23T22:56:56.563Z",
+ "latest": "2026-11-23-sera",
+ "updatedAt": "2026-11-24T03:09:26.108Z",
  "editions": [
+  {
+   "id": "2026-11-23-sera",
+   "slot": "sera",
+   "date": "2026-11-23",
+   "generatedAt": "2026-11-24T02:10:00.909Z",
+   "count": 86,
+   "highlights": [
+    "La Prima Galleria d'Arte di Peggy Guggenheim Durò Solo 18 Mesi. Ma Le Sue 21 Esposizioni Mostrano Molteplici Capolavori dell’Arte Moderna",
+    "Dentro la 'Cappella Sistina delle Ande': Mura secolari raccontano storie bibliche con immagini andine",
+    "Trump interrompe la detonazione in Iowa, incolpa il nuovo governatore e accusa l'elezione di Sand"
+   ],
+   "categories": {
+    "arte": 7,
+    "lingue": 2,
+    "divertimento": 2,
+    "poesia": 1,
+    "scienza": 14,
+    "universita": 6,
+    "natura": 6,
+    "cultura": 6,
+    "psicologia": 4,
+    "design": 7,
+    "tech": 12,
+    "notizie": 14,
+    "curiosita": 2,
+    "storia": 2,
+    "filosofia": 1
+   }
+  },
   {
    "id": "2026-11-23-pomeriggio",
    "slot": "pomeriggio",
