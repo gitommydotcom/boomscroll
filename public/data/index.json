@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-24-mattina",
- "updatedAt": "2026-11-24T14:29:38.508Z",
+ "latest": "2026-11-24-pomeriggio",
+ "updatedAt": "2026-11-24T21:27:30.502Z",
  "editions": [
+  {
+   "id": "2026-11-24-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-24",
+   "generatedAt": "2026-11-24T20:07:50.518Z",
+   "count": 100,
+   "highlights": [
+    "Intelligenza Artificiale Risolve Ipotesi di Riemann: La Prova è di 17 Milioni di Righe",
+    "I formiche slime battono i matematici nei problemi complessi",
+    "GPT 6.2 Astra risolve un mistero storico"
+   ],
+   "categories": {
+    "scienza": 18,
+    "arte": 9,
+    "divertimento": 3,
+    "poesia": 1,
+    "universita": 8,
+    "design": 9,
+    "curiosita": 3,
+    "notizie": 15,
+    "natura": 5,
+    "cultura": 5,
+    "tech": 13,
+    "storia": 5,
+    "psicologia": 3,
+    "lingue": 1,
+    "filosofia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-24-mattina",
    "slot": "mattina",
