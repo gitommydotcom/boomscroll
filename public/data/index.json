@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-23-sera",
- "updatedAt": "2026-11-24T03:09:26.108Z",
+ "latest": "2026-11-24-mattina",
+ "updatedAt": "2026-11-24T14:29:38.508Z",
  "editions": [
+  {
+   "id": "2026-11-24-mattina",
+   "slot": "mattina",
+   "date": "2026-11-24",
+   "generatedAt": "2026-11-24T12:51:46.146Z",
+   "count": 86,
+   "highlights": [
+    "Record per Euclid: scopre il quasar più lontano",
+    "Could an Erectile Dysfunction Pill Slow Alzheimer's Disease? Clinical Trial Results Show Promise for Certain Patients",
+    "Chi è Levent Alpöge, il genio recluso dietro la conquista matematica dell'IA?"
+   ],
+   "categories": {
+    "natura": 7,
+    "arte": 6,
+    "lingue": 1,
+    "curiosita": 4,
+    "poesia": 1,
+    "divertimento": 2,
+    "cultura": 10,
+    "storia": 3,
+    "produttivita": 3,
+    "tech": 11,
+    "scienza": 11,
+    "filosofia": 2,
+    "notizie": 14,
+    "universita": 2,
+    "psicologia": 3,
+    "design": 6
+   }
+  },
   {
    "id": "2026-11-23-sera",
    "slot": "sera",
