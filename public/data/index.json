@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-24-pomeriggio",
- "updatedAt": "2026-11-24T21:27:30.502Z",
+ "latest": "2026-11-24-sera",
+ "updatedAt": "2026-11-25T01:28:40.886Z",
  "editions": [
+  {
+   "id": "2026-11-24-sera",
+   "slot": "sera",
+   "date": "2026-11-24",
+   "generatedAt": "2026-11-24T23:53:22.475Z",
+   "count": 73,
+   "highlights": [
+    "Segretezza che circonda le affermazioni sulla spinta nucleare russa nello spazio",
+    "Un farmaco anticoagulante può fermare l'osteoartrite?",
+    "Nuovo record per Euclid: scopre il quasar più lontano"
+   ],
+   "categories": {
+    "arte": 8,
+    "divertimento": 2,
+    "poesia": 1,
+    "scienza": 10,
+    "storia": 3,
+    "universita": 5,
+    "notizie": 14,
+    "design": 7,
+    "filosofia": 1,
+    "tech": 6,
+    "curiosita": 3,
+    "natura": 5,
+    "cultura": 6,
+    "psicologia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-24-pomeriggio",
    "slot": "pomeriggio",
