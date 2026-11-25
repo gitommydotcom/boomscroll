@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-25-mattina",
- "updatedAt": "2026-11-25T13:18:35.745Z",
+ "latest": "2026-11-25-pomeriggio",
+ "updatedAt": "2026-11-25T20:52:43.318Z",
  "editions": [
+  {
+   "id": "2026-11-25-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-25",
+   "generatedAt": "2026-11-25T19:10:19.047Z",
+   "count": 102,
+   "highlights": [
+    "Nuovi Esperimenti Ampliano la Ricerca della Materia Oscura ‘Ultraleggera’",
+    "Inquinamento causato dai data center statunitensi causa centinaia di morti precoci",
+    "Prove duali per l’ipotesi di Riemann stupiscono i matematici"
+   ],
+   "categories": {
+    "scienza": 15,
+    "arte": 8,
+    "divertimento": 3,
+    "poesia": 2,
+    "tech": 14,
+    "universita": 7,
+    "lingue": 2,
+    "notizie": 17,
+    "natura": 7,
+    "cultura": 10,
+    "curiosita": 3,
+    "design": 8,
+    "storia": 3,
+    "filosofia": 1,
+    "produttivita": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-25-mattina",
    "slot": "mattina",
