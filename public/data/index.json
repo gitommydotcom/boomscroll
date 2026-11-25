@@ -1,7 +1,38 @@
 {
- "latest": "2026-11-24-sera",
- "updatedAt": "2026-11-25T01:28:40.886Z",
+ "latest": "2026-11-25-mattina",
+ "updatedAt": "2026-11-25T13:18:35.745Z",
  "editions": [
+  {
+   "id": "2026-11-25-mattina",
+   "slot": "mattina",
+   "date": "2026-11-25",
+   "generatedAt": "2026-11-25T11:38:53.824Z",
+   "count": 97,
+   "highlights": [
+    "La filosofia morale di Hume",
+    "Non si muore per sé",
+    "Un potente vaccino contro l'HIV è finalmente alla portata – grazie a questi anticorpi super"
+   ],
+   "categories": {
+    "natura": 8,
+    "scienza": 15,
+    "arte": 6,
+    "lingue": 2,
+    "curiosita": 5,
+    "poesia": 1,
+    "divertimento": 4,
+    "tech": 12,
+    "universita": 3,
+    "storia": 4,
+    "cultura": 10,
+    "filosofia": 2,
+    "notizie": 14,
+    "design": 7,
+    "psicologia": 2,
+    "antropologia": 1,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-24-sera",
    "slot": "sera",
