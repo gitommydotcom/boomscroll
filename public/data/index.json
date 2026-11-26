@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-25-pomeriggio",
- "updatedAt": "2026-11-25T20:52:43.318Z",
+ "latest": "2026-11-25-sera",
+ "updatedAt": "2026-11-26T00:54:58.133Z",
  "editions": [
+  {
+   "id": "2026-11-25-sera",
+   "slot": "sera",
+   "date": "2026-11-25",
+   "generatedAt": "2026-11-25T23:36:39.660Z",
+   "count": 67,
+   "highlights": [
+    "Scoperta di corazza medievale su relitto svedese del 1495",
+    "La Terra ha appena registrato la giornata più calda di sempre. Un record destinato però a non restare isolato",
+    "Spazio: sonda europea sventa caos dopo esperimento di deviazione asteroidale"
+   ],
+   "categories": {
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 1,
+    "design": 8,
+    "universita": 2,
+    "scienza": 11,
+    "psicologia": 2,
+    "storia": 2,
+    "natura": 3,
+    "notizie": 14,
+    "cultura": 3,
+    "filosofia": 1,
+    "tech": 8,
+    "curiosita": 2
+   }
+  },
   {
    "id": "2026-11-25-pomeriggio",
    "slot": "pomeriggio",
