@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-26-mattina",
- "updatedAt": "2026-11-26T12:59:07.880Z",
+ "latest": "2026-11-26-pomeriggio",
+ "updatedAt": "2026-11-26T19:55:53.929Z",
  "editions": [
+  {
+   "id": "2026-11-26-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-26",
+   "generatedAt": "2026-11-26T18:59:23.295Z",
+   "count": 78,
+   "highlights": [
+    "Un vaccino efficace contro l’HIV è finalmente a portata di mano grazie ad alcuni super anticorpi",
+    "Rheinmetall: due italiani uccisi in un attacco a Kuwait",
+    "Ford svela il GT41 per puntare di nuovo alla vittoria a Le Mans"
+   ],
+   "categories": {
+    "arte": 9,
+    "divertimento": 3,
+    "poesia": 2,
+    "universita": 4,
+    "scienza": 9,
+    "natura": 4,
+    "tech": 10,
+    "notizie": 15,
+    "lingue": 1,
+    "psicologia": 3,
+    "storia": 4,
+    "produttivita": 1,
+    "cultura": 4,
+    "design": 8,
+    "filosofia": 1
+   }
+  },
   {
    "id": "2026-11-26-mattina",
    "slot": "mattina",
