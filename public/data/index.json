@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-27-mattina",
- "updatedAt": "2026-11-27T12:06:25.740Z",
+ "latest": "2026-11-27-pomeriggio",
+ "updatedAt": "2026-11-27T20:35:45.704Z",
  "editions": [
+  {
+   "id": "2026-11-27-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-27",
+   "generatedAt": "2026-11-27T18:53:44.455Z",
+   "count": 82,
+   "highlights": [
+    "Un farmaco antitumorale prodotto da una pianta",
+    "Un milione di data center nello spazio",
+    "1895: Alfred Nobel sottoscrive il suo testamento, con il quale istituisce il Premio Nobel."
+   ],
+   "categories": {
+    "scienza": 12,
+    "arte": 7,
+    "divertimento": 3,
+    "poesia": 2,
+    "universita": 5,
+    "natura": 5,
+    "tech": 15,
+    "design": 9,
+    "psicologia": 2,
+    "lingue": 1,
+    "notizie": 15,
+    "curiosita": 1,
+    "storia": 1,
+    "cultura": 4
+   }
+  },
   {
    "id": "2026-11-27-mattina",
    "slot": "mattina",
