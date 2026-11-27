@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-26-pomeriggio",
- "updatedAt": "2026-11-26T19:55:53.929Z",
+ "latest": "2026-11-26-sera",
+ "updatedAt": "2026-11-27T00:35:21.797Z",
  "editions": [
+  {
+   "id": "2026-11-26-sera",
+   "slot": "sera",
+   "date": "2026-11-26",
+   "generatedAt": "2026-11-26T23:48:23.865Z",
+   "count": 65,
+   "highlights": [
+    "Intelligenza Artificiale potrebbe aver violato la crittografia Internet?",
+    "Dimorphos dopo Dart, il cratere è enorme",
+    "Infarto anche senza coronarie ostruite: su “The Lancet” la nuova frontiera della cardiologia di precisione"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 1,
+    "lingue": 1,
+    "scienza": 8,
+    "cultura": 3,
+    "natura": 6,
+    "universita": 2,
+    "filosofia": 1,
+    "tech": 10,
+    "notizie": 13,
+    "design": 6,
+    "storia": 3,
+    "psicologia": 3,
+    "produttivita": 1
+   }
+  },
   {
    "id": "2026-11-26-pomeriggio",
    "slot": "pomeriggio",
