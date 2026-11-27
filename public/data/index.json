@@ -1,7 +1,37 @@
 {
- "latest": "2026-11-26-sera",
- "updatedAt": "2026-11-27T00:35:21.797Z",
+ "latest": "2026-11-27-mattina",
+ "updatedAt": "2026-11-27T12:06:25.740Z",
  "editions": [
+  {
+   "id": "2026-11-27-mattina",
+   "slot": "mattina",
+   "date": "2026-11-27",
+   "generatedAt": "2026-11-27T11:17:05.703Z",
+   "count": 77,
+   "highlights": [
+    "Brain area’s mysterious role in speech decoded at last",
+    "A Gaza anche l’ambiente è sotto attacco",
+    "Protesi all’avanguardia permettono ai ricercatori di sondare la mente umana"
+   ],
+   "categories": {
+    "natura": 4,
+    "arte": 5,
+    "lingue": 2,
+    "curiosita": 3,
+    "poesia": 1,
+    "divertimento": 1,
+    "storia": 4,
+    "psicologia": 5,
+    "cultura": 8,
+    "scienza": 7,
+    "tech": 9,
+    "notizie": 14,
+    "design": 7,
+    "universita": 3,
+    "produttivita": 3,
+    "filosofia": 1
+   }
+  },
   {
    "id": "2026-11-26-sera",
    "slot": "sera",
