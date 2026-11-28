@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-27-sera",
- "updatedAt": "2026-11-28T00:35:52.239Z",
+ "latest": "2026-11-28-mattina",
+ "updatedAt": "2026-11-28T12:12:01.618Z",
  "editions": [
+  {
+   "id": "2026-11-28-mattina",
+   "slot": "mattina",
+   "date": "2026-11-28",
+   "generatedAt": "2026-11-28T10:47:21.408Z",
+   "count": 65,
+   "highlights": [
+    "Due personale uccisi in attacco israeliano a Gaza, dichiara MSF",
+    "Il mio ghiacciaio andrà estinto? Intervista a Lander Van Tricht",
+    "Fotografie aeree mostrano la ripresa di Florida Bay, USA"
+   ],
+   "categories": {
+    "arte": 7,
+    "lingue": 2,
+    "poesia": 1,
+    "divertimento": 4,
+    "scienza": 10,
+    "storia": 3,
+    "notizie": 14,
+    "natura": 4,
+    "filosofia": 1,
+    "tech": 8,
+    "psicologia": 1,
+    "design": 5,
+    "produttivita": 1,
+    "cultura": 4
+   }
+  },
   {
    "id": "2026-11-27-sera",
    "slot": "sera",
