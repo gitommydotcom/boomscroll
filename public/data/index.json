@@ -1,7 +1,36 @@
 {
- "latest": "2026-11-28-mattina",
- "updatedAt": "2026-11-28T12:12:01.618Z",
+ "latest": "2026-11-28-pomeriggio",
+ "updatedAt": "2026-11-28T18:46:49.671Z",
  "editions": [
+  {
+   "id": "2026-11-28-pomeriggio",
+   "slot": "pomeriggio",
+   "date": "2026-11-28",
+   "generatedAt": "2026-11-28T17:29:56.568Z",
+   "count": 70,
+   "highlights": [
+    "I Neanderthal di Shanidar",
+    "1520: Tre navi, al comando dell'esploratore portoghese Ferdinando Magellano, raggiungono l'Oceano Pacifico.",
+    "Un Eroe Porta il Suo Nome"
+   ],
+   "categories": {
+    "arte": 6,
+    "curiosita": 3,
+    "divertimento": 3,
+    "poesia": 2,
+    "scienza": 12,
+    "natura": 4,
+    "tech": 13,
+    "universita": 2,
+    "lingue": 1,
+    "notizie": 13,
+    "design": 4,
+    "cultura": 3,
+    "storia": 2,
+    "filosofia": 1,
+    "psicologia": 1
+   }
+  },
   {
    "id": "2026-11-28-mattina",
    "slot": "mattina",
