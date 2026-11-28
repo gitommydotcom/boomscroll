@@ -1,7 +1,35 @@
 {
- "latest": "2026-11-27-pomeriggio",
- "updatedAt": "2026-11-27T20:35:45.704Z",
+ "latest": "2026-11-27-sera",
+ "updatedAt": "2026-11-28T00:35:52.239Z",
  "editions": [
+  {
+   "id": "2026-11-27-sera",
+   "slot": "sera",
+   "date": "2026-11-27",
+   "generatedAt": "2026-11-27T23:24:44.381Z",
+   "count": 68,
+   "highlights": [
+    "Megacittà Africane in Sommerso: 7 Milioni di Persone a Rischio di Inondazioni Entro il 2050",
+    "Carl Stumpf",
+    "Il chirurgo risolutore di crimini che ha ispirato Sherlock Holmes"
+   ],
+   "categories": {
+    "arte": 6,
+    "poesia": 1,
+    "divertimento": 2,
+    "scienza": 11,
+    "natura": 5,
+    "design": 6,
+    "universita": 3,
+    "storia": 4,
+    "filosofia": 1,
+    "tech": 11,
+    "curiosita": 1,
+    "psicologia": 2,
+    "notizie": 14,
+    "cultura": 1
+   }
+  },
   {
    "id": "2026-11-27-pomeriggio",
    "slot": "pomeriggio",
